@@ -1,0 +1,1064 @@
+
+% slide-1.tex
+
+\documentclass[dvipdfmx,notheorems,t]{beamer}
+
+\usepackage{docmute}
+\input{settings}
+
+\title{行列輪講: 第1回 行列の基本処理, 逆行列}
+\author{杉浦 圭祐}
+\institute[松谷研究室]{慶應義塾大学理工学部情報工学科 松谷研究室}
+\date{\today}
+
+\begin{document}
+
+\linespread{1.1}
+
+\frame{\titlepage}
+
+\section{}
+
+\begin{frame}[t,allowdisplaybreaks,allowframebreaks]{目次}
+\tableofcontents
+\end{frame}
+
+\section{概要}
+
+\begin{frame}{このスライドの概要}
+\begin{itemize}
+  \item 行列とベクトルに関する, 重要な公式を確認する
+  \item 「パターン認識と機械学習」などの教科書を読むために必要
+  \item The Matrix Cookbook (公式集)はよく使うので, そちらも参照
+  \begin{itemize}
+    \item \url{math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf}
+  \end{itemize}
+  \item 行列の基本処理, 逆行列について確認する
+  \begin{itemize}
+    \item 行列の基本処理 (行列積, アダマール積, 転置, 逆)
+    \item 行列の種類 (対角, 対称, エルミート, 正定値, 直交, ユニタリ)
+    \item 逆行列 (Woodburyの公式, シューア補行列)
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{行列の基本的な公式}
+
+\begin{frame}{行列の表記}
+\begin{itemize}
+  \item $\vb{A}$を, $m$行$n$列の行列とする (\textcolor{red}{$m \times n$行列}とよぶ).
+  \item $\vb{A}$の$i$行$j$列の要素を, $a_{ij}$と表記する (\textcolor{red}{$(i, j)$要素}とよぶ).
+  \begin{align*}
+    \vb{A} = \mqty(a_{11} & \cdots & a_{1j} & \cdots & a_{1n} \\
+      a_{21} & \cdots & a_{2j} & \cdots & a_{2n} \\
+      \vdots & \ddots & \vdots & \ddots & \vdots \\
+      a_{i1} & \cdots & a_{ij} & \cdots & a_{in} \\
+      \vdots & \ddots & \vdots & \ddots & \vdots \\
+      a_{m1} & \cdots & a_{mj} & \cdots & a_{mn})
+  \end{align*}
+  \item 行列$\vb{A}$の$(i, j)$要素が$a_{ij}$であるとき, $\vb{A} = \mqty(a_{ij})$とかく.
+  \item $m = n$であるとき, $\vb{A}$を\textcolor{red}{正方行列}とよぶ (\textcolor{red}{$n$次正方行列}).
+  \item 各要素が実数であるとき, $\vb{A}$を\textcolor{red}{実行列}とよぶ.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{行列の転置}
+\begin{itemize}
+  \item $\vb{A} = \mqty(a_{ij})$を$m \times n$行列とする.
+  \item $\vb{A}^\top = \mqty(a_{ji})$を, $\vb{A}$の\textcolor{red}{転置行列}とよぶ.
+  \begin{align*}
+    \vb{A}^\top &= \mqty(a_{11} & a_{21} & \cdots & a_{i1} & \cdots & a_{m1} \\
+      \vdots & \vdots & \ddots & \vdots & \ddots & \vdots \\
+      a_{1j} & a_{2j} & \cdots & a_{ij} & \cdots & a_{mj} \\
+      \vdots & \vdots & \ddots & \vdots & \ddots & \vdots \\
+      a_{1n} & a_{2n} & \cdots & a_{in} & \cdots & a_{mn}) \\
+    \left( \vb{A}^\top \right)_{ji} &= \left( \vb{A} \right)_{ij} = a_{ij}
+  \end{align*}
+  \item $\vb{A}^\top$は$m \times n \to n \times m$行列となる.
+  \item $\vb{A}$の行 (列) が, $\vb{A}^\top$の列 (行) に対応する.
+  \item $\vb{A}$の$(i, j)$要素は, $\vb{A}^\top$の$(j, i)$要素に対応する.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{行ベクトルと列ベクトル}
+\begin{itemize}
+  \item $\vb{A} = \mqty(a_{ij})$を$m \times n$行列とする.
+  \item $n$次の\textcolor{red}{行ベクトル}を, 縦に$m$個並べたものとして表記できる.
+  \begin{align*}
+    \vb{A} = \mqty(\vb*{\alpha}_1^\top \\ \vb*{\alpha}_2^\top \\ \vdots \\ \vb*{\alpha}_m^\top),
+      \quad \vb*{\alpha}_i^\top = \mqty(a_{i1} & a_{i2} & \cdots & a_{in})
+  \end{align*}
+  \item $m$次の\textcolor{red}{列ベクトル}を, 横に$n$個並べたものとして表記できる.
+  \begin{align*}
+    \vb{A} = \mqty(\vb{a}_1 & \vb{a}_2 & \cdots & \vb{a}_n),
+      \quad \vb{a}_j = \mqty(a_{1j} \\ a_{2j} \\ \vdots \\ a_{mj})
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{行列の和, スカラー倍}
+\begin{itemize}
+  \item $\vb{A} = \mqty(a_{ij}), \vb{B} = \mqty(b_{ij})$を$m \times n$行列とする.
+  \item 2つの行列の和を, $\vb{A} + \vb{B}$とかく.
+  \item $\vb{A} + \vb{B}$の$(i, j)$要素は, 行列$\vb{A}, \vb{B}$の$(i, j)$要素の和である.
+  \begin{align*}
+    \left( \vb{A} + \vb{B} \right)_{ij} = a_{ij} + b_{ij}
+  \end{align*}
+
+  \item $\lambda \in \mathbb{R}$をスカラー (実数) とする.
+  \item 行列$\vb{A}$のスカラー倍を, $\lambda \vb{A}$とかく.
+  \item $\lambda \vb{A}$の$(i, j)$要素は, 行列$\vb{A}$の$(i, j)$要素の$\lambda$倍である.
+  \begin{align*}
+    \left( \lambda \vb{A} \right)_{ij} = \lambda a_{ij}
+  \end{align*}
+  \item $\left( -1 \right) \vb{A}$は, $\vb{A}$の各要素の符号を反転させたもので, $-\vb{A}$とかく.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{行列の和, スカラー倍}
+\begin{block}{交換法則, 結合法則, 分配法則}
+  $\vb{A}, \vb{B}, \vb{C}$を$m \times n$行列とする.
+  $\lambda, \mu \in \mathbb{R}$をスカラー (実数) とする.
+  \begin{align*}
+    \vb{A} + \vb{B} &= \vb{B} + \vb{A} & \text{交換法則} \\
+    \left( \vb{A} + \vb{B} \right) + \vb{C} &= \vb{A} + \left( \vb{B} + \vb{C} \right) & \text{結合法則} \\
+    \left( \lambda + \mu \right) \vb{A} &= \lambda \vb{A} + \mu \vb{A} & \text{分配法則} \\
+    \lambda \left( \vb{A} + \vb{B} \right) &= \lambda \vb{A} + \lambda \vb{B} & \text{分配法則} \\
+    \left( \lambda \mu \right) \vb{A} &= \lambda \left( \mu \vb{A} \right) & \text{結合法則}
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{行列のアダマール積 (Hadamard Product)}
+\begin{itemize}
+  \item $\vb{A} = \mqty(a_{ij}), \vb{B} = \mqty(b_{ij})$を$m \times n$行列とする.
+  \item 2つの行列のアダマール積を, $\vb{A} \odot \vb{B}$とかく.
+  \item $\vb{A} \odot \vb{B}$の$(i, j)$要素は, 行列$\vb{A}, \vb{B}$の$(i, j)$要素の積である.
+  \begin{align*}
+    \left( \vb{A} \odot \vb{B} \right)_{ij} = a_{ij} b_{ij}
+  \end{align*}
+\end{itemize}
+
+\begin{block}{交換法則, 結合法則, 分配法則}
+  $\vb{A}, \vb{B}, \vb{C}$を$m \times n$行列とする.
+  \begin{align*}
+    \vb{A} \odot \vb{B} &= \vb{B} \odot \vb{A} & \text{交換法則} \\
+    \left( \vb{A} \odot \vb{B} \right) \odot \vb{C}
+      &= \vb{A} \odot \left( \vb{B} \odot \vb{C} \right) & \text{結合法則} \\
+    \left( \vb{A} + \vb{B} \right) \odot \vb{C}
+      &= \vb{A} \odot \vb{C} + \vb{B} \odot \vb{C} & \text{分配法則}
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{行列積}
+\begin{itemize}
+  \item $\vb{A}$を$l \times m$行列, $\vb{B}$を$m \times n$行列とする.
+  \item 2つの行列の積を, $\vb{A} \vb{B}$とかく.
+  \item $\vb{A} \vb{B}$は, $(l \times m) \times (m \times n) \to (l \times n)$行列となる.
+  \item $\vb{A} \vb{B}$の$(i, j)$要素$\left( \vb{A} \vb{B} \right)_{ij}$は, 次のようになる.
+  \begin{align*}
+    \left( \vb{A} \vb{B} \right)_{ij} = \sum_{k = 1}^m a_{ik} b_{kj}
+  \end{align*}
+  \item 総和の部分を簡略化して, 次のようにかく ($\vb{A}$の列方向, $\vb{B}$の行方向についての総和).
+  \begin{align*}
+    \left( \vb{A} \vb{B} \right)_{ij} = \sum_k a_{ik} b_{kj}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{行列積}
+\begin{itemize}
+  \item $\vb{A}$を$l \times m$行列, $\vb{B}$を$m \times n$行列とする.
+  \item 行ベクトルと列ベクトルを使って, $\vb{A}, \vb{B}$を次のようにかく.
+  \begin{align*}
+    \vb{A} = \mqty(\vb*{\alpha}_1^\top \\ \vb*{\alpha}_2^\top \\ \vdots \\ \vb*{\alpha}_m^\top),
+      \quad \vb{B} = \mqty(\vb{b}_1 & \vb{b}_2 & \cdots & \vb{b}_n)
+  \end{align*}
+  \item $\vb{A} \vb{B}$の$(i, j)$要素$\left( \vb{A} \vb{B} \right)_{ij}$は, 次のようにかける.
+  \begin{align*}
+    \left( \vb{A} \vb{B} \right)_{ij} = \vb*{\alpha}_i^\top \vb{b}_j
+      = \sum_k a_{ik} b_{kj}
+  \end{align*}
+  \item $\left( \vb{A} \vb{B} \right)_{ij}$は, $\vb{A}$の第$i$行ベクトルと, $\vb{B}$の第$j$列ベクトルの内積である.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{行列積}
+\begin{itemize}
+  \item 行列積の各成分を, 積和で表記することは, よくある.
+  \item いまのうちに慣れておきましょう.
+  \item 行列$\vb{A} \vb{B}$, $\vb{A} \vb{B} \vb{C}$, $\vb{A} \vb{B} \vb{C} \vb{D}$の$(i, j)$要素は,
+  \begin{align*}
+    \left( \vb{A} \vb{B} \right)_{ij} &= \sum_k a_{ik} b_{kj} \\
+    \left( \vb{A} \vb{B} \vb{C} \right)_{ij}
+      &= \sum_k a_{ik} \left( \vb{B} \vb{C} \right)_{kj}
+      = \sum_k a_{ik} \sum_l b_{kl} c_{lj} = \sum_k \sum_l a_{ik} b_{kl} c_{lj} \\
+    \left( \vb{A} \vb{B} \vb{C} \vb{D} \right)_{ij}
+      &= \sum_k a_{ik} \left( \vb{B} \vb{C} \vb{D} \right)_{kj}
+      = \sum_k a_{ik} \sum_l b_{kl} \left( \vb{C} \vb{D} \right)_{lj} \\
+      &= \sum_k a_{ik} \sum_l b_{kl} \sum_m c_{lm} d_{mj}
+      = \sum_k \sum_l \sum_m a_{ik} b_{kl} c_{lm} d_{mj}
+  \end{align*}
+  のようにかける.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{行列積}
+\begin{itemize}
+  \item 先ほどの例を一般化する.
+  \item 行列$\vb{A}^{(1)} \vb{A}^{(2)} \cdots \vb{A}^{(K)}$の$(i, j)$要素は,
+  $K - 1$個のインデックス$u_1, \ldots, u_{K - 1}$を用いて,
+  \begin{align*}
+    \left( \vb{A}^{(1)} \vb{A}^{(2)} \cdots \vb{A}^{(K)} \right)_{ij}
+      &= \underbrace{\sum_{u_1} \sum_{u_2} \cdots \sum_{u_{K - 1}}}_{\text{$K - 1$個}} \\
+      & \quad \quad a_{i, u_1}^{(1)} a_{u_1, u_2}^{(2)} a_{u_2, u_3}^{(3)} \cdots
+        a_{u_{K - 2}, u_{K - 1}}^{(K - 1)} a_{u_{K - 1}, j}^{(K)}
+  \end{align*}
+  のようにかける.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{行列積}
+\begin{block}{結合法則}
+  $$\vb{A} \left( \vb{B} \vb{C} \right) = \left( \vb{A} \vb{B} \right) \vb{C}
+    = \vb{A} \vb{B} \vb{C}$$
+\end{block}
+
+\begin{proof}
+  $\vb{A} \left( \vb{B} \vb{C} \right)$と, $\left( \vb{A} \vb{B} \right) \vb{C}$の$(i, j)$要素を比べると,
+  \begin{align*}
+    \left(\vb{A} \left( \vb{B} \vb{C} \right)\right)_{ij}
+      &= \sum_k a_{ik} \left( \vb{B} \vb{C} \right)_{kj}
+      = \sum_k a_{ik} \left( \sum_l b_{kl} c_{lj} \right)
+      = \sum_{k, l} a_{ik} b_{kl} c_{lj} \\
+    \left( \vb{A} \vb{B} \right) \vb{C}_{ij}
+      &= \sum_l \left( \vb{A} \vb{B} \right)_{il} c_{lj}
+      = \sum_l \left( \sum_k a_{ik} b_{kl} \right) c_{lj}
+      = \sum_{k, l} a_{ik} b_{kl} c_{lj}
+  \end{align*}
+\end{proof}
+\end{frame}
+
+\begin{frame}{行列積}
+\begin{block}{分配法則}
+  $$\vb{A} \left( \vb{B} + \vb{C} \right) = \vb{A} \vb{B} + \vb{A} \vb{C}$$
+\end{block}
+
+\begin{proof}
+  $\vb{A} \left( \vb{B} + \vb{C} \right)$と, $\vb{A} \vb{B} + \vb{A} \vb{C}$の$(i, j)$要素を比べると,
+  \begin{align*}
+    \left( \vb{A} \left( \vb{B} + \vb{C} \right) \right)_{ij}
+      &= \sum_k a_{ik} \left( \vb{B} + \vb{C} \right)_{kj}
+      = \sum_k a_{ik} \left( b_{kj} + c_{kj} \right) \\
+      &= \sum_k a_{ik} b_{kj} + \sum_k a_{ik} c_{kj} \\
+    \left( \vb{A} \vb{B} + \vb{A} \vb{C} \right)_{ij}
+      &= \left( \vb{A} \vb{B} \right)_{ij} + \left( \vb{A} \vb{C} \right)_{ij}
+      = \sum_k a_{ik} b_{kj} + \sum_k a_{ik} c_{kj}
+  \end{align*}
+\end{proof}
+\end{frame}
+
+\begin{frame}{行列積}
+\begin{block}{非可換}
+  一般に, $\vb{A} \vb{B} \neq \vb{B} \vb{A}$である. \\
+  $\vb{A} \vb{B} = \vb{B} \vb{A}$であるとき, $\vb{A}$と$\vb{B}$は可換であるという.
+\end{block}
+
+\begin{block}{分配法則}
+  $$\left( \vb{A} + \vb{B} \right) \vb{C} = \vb{A} \vb{C} + \vb{B} \vb{C}$$
+\end{block}
+
+\begin{block}{結合法則}
+  $$\left( \lambda \vb{A} \right) \vb{B} = \lambda \left( \vb{A} \vb{B} \right)
+    = \vb{A} \left( \lambda \vb{B} \right)$$
+\end{block}
+\end{frame}
+
+\begin{frame}{行列の転置}
+\begin{block}{行列の転置の転置}
+  $$\left( \vb{A}^\top \right)^\top = \vb{A}$$
+\end{block}
+
+\begin{block}{行列の転置と和}
+  $$\left( \vb{A} + \vb{B} \right)^\top = \vb{A}^\top + \vb{B}^\top$$
+\end{block}
+
+\begin{block}{行列の転置と積}
+  \begin{align*}
+    \left( \vb{A} \vb{B} \right)^\top &= \vb{B}^\top \vb{A}^\top \\
+    \left( \vb{A} \vb{B} \vb{C} \right)^\top &= \vb{C}^\top \vb{B}^\top \vb{A}^\top \\
+    \left( \vb{A}_1 \vb{A}_2 \cdots \vb{A}_{n - 1} \vb{A}_n \right)^\top
+      &= \vb{A}_n^\top \vb{A}_{n - 1}^\top \cdots \vb{A}_2^\top \vb{A}_1^\top
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{行列の転置}
+\begin{block}{行列の転置と積}
+  $$\left( \vb{A} \vb{B} \right)^\top = \vb{B}^\top \vb{A}^\top$$
+\end{block}
+
+\begin{proof}
+  $\left( \vb{A} \vb{B} \right)^\top$と, $\vb{B}^\top \vb{A}^\top$の$(i, j)$要素を比べると,
+  \begin{align*}
+    \left( \left( \vb{A} \vb{B} \right)^\top \right)_{ij}
+      &= \left( \vb{A} \vb{B} \right)_{ji}
+      = \sum_k a_{jk} b_{ki} \\
+    \left( \vb{B}^\top \vb{A}^\top \right)_{ij}
+      &= \sum_k \left( \vb{B}^\top \right)_{ik} \left( \vb{A}^\top \right)_{kj}
+      = \sum_k b_{ki} a_{jk}
+  \end{align*}
+\end{proof}
+\end{frame}
+
+\begin{frame}{零行列}
+\begin{itemize}
+  \item 行列$\vb{A} = \mqty(a_{ij})$の全ての要素が$0$であるとき, $\vb{A}$を\textcolor{red}{零行列}とよぶ.
+  \item 零行列を, $\vb{0}$とかく.
+\end{itemize}
+
+\begin{block}{零行列}
+  \begin{gather*}
+    \vb{A} + \vb{0} = \vb{0} + \vb{A} = \vb{A} \\
+    \vb{A} + \left( -\vb{A} \right) = \vb{0} \\
+    \vb{A} \odot \vb{0} = \vb{0} \odot \vb{A} = \vb{0} \\
+    \vb{A} \vb{0} = \vb{0} \vb{A} = \vb{0}
+  \end{gather*}
+\end{block}
+\end{frame}
+
+\begin{frame}{対角行列 (Diagonal Matrix)}
+\begin{itemize}
+  \item $\vb{A}$を, $n$次正方行列とする.
+  \item $\vb{A}$の対角線上の成分$a_{11}, \ldots, a_{ii}, \ldots, a_{nn}$を, \textcolor{red}{対角成分}とよぶ.
+  \item 対角成分以外が$0$であるとき, $\vb{A}$を\textcolor{red}{対角行列}とよぶ.
+  $$\vb{A} = \mqty(\dmat{a_{11}, \ddots, a_{ii}, \ddots, a_{nn}})$$
+  \item 空白部分は$0$で埋まっているものとする.
+  \item 対角成分のみを抜き出して, 対角行列を, 次のようにもかく.
+  $$\vb{A} = \diag(a_{11}, \ldots, a_{ii}, \ldots, a_{nn})$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{単位行列 (Identity Matrix)}
+\begin{itemize}
+  \item $\vb{A}$を, $n \times n$の対角行列とする.
+  \item 対角成分が全て$1$であるとき, $\vb{A}$を\textcolor{red}{単位行列}とよぶ.
+  \item $n \times n$の単位行列を, $\vb{I}_n$とかく (単に$\vb{I}$とすることもある).
+\end{itemize}
+
+\begin{block}{単位行列}
+  $\vb{A}$を$m \times n$行列とする.
+  $$\vb{A} \vb{I}_n = \vb{I}_m \vb{A} = \vb{A}$$
+\end{block}
+\end{frame}
+
+\begin{frame}{行と列のスカラー倍}
+\begin{itemize}
+  \item $\vb{A}$を, $m \times n$行列とする.
+  \item $\vb{A}$に, 左側から対角行列$\vb{D}$を掛けると, 行ごとにスケールできる.
+  \begin{align*}
+    \vb{D} \vb{A} = \mqty(\dmat{d_1, \ddots, d_m})
+      \mqty(\vb*{\alpha}_1^\top \\ \vdots \\ \vb*{\alpha}_m^\top)
+      = \mqty(d_1 \vb*{\alpha}_1^\top \\ \vdots \\ d_m \vb*{\alpha}_m^\top)
+  \end{align*}
+  \item $\vb{A}$に, 右側から対角行列$\vb{D}$を掛けると, 列ごとにスケールできる.
+  \begin{align*}
+    \vb{A} \vb{D} = \mqty(\vb{a}_1 & \cdots & \vb{a}_n)
+      \mqty(\dmat{d_1, \ddots, d_n})
+      = \mqty(d_1 \vb{a}_1 & \cdots & d_n \vb{a}_n)
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{対称行列 (Symmetric), 歪対称行列 (Skew-symmetric)}
+\begin{itemize}
+  \item $\vb{A}$を, $n$次正方行列とする.
+  \item $\vb{A}^\top = \vb{A}$が成り立つとき, $\vb{A}$を\textcolor{red}{対称行列}とよぶ.
+  \item 対称行列$\vb{A}$について, $a_{ij} = a_{ji}$が成り立つ.
+  \item $\vb{A}^\top = -\vb{A}$が成り立つとき, $\vb{A}$を\textcolor{red}{歪対称行列}とよぶ.
+  \item 歪対称行列$\vb{A}$について, $a_{ij} = -a_{ji}$が成り立つ.
+  \item また, 対角成分$a_{ii}$は, 常に$0$である ($a_{ii} = -a_{ii}$).
+  \item 任意の正方行列$\vb{A}$から, 対称行列と, 歪対称行列を作れる.
+  \begin{align*}
+    \frac{1}{2} \left( \vb{A} + \vb{A}^\top \right) & \qquad \text{対称行列} \\
+    \frac{1}{2} \left( \vb{A} - \vb{A}^\top \right) & \qquad \text{歪対称行列}
+  \end{align*}
+  \item 任意の正方行列は, 対称行列と, 歪対称行列の和である.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{エルミート行列 (Hermitian, Self-adjoint Matrix)}
+\begin{itemize}
+  \item $\vb{A}$を, $n \times n$の\textcolor{red}{複素}行列とする (特に明記しないときは, 実行列とする).
+  \item $\vb{A}$の各要素を複素共役で置き換え, さらに転置したものを, $\vb{A}^\mathrm{H}$とかく.
+  \item $\vb{A}^\mathrm{H}$を, \textcolor{red}{随伴行列}, \textcolor{red}{共役転置}とよぶ.
+  $$\vb{A} = \mqty(1 + 3i & 2 - 2i \\ 4 + 5i & 6 - 7i), \quad
+    \vb{A}^\mathrm{H} = \mqty(1 - 3i & 4 - 5i \\ 2 + 2i & 6 + 7i)$$
+  \item $\vb{A}^\mathrm{H} = \vb{A}$をみたすとき, $\vb{A}$を\textcolor{red}{エルミート行列},
+  \textcolor{red}{自己随伴行列}とよぶ.
+  $$\vb{A} = \mqty(1 & 2 - 2i \\ 2 + 2i & 3), \quad
+    \vb{A}^\mathrm{H} = \mqty(1 & 2 - 2i \\ 2 + 2i & 3)$$
+  \item エルミート行列の対角成分は, 常に実数である.
+  \item 対称行列は, エルミート行列でもある.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{正定値行列 (Positive Definite)}
+\begin{itemize}
+  \item $\vb{A}$を, $n \times n$の実対称行列とする. 任意のベクトル$\vb{x} \neq \vb{0}$について,
+  \item $\vb{x}^\top \vb{A} \vb{x} > 0$ $\to$ $\vb{A}$は\textcolor{red}{正定値行列}
+  \item $\vb{x}^\top \vb{A} \vb{x} \ge 0$ $\to$ $\vb{A}$は\textcolor{red}{半正定値行列}
+  \item $\vb{x}^\top \vb{A} \vb{x} < 0$ $\to$ $\vb{A}$は\textcolor{red}{負定値行列}
+  \item $\vb{x}^\top \vb{A} \vb{x} \le 0$ $\to$ $\vb{A}$は\textcolor{red}{半負定値行列}
+  \item $\vb{A}$が(半)正定値 $\Longleftrightarrow$ $\vb{A}$の全ての固有値が正(非負)
+  \item $\vb{A}$が(半)負定値 $\Longleftrightarrow$ $\vb{A}$の全ての固有値が負(非正)
+  \item 例えば, ガウス分布の共分散行列$\vb{\Sigma}$は, 正定値対称行列となる.
+  $$p(\vb{x} \mid \vb*{\mu}, \vb{\Sigma}) = \frac{1}{\det(2 \pi \vb{\Sigma})^\frac{1}{2}}
+    \exp\left\{ -\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+    \left( \vb{x} - \vb*{\mu} \right) \right\}$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{直交行列 (Orthogonal Matrix)}
+\begin{itemize}
+  \item $\vb{A}$を, $n$次正方行列とする.
+  \item $\vb{A} \vb{A}^\top = \vb{A}^\top \vb{A} = \vb{I}$となるとき, $\vb{A}$を\textcolor{red}{直交行列}という.
+  \item $\vb{A} = \mqty(\vb{a}_1 & \cdots & \vb{a}_n)$としたとき,
+  $$\vb{A}^\top \vb{A}
+    = \mqty(\vb{a}_1^\top \\ \vdots \\ \vb{a}_n^\top) \mqty(\vb{a}_1 & \cdots & \vb{a}_n)
+    = \mqty(\vb{a}_1^\top \vb{a}_1 & \cdots & \vb{a}_1^\top \vb{a}_n \\
+      \vdots & \ddots & \vdots \\
+      \vb{a}_n^\top \vb{a}_1 & \cdots & \vb{a}_n^\top \vb{a}_n) = \vb{I}$$
+  であるから,
+  $$\vb{a}_i^\top \vb{a}_j = \delta_{ij} = \left\{ \begin{array}{ll}
+    1 & i = j \\ 0 & \text{Otherwise} \end{array} \right.$$
+  \item $\delta_{ij}$はクロネッカーのデルタである.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{直交行列 (Orthogonal Matrix)}
+\begin{itemize}
+  \item 直交行列$\vb{A} = \mqty(\vb{a}_1 & \cdots & \vb{a}_n)$について,
+  $\vb{a}_i^\top \vb{a}_j = \delta_{ij}$
+  \item $\vb{a}_i$は, 自分自身との内積が$1$, それ以外との内積が$0$になる.
+  \item $\vb{a}_i$のノルムは$1$であり, 他の$\vb{a}_j$とは直交する.
+  \item 言い換えると, $\vb{a}_1, \ldots, \vb{a}_n$は正規直交基底である.
+  \item 直交行列$\vb{A}$による変換の前後で, 内積は変わらない:
+  $$\left( \vb{A} \vb{x} \right)^\top \vb{A} \vb{y}
+    = \vb{x}^\top \vb{A}^\top \vb{A} \vb{y} = \vb{x}^\top \vb{y}$$
+  \item 直交行列$\vb{A}$による変換の前後で, ノルムは変わらない:
+  $$\left\| \vb{A} \vb{x} \right\| = \sqrt{\left( \vb{A} \vb{x} \right)^\top \vb{A} \vb{x}}
+    = \sqrt{\vb{x}^\top \vb{x}} = \left\| \vb{x} \right\|$$
+  \item 例えば, 回転行列は, 行列式が$1$の直交行列として定義される.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ユニタリ行列 (Unitary Matrix)}
+\begin{itemize}
+  \item $\vb{A}$を, $n$次の複素正方行列とする.
+  \item $\vb{A} \vb{A}^\mathrm{H} = \vb{A}^\mathrm{H} \vb{A} = \vb{I}$であるとき,
+  $\vb{A}$を\textcolor{red}{ユニタリ行列}という.
+  \item $\vb{A}^\mathrm{H}$は, $\vb{A}$の共役転置である.
+  \item $\vb{A} = \mqty(\vb{a}_1 & \cdots & \vb{a}_n)$としたとき,
+  $\vb{a}_1, \ldots, \vb{a}_n$は正規直交基底である.
+  $$\vb{a}_i^\top \vb{a}_j = \delta_{ij} = \left\{ \begin{array}{ll}
+    1 & i = j \\ 0 & \text{Otherwise} \end{array} \right.$$
+  \item 直交行列は, ユニタリ行列でもある.
+\end{itemize}
+\end{frame}
+
+\section{逆行列}
+
+\begin{frame}{逆行列 (Inverse Matrix)}
+\begin{itemize}
+  \item $\vb{A}$を, $n$次正方行列とする.
+  \item $\vb{A}$に対して, $\vb{A} \vb{B} = \vb{B} \vb{A} = \vb{I}$となるような$\vb{B}$が存在するとき,
+  $\vb{B}$を$\vb{A}$の\textcolor{red}{逆行列}とよぶ.
+  \item $\vb{A}$の逆行列を, $\vb{A}^{-1}$とかく.
+  \item もし逆行列が存在するなら, それはただ1つだけである.
+  $\vb{B}_1$, $\vb{B}_2$を$\vb{A}$の逆行列とすると,
+  \begin{align*}
+    \vb{B}_2 = \vb{I} \vb{B}_2 = \left( \vb{B}_1 \vb{A} \right) \vb{B}_2
+      = \vb{B}_1 \left( \vb{A} \vb{B}_2 \right) = \vb{B}_1 \vb{I} = \vb{B}_1
+  \end{align*}
+  \item $\vb{A} \vb{B} = \vb{I}$が成り立つなら, $\vb{B} \vb{A} = \vb{I}$である (逆も同様).
+  \begin{itemize}
+    \item 証明は省略
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{対角行列の逆行列}
+\begin{block}{対角行列の逆行列}
+  $\vb{A}$を, $n \times n$の対角行列とする.
+  $\vb{A}$の逆行列は, $\vb{A}$の対角成分の逆数を, 対角成分としてもった対角行列である.
+  \textcolor{red}{対角行列なら, 簡単に逆行列が得られる}.
+  $$\vb{A}^{-1} = \left( \diag(a_1, a_2, \ldots, a_n) \right)^{-1}
+    = \diag\left( \frac{1}{a_1}, \frac{1}{a_2}, \ldots, \frac{1}{a_n} \right)$$
+\end{block}
+\begin{itemize}
+  \item 以下を簡単に確認できる.
+  \begin{align*}
+    \mqty(\dmat{a_1, \ddots, a_n})
+      \mqty(\dmat{\frac{1}{a_1}, \ddots, \frac{1}{a_n}}) = \vb{I}
+  \end{align*}
+  \item $\vb{A}$の全ての対角成分が$0$ではないなら, 逆行列が存在する.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{上三角行列の逆行列}
+\begin{block}{上三角行列の逆行列}
+  $\vb{A}$を, $n \times n$の上三角行列とする.
+  $\vb{A}$の逆行列は, 対角成分が, $\vb{A}$の対角成分の逆数となった, 上三角行列である.
+  $$\mqty(a_{11} & * & \cdots & * \\ & a_{22} & \ddots & \vdots \\
+    & & \ddots & * \\ & & & a_{nn})^{-1}
+    = \mqty(a_{11}^{-1} & * & \cdots & * \\ & a_{22}^{-1} & \ddots & \vdots \\
+    & & \ddots & * \\ & & & a_{nn}^{-1})$$
+\end{block}
+
+\begin{itemize}
+  \item 証明は省略.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{下三角行列の逆行列}
+\begin{block}{下三角行列の逆行列}
+  $\vb{A}$を, $n \times n$の下三角行列とする.
+  $\vb{A}$の逆行列は, 対角成分が, $\vb{A}$の対角成分の逆数となった, 下三角行列である.
+  $$\mqty(a_{11} \\ * & a_{22} \\ \vdots & \ddots & \ddots \\ * & \cdots & * & a_{nn})^{-1}
+    = \mqty(a_{11}^{-1} \\ * & a_{22}^{-1} \\ \vdots & \ddots & \ddots \\ * & \cdots & * & a_{nn}^{-1})$$.
+\end{block}
+
+\begin{itemize}
+  \item 証明は省略.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{逆行列}
+\begin{block}{逆行列と転置}
+  逆行列と転置は, 順番を入れ替えられる.
+  $$\left( \vb{A}^\top \right)^{-1} = \left( \vb{A}^{-1} \right)^\top$$
+\end{block}
+
+\begin{proof}
+  \begin{align*}
+    \vb{A}^\top \left( \vb{A}^{-1} \right)^\top
+      &= \left( \vb{A}^{-1} \vb{A} \right)^\top = \vb{I}^\top = \vb{I} \\
+    \left( \vb{A}^{-1} \right)^\top \vb{A}^\top
+      &= \left( \vb{A} \vb{A}^{-1} \right)^\top = \vb{I}^\top = \vb{I}
+  \end{align*}
+  以上より, $\vb{A}^\top$には逆行列$\left( \vb{A}^\top \right)^{-1}$が存在する. \\
+  $\left( \vb{A}^\top \right)^{-1}$を, 最初の式に左側から掛ければよい.
+\end{proof}
+\end{frame}
+
+\begin{frame}{逆行列}
+\begin{block}{逆行列と積}
+  \begin{align*}
+    \left( \vb{A} \vb{B} \right)^{-1} &= \vb{B}^{-1} \vb{A}^{-1} \\
+    \left( \vb{A} \vb{B} \vb{C} \right)^{-1} &= \vb{C}^{-1} \vb{B}^{-1} \vb{A}^{-1} \\
+    \left( \vb{A}_1 \vb{A}_2 \cdots \vb{A}_{n - 1} \vb{A}_n \right)^{-1}
+      &= \vb{A}_n^{-1} \vb{A}_{n - 1}^{-1} \cdots \vb{A}_2^{-1} \vb{A}_1^{-1}
+  \end{align*}
+\end{block}
+
+\begin{proof}
+  \begin{align*}
+    \left( \vb{A} \vb{B} \right) \left( \vb{B}^{-1} \vb{A}^{-1} \right)
+      &= \vb{A} \left( \vb{B} \vb{B}^{-1} \right) \vb{A}^{-1}
+      = \vb{A} \vb{A}^{-1} = \vb{I} \\
+    \left( \vb{B}^{-1} \vb{A}^{-1} \right) \left( \vb{A} \vb{B} \right)
+      &= \vb{B}^{-1} \left( \vb{A}^{-1} \vb{A} \right) \vb{B}
+      = \vb{B}^{-1} \vb{B} = \vb{I}
+  \end{align*}
+  以上より, $\vb{A} \vb{B}$の逆行列$\left( \vb{A} \vb{B} \right)^{-1}$が存在し,
+  それは$\vb{B}^{-1} \vb{A}^{-1}$である.
+\end{proof}
+\end{frame}
+
+\begin{frame}{ブロック行列の積}
+\begin{itemize}
+  \item 2つのブロック行列の積は, 次のようになる.
+  \begin{align*}
+    \mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D})
+      \mqty(\vb{P} & \vb{Q} \\ \vb{R} & \vb{S})
+      = \mqty(\vb{A} \vb{P} + \vb{B} \vb{R} & \vb{A} \vb{Q} + \vb{B} \vb{S} \\
+        \vb{C} \vb{P} + \vb{D} \vb{R} & \vb{C} \vb{Q} + \vb{D} \vb{S})
+  \end{align*}
+  \item ブロック行列の転置は, 次のようになる.
+  \begin{align*}
+    \mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D})^\top
+      = \mqty(\vb{A}^\top & \vb{C}^\top \\ \vb{B}^\top & \vb{D}^\top)
+  \end{align*}
+  \item 通常の行列積, 転置と同様である.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ブロック行列の積}
+\begin{itemize}
+  \item $\vb{A}$をブロック行列とする.
+  \item $\vb{A}$に, 左側からブロック対角行列$\vb{D}$を掛けると, 行ごとに積を計算できる.
+  \begin{align*}
+    \small
+    \mqty(\dmat{\vb{D}_1, \ddots, \vb{D}_K})
+      \mqty(\vb{A}_{11} & \cdots & \vb{A}_{1L} \\
+        \vdots & \ddots & \vdots \\
+        \vb{A}_{K1} & \cdots & \vb{A}_{KL})
+      = \mqty(\vb{D}_1 \vb{A}_{11} & \cdots & \vb{D}_1 \vb{A}_{1L} \\
+        \vdots & \ddots & \vdots \\
+        \vb{D}_K \vb{A}_{K1} & \cdots & \vb{D}_K \vb{A}_{KL})
+  \end{align*}
+  \item $\vb{A}$に, 右側からブロック対角行列$\vb{D}$を掛けると, 列ごとに積を計算できる.
+  \begin{align*}
+    \small
+    \mqty(\vb{A}_{11} & \cdots & \vb{A}_{1L} \\
+        \vdots & \ddots & \vdots \\
+        \vb{A}_{K1} & \cdots & \vb{A}_{KL})
+        \mqty(\dmat{\vb{D}_1, \ddots, \vb{D}_L})
+      = \mqty(\vb{A}_{11} \vb{D}_1 & \cdots & \vb{A}_{1L} \vb{D}_L \\
+        \vdots & \ddots & \vdots \\
+        \vb{A}_{K1} \vb{D}_1 & \cdots & \vb{A}_{KL} \vb{D}_L)
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ブロック行列の逆行列}
+\begin{itemize}
+  \item $\vb{A}, \vb{B}, \vb{C}, \vb{D}$からなるブロック行列について, その逆行列を考える.
+  \begin{align*}
+    \mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D})^{-1}
+      = \mqty(\vb{P} & \vb{Q} \\ \vb{R} & \vb{S})
+  \end{align*}
+  \item $\vb{A}, \vb{D}, \vb{P}, \vb{S}$は正方行列とする.
+  \item $\vb{A}, \vb{D}$には逆行列があるとする.
+  \item $\vb{P}, \vb{Q}, \vb{R}, \vb{S}$を$\vb{A}, \vb{B}, \vb{C}, \vb{D}$で表してみよう.
+  \begin{align*}
+    \mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D}) \mqty(\vb{P} & \vb{Q} \\ \vb{R} & \vb{S})
+      &= \mqty(\vb{A} \vb{P} + \vb{B} \vb{R} & \vb{A} \vb{Q} + \vb{B} \vb{S} \\
+        \vb{C} \vb{P} + \vb{D} \vb{R} & \vb{C} \vb{Q} + \vb{D} \vb{S})
+      = \mqty(\vb{I} & \vb{0} \\ \vb{0} & \vb{I}) \\
+    \mqty(\vb{P} & \vb{Q} \\ \vb{R} & \vb{S}) \mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D})
+      &= \mqty(\vb{P} \vb{A} + \vb{Q} \vb{C} & \vb{P} \vb{B} + \vb{Q} \vb{D} \\
+        \vb{R} \vb{A} + \vb{S} \vb{C} & \vb{R} \vb{B} + \vb{S} \vb{D})
+      = \mqty(\vb{I} & \vb{0} \\ \vb{0} & \vb{I})
+  \end{align*}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{ブロック行列の逆行列}
+\begin{itemize}
+  \item 以下が得られる:
+  \begin{gather*}
+    \mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D}) \mqty(\vb{P} & \vb{Q} \\ \vb{R} & \vb{S})
+      = \mqty(\vb{A} \vb{P} + \vb{B} \vb{R} & \vb{A} \vb{Q} + \vb{B} \vb{S} \\
+        \vb{C} \vb{P} + \vb{D} \vb{R} & \vb{C} \vb{Q} + \vb{D} \vb{S})
+      = \mqty(\vb{I} & \vb{0} \\ \vb{0} & \vb{I}) \\
+    \hspace*{-10pt} \mqty(\vb{P} & \vb{Q} \\ \vb{R} & \vb{S})
+      = \mqty(\left( \vb{A} - \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1} &
+        -\vb{A}^{-1} \vb{B} \left( \vb{D} - \vb{C} \vb{A}^{-1} \vb{B} \right)^{-1} \\
+        -\vb{D}^{-1} \vb{C} \left( \vb{A} - \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1} &
+        \left( \vb{D} - \vb{C} \vb{A}^{-1} \vb{B} \right)^{-1})
+  \end{gather*}
+  \item $\vb{P} = \left( \vb{A} - \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1}$,
+  $\vb{R} = -\vb{D}^{-1} \vb{C} \left( \vb{A} - \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1}$.
+  \begin{itemize}
+    \item $\vb{C} \vb{P} + \vb{D} \vb{R} = \vb{0}$ゆえ, $\vb{R} = -\vb{D}^{-1} \vb{C} \vb{P}$.
+    \item $\vb{A} \vb{P} + \vb{B} \vb{R} = \vb{I}$に代入して,
+    $\left( \vb{A} - \vb{B} \vb{D}^{-1} \vb{C} \right) \vb{P} = \vb{I}$.
+  \end{itemize}
+
+  \item $\vb{S} = \left( \vb{D} - \vb{C} \vb{A}^{-1} \vb{B} \right)^{-1}$,
+  $\vb{Q} = -\vb{A}^{-1} \vb{B} \left( \vb{D} - \vb{C} \vb{A}^{-1} \vb{B} \right)^{-1}$.
+  \begin{itemize}
+    \item $\vb{A} \vb{Q} + \vb{B} \vb{S} = \vb{0}$ゆえ, $\vb{Q} = -\vb{A}^{-1} \vb{B} \vb{S}$.
+    \item $\vb{C} \vb{Q} + \vb{D} \vb{S} = \vb{I}$に代入して,
+    $\left( \vb{D} - \vb{C} \vb{A}^{-1} \vb{B} \right) \vb{S} = \vb{I}$.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ブロック行列の逆行列}
+\begin{itemize}
+  \item 続いて, 以下が得られる:
+  \begin{gather*}
+    \mqty(\vb{P} & \vb{Q} \\ \vb{R} & \vb{S}) \mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D})
+      = \mqty(\vb{P} \vb{A} + \vb{Q} \vb{C} & \vb{P} \vb{B} + \vb{Q} \vb{D} \\
+        \vb{R} \vb{A} + \vb{S} \vb{C} & \vb{R} \vb{B} + \vb{S} \vb{D})
+      = \mqty(\vb{I} & \vb{0} \\ \vb{0} & \vb{I}) \\
+    \hspace*{-10pt} \mqty(\vb{P} & \vb{Q} \\ \vb{R} & \vb{S})
+      = \mqty(\left( \vb{A} - \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1} &
+        -\left( \vb{A} - \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1} \vb{B} \vb{D}^{-1} \\
+        -\left( \vb{D} - \vb{C} \vb{A}^{-1} \vb{B} \right)^{-1} \vb{C} \vb{A}^{-1} &
+        \left( \vb{D} - \vb{C} \vb{A}^{-1} \vb{B} \right)^{-1})
+  \end{gather*}
+  \item $\vb{P} = \left( \vb{A} - \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1}$,
+  $\vb{Q} = -\left( \vb{A} - \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1} \vb{B} \vb{D}^{-1}$.
+  \begin{itemize}
+    \item $\vb{P} \vb{B} + \vb{Q} \vb{D} = \vb{0}$より, $\vb{Q} = -\vb{P} \vb{B} \vb{D}^{-1}$.
+    \item $\vb{P} \vb{A} + \vb{Q} \vb{C} = \vb{I}$に代入して,
+    $\vb{P} \left( \vb{A} - \vb{B} \vb{D}^{-1} \vb{C} \right) = \vb{I}$.
+  \end{itemize}
+
+  \item $\vb{S} = \left( \vb{D} - \vb{C} \vb{A}^{-1} \vb{B} \right)^{-1}$,
+  $\vb{R} = -\left( \vb{D} - \vb{C} \vb{A}^{-1} \vb{B} \right)^{-1} \vb{C} \vb{A}^{-1}$.
+  \begin{itemize}
+    \item $\vb{R} \vb{A} + \vb{S} \vb{C} = \vb{0}$より, $\vb{R} = -\vb{S} \vb{C} \vb{A}^{-1}$.
+    \item $\vb{R} \vb{B} + \vb{S} \vb{D} = \vb{I}$に代入して,
+    $\vb{S} \left( \vb{D} - \vb{C} \vb{A}^{-1} \vb{B} \right) = \vb{I}$.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ブロック行列の逆行列}
+\begin{itemize}
+  \item さらに, 以下が得られる:
+  \begin{gather*}
+    \mqty(\vb{P} & \vb{Q} \\ \vb{R} & \vb{S}) \mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D})
+      = \mqty(\vb{P} \vb{A} + \vb{Q} \vb{C} & \vb{P} \vb{B} + \vb{Q} \vb{D} \\
+        \vb{R} \vb{A} + \vb{S} \vb{C} & \vb{R} \vb{B} + \vb{S} \vb{D})
+      = \mqty(\vb{I} & \vb{0} \\ \vb{0} & \vb{I})
+  \end{gather*}
+  \item $\vb{Q} = -\vb{A}^{-1} \vb{B} \left( \vb{D} - \vb{C} \vb{A}^{-1} \vb{B} \right)^{-1}$,
+  $\vb{P} = \vb{A}^{-1} + \vb{A}^{-1} \vb{B} \left( \vb{D} - \vb{C} \vb{A}^{-1} \vb{B} \right)^{-1} \vb{C} \vb{A}^{-1}$.
+  \begin{itemize}
+    \item $\vb{P} \vb{A} + \vb{Q} \vb{C} = \vb{I}$より,
+    $\vb{P} = \vb{A}^{-1} - \vb{Q} \vb{C} \vb{A}^{-1}$.
+    \item $\vb{P} \vb{B} + \vb{Q} \vb{D} = \vb{0}$より,
+    $\vb{A}^{-1} \vb{B} + \vb{Q} \left( \vb{D} - \vb{C} \vb{A}^{-1} \vb{B} \right) = \vb{0}$.
+  \end{itemize}
+
+  \item $\vb{R} = -\vb{D}^{-1} \vb{C} \left( \vb{A} - \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1}$,
+  $\vb{S} = \vb{D}^{-1} + \vb{D}^{-1} \vb{C} \left( \vb{A} - \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1} \vb{B} \vb{D}^{-1}$.
+  \begin{itemize}
+    \item $\vb{R} \vb{B} + \vb{S} \vb{D} = \vb{I}$より, $\vb{S} = \vb{D}^{-1} - \vb{R} \vb{B} \vb{D}^{-1}$.
+    \item $\vb{R} \vb{A} + \vb{S} \vb{C} = \vb{0}$より,
+    $\vb{D}^{-1} \vb{C} + \vb{R} \left( \vb{A} - \vb{B} \vb{D}^{-1} \vb{C} \right) = \vb{0}$.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ブロック行列の逆行列}
+\begin{block}{ブロック行列の逆行列}
+  $$\mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D})^{-1} = \mqty(\vb{P} & \vb{Q} \\ \vb{R} & \vb{S})$$
+  $\vb{X} = \vb{A} - \vb{B} \vb{D}^{-1} \vb{C}$, $\vb{Y} = \vb{D} - \vb{C} \vb{A}^{-1} \vb{B}$とすれば,
+  \begin{align*}
+    \mqty(\vb{P} & \vb{Q} \\ \vb{R} & \vb{S})
+      &= \mqty(\vb{X}^{-1} & -\vb{A}^{-1} \vb{B} \vb{Y}^{-1} \\
+        -\vb{D}^{-1} \vb{C} \vb{X}^{-1} & \vb{Y}^{-1}) \\
+    \mqty(\vb{P} & \vb{Q} \\ \vb{R} & \vb{S})
+      &= \mqty(\vb{X}^{-1} & -\vb{X}^{-1} \vb{B} \vb{D}^{-1} \\
+        -\vb{Y}^{-1} \vb{C} \vb{A}^{-1} & \vb{Y}^{-1}) \\
+    \mqty(\vb{P} & \vb{Q} \\ \vb{R} & \vb{S})
+      &= \mqty(\vb{A}^{-1} + \vb{A}^{-1} \vb{B} \vb{Y}^{-1} \vb{C} \vb{A}^{-1} &
+        -\vb{A}^{-1} \vb{B} \vb{Y}^{-1} \\
+        -\vb{D}^{-1} \vb{C} \vb{X}^{-1} &
+        \vb{D}^{-1} + \vb{D}^{-1} \vb{C} \vb{X}^{-1} \vb{B} \vb{D}^{-1})
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{ブロック対角行列の逆行列}
+\begin{block}{ブロック対角行列の逆行列}
+  $$\mqty(\vb{A} & \vb{0} \\ \vb{0} & \vb{D})^{-1}
+  = \mqty(\vb{A}^{-1} & \vb{0} \\ \vb{0} & \vb{D}^{-1})$$
+  上式を繰り返し適用すると,
+  $$\mqty(\dmat{\vb{A}_1, \vb{A}_2, \ddots, \vb{A}_K})^{-1}
+    = \mqty(\dmat{\vb{A}_1^{-1}, \vb{A}_2^{-1}, \ddots, \vb{A}_K^{-1}})$$
+\end{block}
+
+\begin{proof}
+先ほどの式において, $\vb{B} = \vb{0}, \vb{C} = \vb{0}$とすればよい.
+\end{proof}
+\end{frame}
+
+\begin{frame}{ブロック行列の逆行列}
+\begin{itemize}
+  \item 次のようなブロック行列$\vb{A}$に対する逆行列は,
+  \begin{gather*}
+    \vb{A} = \mqty(\vb{I} & \vb{X} \\ \vb{0} & \vb{I}), \quad
+      \vb{A}^{-1} = \mqty(\vb{I} & -\vb{X} \\ \vb{0} & \vb{I}) \\
+    \vb{A} = \mqty(\vb{I} & \vb{X} & \vb{X} \vb{Y} \\ & \vb{I} & \vb{Y} \\ & & \vb{I}), \quad
+      \vb{A}^{-1} = \mqty(\vb{I} & -\vb{X} \\ & \vb{I} & -\vb{Y} \\ & & \vb{I}) \\
+    \vb{A} = \mqty(\vb{I} & \vb{0} \\ \vb{X} & \vb{I}), \quad
+      \vb{A}^{-1} = \mqty(\vb{I} & \vb{0} \\ -\vb{X} & \vb{I}) \\
+    \vb{A} = \mqty(\vb{I} \\ \vb{X} & \vb{I} \\ \vb{X} \vb{Y} & \vb{Y} & \vb{I}), \quad
+      \vb{A}^{-1} = \mqty(\vb{I} \\ -\vb{X} & \vb{I} \\ & -\vb{Y} & \vb{I})
+  \end{gather*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ブロック行列の逆行列}
+これを繰り返していくと,
+\begin{align*}
+  \vb{A} &= \mqty(\vb{I} \\
+    \vb{A}_1 & \vb{I} \\
+    \vb{A}_2 \vb{A}_1 & \vb{A}_2 & \vb{I} \\
+    \vdots & \vdots & \vdots & \ddots \\
+    \vb{A}_{K - 1} \cdots \vb{A}_1 & \vb{A}_{K - 1} \cdots \vb{A}_2 &
+      \vb{A}_{K - 1} \cdots \vb{A}_3 & \cdots & \vb{I} \\
+    \vb{A}_K \cdots \vb{A}_1 & \vb{A}_K \cdots \vb{A}_2 &
+      \vb{A}_{K - 1} \cdots \vb{A}_3 & \cdots & \vb{A}_K & \vb{I}) \\
+  \vb{A}^{-1} &= \mqty(\vb{I} \\
+    -\vb{A}_1 & \vb{I} \\
+    & -\vb{A}_2 & \vb{I} \\
+    & & -\vb{A}_3 & \ddots \\
+    & & & \ddots & & \vb{I} \\
+    & & & & & -\vb{A}_K & \vb{I})
+\end{align*}
+\end{frame}
+
+\begin{frame}{Sherman-Morrison-Woodburyの公式}
+\begin{itemize}
+  \item ブロック行列の逆行列の式:
+  $$\mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D})^{-1} = \mqty(\vb{P} & \vb{Q} \\ \vb{R} & \vb{S})$$
+  $\vb{X} = \vb{A} - \vb{B} \vb{D}^{-1} \vb{C}$, $\vb{Y} = \vb{D} - \vb{C} \vb{A}^{-1} \vb{B}$とすれば,
+  \begin{align*}
+    \mqty(\vb{P} & \vb{Q} \\ \vb{R} & \vb{S})
+      &= \mqty(\vb{X}^{-1} & -\vb{A}^{-1} \vb{B} \vb{Y}^{-1} \\
+        -\vb{D}^{-1} \vb{C} \vb{X}^{-1} & \vb{Y}^{-1}) \\
+    \mqty(\vb{P} & \vb{Q} \\ \vb{R} & \vb{S})
+      &= \mqty(\vb{A}^{-1} + \vb{A}^{-1} \vb{B} \vb{Y}^{-1} \vb{C} \vb{A}^{-1} &
+        -\vb{X}^{-1} \vb{B} \vb{D}^{-1} \\
+        -\vb{Y}^{-1} \vb{C} \vb{A}^{-1} &
+        \vb{D}^{-1} + \vb{D}^{-1} \vb{C} \vb{X}^{-1} \vb{B} \vb{D}^{-1})
+  \end{align*}
+  \item 各ブロックを比べることで, 有名な\textcolor{red}{Sherman-Morrison-Woodburyの公式}が得られる.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Sherman-Morrison-Woodburyの公式}
+\begin{block}{Sherman-Morrison-Woodburyの公式}
+  \begin{align*}
+    \left( \vb{A}^{-1} + \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1}
+      &= \vb{A} - \vb{A} \vb{B}
+        \left( \vb{D} + \vb{C} \vb{A} \vb{B} \right)^{-1} \vb{C} \vb{A} \\
+    \left( \vb{D} + \vb{C} \vb{A} \vb{B} \right)^{-1}
+      &= \vb{D}^{-1} - \vb{D}^{-1} \vb{C}
+        \left( \vb{A}^{-1} + \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1} \vb{B} \vb{D}^{-1} \\
+    \vb{A} \vb{B} \left( \vb{D} + \vb{C} \vb{A} \vb{B} \right)^{-1}
+      &= \left( \vb{A}^{-1} + \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1} \vb{B} \vb{D}^{-1} \\
+    \left( \vb{D} + \vb{C} \vb{A} \vb{B} \right)^{-1} \vb{C} \vb{A}
+      &= \vb{D}^{-1} \vb{C} \left( \vb{A}^{-1} + \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1}
+  \end{align*}
+\end{block}
+
+\begin{itemize}
+  \item 最初の式で, $\vb{A}$が大きな, $\vb{D}$が小さな行列とする ($\vb{B}, \vb{C}$は細長い行列).
+  \item 左辺は, 大きな行列の逆行列$\left( \vb{A}^{-1} + \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1}$が必要
+  \item 右辺は, 小さな行列の逆行列$\left( \vb{D} + \vb{C} \vb{A} \vb{B} \right)^{-1}$で, 容易に計算できる
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Sherman-Morrison-Woodburyの公式}
+\begin{block}{Sherman-Morrison-Woodburyの公式 (その2)}
+  \begin{gather*}
+    \left( \vb{A}^{-1} + \vb{C} \vb{B}^{-1} \vb{C}^\top \right)^{-1}
+      = \vb{A} - \vb{A} \vb{C}
+        \left( \vb{B} + \vb{C}^\top \vb{A} \vb{C} \right)^{-1} \vb{C}^\top \vb{A} \\
+    \left( \vb{A}^{-1} + \vb{C} \vb{B}^{-1} \vb{C}^\top \right)^{-1} \vb{C} \vb{B}^{-1}
+      = \vb{A} \vb{C} \left( \vb{B} + \vb{C}^\top \vb{A} \vb{C} \right)^{-1}
+  \end{gather*}
+\end{block}
+\begin{itemize}
+  \item 以下の式で, $\vb{A}^{-1}, \vb{B}, \vb{D}^{-1}, \vb{C} \to \vb{A}^{-1}, \vb{C}, \vb{B}^{-1}, \vb{C}^\top$と置き換え
+  $$\left( \vb{A}^{-1} + \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1}
+    = \vb{A} - \vb{A} \vb{B}
+      \left( \vb{D} + \vb{C} \vb{A} \vb{B} \right)^{-1} \vb{C} \vb{A}$$
+  \item 以下の式で, $\vb{D}, \vb{C}, \vb{A}, \vb{B} \to \vb{A}^{-1}, \vb{C}, \vb{B}^{-1}, \vb{C}^\top$と置き換え
+  $$\left( \vb{D} + \vb{C} \vb{A} \vb{B} \right)^{-1} \vb{C} \vb{A}
+    = \vb{D}^{-1} \vb{C} \left( \vb{A}^{-1} + \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1}$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Sherman-Morrison-Woodburyの公式}
+\begin{block}{Sherman-Morrison-Woodburyの公式 (その3)}
+  \begin{gather*}
+    \left( \vb{A} + \vb{B} \vb{C} \right)^{-1}
+      = \vb{A}^{-1} - \vb{A}^{-1} \vb{B}
+        \left( \vb{I} + \vb{C} \vb{A}^{-1} \vb{B} \right)^{-1} \vb{C} \vb{A}^{-1} \\
+    \vb{C} \left( \vb{A} + \vb{B} \vb{C} \right)^{-1}
+      = \left( \vb{I} + \vb{C} \vb{A}^{-1} \vb{B} \right)^{-1} \vb{C} \vb{A}^{-1}
+  \end{gather*}
+\end{block}
+
+\begin{itemize}
+  \item 以下の式で, $\vb{A}^{-1}, \vb{D}^{-1} \to \vb{A}, \vb{I}$と置き換え
+  $$\left( \vb{A}^{-1} + \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1}
+    = \vb{A} - \vb{A} \vb{B}
+      \left( \vb{D} + \vb{C} \vb{A} \vb{B} \right)^{-1} \vb{C} \vb{A}$$
+  \item 以下の式で, $\vb{D}, \vb{A} \to \vb{I}, \vb{A}^{-1}$と置き換え
+  $$\left( \vb{D} + \vb{C} \vb{A} \vb{B} \right)^{-1} \vb{C} \vb{A}
+    = \vb{D}^{-1} \vb{C} \left( \vb{A}^{-1} + \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1}$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Sherman-Morrison-Woodburyの公式}
+\begin{block}{Sherman-Morrison-Woodburyの公式 (その4)}
+  \begin{gather*}
+    \left( \vb{A} + \vb{b} \vb{c}^\top \right)^{-1}
+      = \vb{A}^{-1} - \frac{\vb{A}^{-1} \vb{b} \vb{c}^\top \vb{A}^{-1}}{1 + \vb{c}^\top \vb{A}^{-1} \vb{b}} \\
+    \vb{c}^\top \left( \vb{A} + \vb{b} \vb{c}^\top \right)^{-1}
+      = \frac{\vb{c}^\top \vb{A}^{-1}}{1 + \vb{c}^\top \vb{A}^{-1} \vb{b}}
+  \end{gather*}
+\end{block}
+
+\begin{itemize}
+  \item 以下の式で, $\vb{B}, \vb{C} \to \vb{b}, \vb{c}^\top$と置き換え
+  \begin{gather*}
+    \left( \vb{A} + \vb{B} \vb{C} \right)^{-1}
+      = \vb{A}^{-1} - \vb{A}^{-1} \vb{B}
+        \left( \vb{I} + \vb{C} \vb{A}^{-1} \vb{B} \right)^{-1} \vb{C} \vb{A}^{-1} \\
+    \vb{C} \left( \vb{A} + \vb{B} \vb{C} \right)^{-1}
+      = \left( \vb{I} + \vb{C} \vb{A}^{-1} \vb{B} \right)^{-1} \vb{C} \vb{A}^{-1}
+  \end{gather*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Sherman-Morrison-Woodburyの公式}
+\begin{block}{Sherman-Morrison-Woodburyの公式 (その5)}
+  \begin{gather*}
+    \left( \vb{I} + \vb{A} \vb{B} \right)^{-1}
+      = \vb{I} - \vb{A} \left( \vb{I} + \vb{B} \vb{A} \right)^{-1} \vb{B} \\
+    \left( \vb{I} + \vb{A} \vb{B} \right)^{-1} \vb{A}
+      = \vb{A} \left( \vb{I} + \vb{B} \vb{A} \right)^{-1}
+  \end{gather*}
+\end{block}
+
+\begin{itemize}
+  \item 以下の式で, $\vb{A}^{-1}, \vb{B}, \vb{D}^{-1}, \vb{C} \to \vb{I}, \vb{A}, \vb{I}, \vb{B}$と置き換え
+  $$\left( \vb{A}^{-1} + \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1}
+    = \vb{A} - \vb{A} \vb{B}
+      \left( \vb{D} + \vb{C} \vb{A} \vb{B} \right)^{-1} \vb{C} \vb{A}$$
+  \item 以下の式で, $\vb{D}, \vb{C}, \vb{A}, \vb{B} \to \vb{I}, \vb{A}, \vb{I}, \vb{B}$と置き換え
+  $$\left( \vb{D} + \vb{C} \vb{A} \vb{B} \right)^{-1} \vb{C} \vb{A}
+    = \vb{D}^{-1} \vb{C} \left( \vb{A}^{-1} + \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1}$$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{逆行列の公式}
+\begin{block}{逆行列の公式}
+  \begin{gather*}
+    \left( \vb{A} + \vb{B} \vb{B}^\top \right)^{-1}
+      = \vb{A}^{-1} - \vb{A}^{-1} \vb{B}
+        \left( \vb{I} + \vb{B}^\top \vb{A}^{-1} \vb{B} \right)^{-1} \vb{B}^\top \vb{A}^{-1} \\
+    \left( \vb{A} + \vb{B} \vb{B}^\top \right)^{-1} \vb{B}
+      = \vb{A}^{-1} \vb{B} \left( \vb{I} + \vb{B}^\top \vb{A}^{-1} \vb{B} \right)^{-1}
+  \end{gather*}
+\end{block}
+
+\begin{itemize}
+  \item 以下の式で, $\vb{A}^{-1}, \vb{C}, \vb{B}^{-1}, \vb{C}^\top \to \vb{A}, \vb{B}, \vb{I}, \vb{B}^\top$と置き換え
+  \begin{gather*}
+    \left( \vb{A}^{-1} + \vb{C} \vb{B}^{-1} \vb{C}^\top \right)^{-1}
+      = \vb{A} - \vb{A} \vb{C}
+        \left( \vb{B} + \vb{C}^\top \vb{A} \vb{C} \right)^{-1} \vb{C}^\top \vb{A} \\
+    \left( \vb{A}^{-1} + \vb{C} \vb{B}^{-1} \vb{C}^\top \right)^{-1} \vb{C} \vb{B}^{-1}
+      = \vb{A} \vb{C} \left( \vb{B} + \vb{C}^\top \vb{A} \vb{C} \right)^{-1}
+  \end{gather*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{逆行列の公式}
+\begin{block}{逆行列の公式}
+  $$\left( \vb{A}^{-1} + \vb{B}^{-1} \right)^{-1}
+    = \vb{A} - \vb{A} \left( \vb{A} + \vb{B} \right)^{-1} \vb{A}
+    = \vb{B} - \vb{B} \left( \vb{A} + \vb{B} \right)^{-1} \vb{B}$$
+\end{block}
+
+\begin{itemize}
+  \item 以下の式で, $\vb{A}, \vb{B}, \vb{C} \to \vb{A}^{-1}, \vb{B}^{-1}, \vb{I}$と置き換え
+  \begin{align*}
+    \left( \vb{A} + \vb{B} \vb{C} \right)^{-1}
+      &= \vb{A}^{-1} - \vb{A}^{-1} \vb{B}
+        \left( \vb{I} + \vb{C} \vb{A}^{-1} \vb{B} \right)^{-1} \vb{C} \vb{A}^{-1} \\
+    \left( \vb{A}^{-1} + \vb{B}^{-1} \right)^{-1}
+      &= \vb{A} - \vb{A} \vb{B}^{-1} \left( \vb{I} + \vb{A} \vb{B}^{-1} \right)^{-1} \vb{A} \\
+    \left( \vb{A}^{-1} + \vb{B}^{-1} \right)^{-1}
+      &= \vb{A} - \vb{A} \left( \vb{A} + \vb{B} \right)^{-1} \vb{A}
+  \end{align*}
+  \item さらに, $\vb{A}, \vb{B}$を入れ替え
+  \begin{align*}
+    \left( \vb{A}^{-1} + \vb{B}^{-1} \right)^{-1}
+      &= \vb{B} - \vb{B} \left( \vb{A} + \vb{B} \right)^{-1} \vb{B}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{逆行列の公式}
+\begin{block}{逆行列の公式}
+  \begin{align*}
+    \left( \vb{I} + \vb{A}^{-1} \right)^{-1} &= \vb{A} \left( \vb{A} + \vb{I} \right)^{-1} \\
+    \left( \vb{A}^{-1} + \vb{B}^{-1} \right)^{-1}
+      &= \vb{A} \left( \vb{A} + \vb{B} \right)^{-1} \vb{B}
+      = \vb{B} \left( \vb{A} + \vb{B} \right)^{-1} \vb{A} \\
+    \vb{A}^{-1} + \vb{B}^{-1} &= \vb{A}^{-1} \left( \vb{A} + \vb{B} \right) \vb{B}^{-1}
+  \end{align*}
+\end{block}
+
+\begin{itemize}
+  \item $\left( \vb{I} + \vb{A}^{-1} \right)^{-1}
+    = \vb{A} \vb{A}^{-1} \left( \vb{I} + \vb{A}^{-1} \right)^{-1}
+    = \vb{A} \left( \vb{A} + \vb{I} \right)^{-1}$
+  \item $\left( \vb{A}^{-1} + \vb{B}^{-1} \right)^{-1}
+    = \vb{A} \vb{A}^{-1} \left( \vb{A}^{-1} + \vb{B}^{-1} \right)^{-1} \vb{B}^{-1} \vb{B}
+    = \vb{A} \left( \vb{A} + \vb{B} \right)^{-1} \vb{B}$
+  \item $\left( \vb{A}^{-1} + \vb{B}^{-1} \right)^{-1}
+    = \vb{B} \vb{B}^{-1} \left( \vb{A}^{-1} + \vb{B}^{-1} \right)^{-1} \vb{A}^{-1} \vb{A}
+    = \vb{B} \left( \vb{A} + \vb{B} \right)^{-1} \vb{A}$
+  \begin{itemize}
+    \item $\vb{B}^{-1} \vb{A}^{-1} = \left( \vb{A} \vb{B} \right)^{-1}$.
+    \item $\vb{C}^{-1} \vb{B}^{-1} \vb{A}^{-1} = \left( \vb{A} \vb{B} \vb{C} \right)^{-1}$.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{シューア補行列 (Schur Complement)}
+\begin{itemize}
+  \item ブロック行列$\mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D})$を考える.
+  \item $\vb{D}$に対するシューア補行列は, $\vb{D} - \vb{C} \vb{A}^{-1} \vb{B}$
+  \item $\vb{A}$に対するシューア補行列は, $\vb{A} - \vb{B} \vb{D}^{-1} \vb{C}$
+\end{itemize}
+
+\begin{block}{シューア補行列による, ブロック行列の表現}
+  下三角, 対角, 上三角パターンと, 上三角, 対角, 下三角パターン
+  \begin{gather*}
+    \mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D})
+      = \mqty(\vb{I} & \vb{0} \\ \vb{C} \vb{A}^{-1} & \vb{I})
+        \mqty(\dmat[\vb{0}]{\vb{A}, \vb{D} - \vb{C} \vb{A}^{-1} \vb{B}})
+        \mqty(\vb{I} & \vb{A}^{-1} \vb{B} \\ \vb{0} & \vb{I}) \\
+    \mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D})
+      = \mqty(\vb{I} & \vb{B} \vb{D}^{-1} \\ \vb{0} & \vb{I})
+        \mqty(\dmat[\vb{0}]{\vb{A} - \vb{B} \vb{D}^{-1} \vb{C}, \vb{D}})
+        \mqty(\vb{I} & \vb{0} \\ \vb{D}^{-1} \vb{C} & \vb{I})
+  \end{gather*}
+\end{block}
+\end{frame}
+
+\begin{frame}{シューア補行列 (Schur Complement)}
+\begin{block}{シューア補行列による, ブロック行列の逆行列の表現}
+  上三角, 対角, 下三角パターンと, 下三角, 対角, 上三角パターン
+  \begin{gather*}
+    \small
+    \mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D})^{-1}
+      = \mqty(\vb{I} & -\vb{A}^{-1} \vb{B} \\ \vb{0} & \vb{I})
+        \mqty(\dmat[\vb{0}]{\vb{A}^{-1}, \left( \vb{D} - \vb{C} \vb{A}^{-1} \vb{B} \right)^{-1}})
+        \mqty(\vb{I} & \vb{0} \\ -\vb{C} \vb{A}^{-1} & \vb{I}) \\
+    \small
+    \mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D})^{-1}
+      = \mqty(\vb{I} & \vb{0} \\ -\vb{D}^{-1} \vb{C} & \vb{I})
+        \mqty(\dmat[\vb{0}]{\left( \vb{A}^{-1} - \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1}, \vb{D}^{-1}})
+        \mqty(\vb{I} & -\vb{B} \vb{D}^{-1} \\ \vb{0} & \vb{I})
+  \end{gather*}
+\end{block}
+
+\begin{itemize}
+  \item $\mqty(\vb{I} & \vb{X} \\ \vb{0} & \vb{I})^{-1} = \mqty(\vb{I} & -\vb{X} \\ \vb{0} & \vb{I})$,
+  $\mqty(\vb{I} & \vb{0} \\ \vb{X} & \vb{I})^{-1} = \mqty(\vb{I} & \vb{0} \\ -\vb{X} & \vb{I})$を用いた.
+  \item この2式から, Sherman-Morrison-Woodburyの公式を導出できる.
+\end{itemize}
+\end{frame}
+
+\end{document}
+
