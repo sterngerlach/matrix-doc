@@ -1,0 +1,204 @@
+
+% slide-prob.tex
+
+\documentclass[dvipdfmx,notheorems,t]{beamer}
+
+\usepackage{docmute}
+\input{settings}
+
+\title{行列輪講: 練習問題}
+\author{杉浦 圭祐}
+\institute[松谷研究室]{慶應義塾大学理工学部情報工学科 松谷研究室}
+\date{\today}
+
+\begin{document}
+
+\linespread{1.1}
+
+\frame{\titlepage}
+
+\section{練習問題}
+
+\begin{frame}{第1回: 行列の基本処理, 逆行列}
+\begin{enumerate}
+  \item 以下の行列積の$(i, j)$成分を, 各行列の成分を用いて書いてください.
+  \begin{gather*}
+    \vb{A} \vb{B} \\
+    \vb{A}^\top \vb{B} \\
+    \vb{A} \vb{B} \vb{C} \\
+    \vb{A} \vb{B} \vb{C} \vb{D} \\
+    \vb{A} \vb{B}^\top \vb{C} \vb{D}^\top \\
+    \vb{A}^n \\
+    \text{例: } \left( \vb{A} \vb{B} \vb{A}^\top \right)_{ij} = \sum_k \sum_l a_{ik} b_{kl} a_{jl}
+  \end{gather*}
+  \item 対称行列, エルミート行列, 正定値行列, 直交行列, ユニタリ行列とは何か, 確認しましょう.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第1回: 行列の基本処理, 逆行列}
+\begin{enumerate}
+  \setcounter{enumi}{2}
+  \item Sherman-Morrison-Woodburyの公式があります.
+  どのようなときに, この公式が役に立つでしょうか.
+  \begin{align*}
+    \left( \vb{A}^{-1} + \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1}
+      &= \vb{A} - \vb{A} \vb{B}
+        \left( \vb{D} + \vb{C} \vb{A} \vb{B} \right)^{-1} \vb{C} \vb{A}
+  \end{align*}
+  \item 上式から, 以下の式を導出してください.
+  \begin{align*}
+    \left( \vb{A} + \vb{b} \vb{c}^\top \right)^{-1}
+      &= \vb{A}^{-1} - \frac{\vb{A}^{-1} \vb{b} \vb{c}^\top \vb{A}^{-1}}{1 + \vb{c}^\top \vb{A}^{-1} \vb{b}}
+  \end{align*}
+  \item シューア補行列による以下の式を, 確認してください.
+  \begin{align*}
+    \mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D})
+      &= \mqty(\vb{I} & \vb{0} \\ \vb{C} \vb{A}^{-1} & \vb{I})
+        \mqty(\dmat[\vb{0}]{\vb{A}, \vb{D} - \vb{C} \vb{A}^{-1} \vb{B}})
+        \mqty(\vb{I} & \vb{A}^{-1} \vb{B} \\ \vb{0} & \vb{I})
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第2回: 行列式, トレース}
+\begin{enumerate}
+  \item 同じ列ベクトルを2箇所に含んだ行列の, 行列式が$0$になることを確認してください.
+  \begin{align*}
+    \det(\mqty(\vb{a}_1, \ldots, \vb{a}_i, \ldots, \vb{a}_i, \ldots, \vb{a}_n)) = 0
+  \end{align*}
+  \item $n$次正方行列$\vb{A}$を$c$倍したとき, 行列式は元の$c^n$倍になることを確認してください (置換による行列式の定義を用いる).
+  \begin{align*}
+    \det(c \vb{A}) = c^n \det(\vb{A})
+  \end{align*}
+  \item 上を用いて, $i$列目に$j$列目の$c$倍を足しても ($i \neq j$), 行列式が変わらないことを確認してください.
+  \begin{align*}
+    & \det(\mqty(\vb{a}_1, \ldots, \vb{a}_i + c \vb{a}_j, \ldots, \vb{a}_j, \ldots, \vb{a}_n)) \\
+      &= \det(\mqty(\vb{a}_1, \ldots, \vb{a}_i, \ldots, \vb{a}_j, \ldots, \vb{a}_n))
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第2回: 行列式, トレース}
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item 以下を確認してください (1行目から2行目を引き, 2列目に1列目を足す).
+  \begin{align*}
+    \det\left( \mqty(\vb{A} & \vb{B} \\ \vb{B} & \vb{A}) \right)
+      &= \det(\vb{A} + \vb{B}) \det(\vb{A} - \vb{B})
+  \end{align*}
+  \item 以下を確認してください.
+  $\vb{A}$の余因子行列$\adj \vb{A}$, 行列式$\det(\vb{A})$, 逆行列$\vb{A}^{-1}$について,
+  \begin{align*}
+    \left( \adj \vb{A} \right) \vb{A} = \left( \det(\vb{A}) \right) \vb{I}
+  \end{align*}
+  \item 以下を確認してください.
+  \begin{align*}
+    \tr(\vb{X}^{-1} \vb{A} \vb{X}) = \tr(\vb{A})
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第3回: 行列とベクトルの微分}
+\begin{enumerate}
+  \item $\vb{x}, \vb{y}$を$n$, $m$次縦ベクトルとします.
+  以下の微分の形 (サイズ) を確認しましょう.
+  分子レイアウト, 分母レイアウトの双方で考えてください.
+  \begin{align*}
+    \pdv{\vb{y}}{x}, \ \pdv{y}{\vb{x}}, \ \pdv{\vb{y}}{\vb{x}}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{}
+\end{frame}
+
+\section{解答}
+
+\begin{frame}{第1回: 行列の基本処理, 逆行列}
+\begin{enumerate}
+  \item 以下のようになる.
+  \begin{align*}
+    \left( \vb{A} \vb{B} \right)_{ij} &= \sum_k a_{ik} b_{kj} \\
+    \left( \vb{A}^\top \vb{B} \right)_{ij} &= \sum_k a_{ki} b_{kj} \\
+    \left( \vb{A} \vb{B} \vb{C} \right)_{ij} &= \sum_k \sum_m a_{ik} b_{km} c_{mj} \\
+    \left( \vb{A} \vb{B} \vb{C} \vb{D} \right)_{ij}
+      &= \sum_k \sum_m \sum_n a_{ik} b_{km} c_{mn} d_{nk} \\
+    \left( \vb{A} \vb{B}^\top \vb{C} \vb{D}^\top \right)_{ij}
+      &= \sum_k \sum_m \sum_n a_{ik} b_{mk} c_{mn} d_{kn} \\
+    \left( \vb{A}^n \right)_{ij}
+      &= \sum_{u_1} \sum_{u_2} \cdots \sum_{u_{n - 1}}
+        a_{i, u_1} a_{u_1, u_2} \cdots a_{u_{n - 2}, u_{n - 1}} a_{u_{n - 1}, j}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第1回: 行列の基本処理, 逆行列}
+\begin{enumerate}
+  \setcounter{enumi}{1}
+  \item 省略.
+  \item $\vb{A}, \vb{B}, \vb{C}, \vb{D}$を, $m \times m$, $m \times n$, $n \times m$, $n \times n$行列とする.
+  ここで$m \gg n$とすると, 左辺を計算するためには, 大きな$m$次行列の逆行列が必要である.
+  一方, 左辺の代わりに右辺を計算することにすれば, 小さな$n$次行列の逆行列を求めるだけでよい.
+  \begin{align*}
+    \left( \vb{A}^{-1} + \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1}
+      &= \vb{A} - \vb{A} \vb{B}
+        \left( \vb{D} + \vb{C} \vb{A} \vb{B} \right)^{-1} \vb{C} \vb{A}
+  \end{align*}
+  \item 省略.
+  \item 省略.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第2回: 行列式, トレース}
+\begin{enumerate}
+  \item $\lambda = \det(\mqty(\vb{a}_1, \ldots, \vb{a}_i, \ldots, \vb{a}_i, \ldots, \vb{a}_n))$とする.
+  列を交換すると, 行列式の符号は反転する.
+  しかし, 列を交換しても, 元と同じ行列であるから, $\lambda = -\lambda$である.
+  よって, $\lambda = 0$である.
+  \item 省略.
+  \item 以下のように示せる.
+  最初の式変形では, 列の線形変換と行列式との関係を用いる.
+  最後の式変形では, 同じ列を含んでいれば行列式が$0$となることを用いる.
+  {\small \begin{align*}
+    & \det(\mqty(\vb{a}_1, \ldots, \vb{a}_i + c \vb{a}_j, \ldots, \vb{a}_j, \ldots, \vb{a}_n)) \\
+    &= \det(\mqty(\vb{a}_1, \ldots, \vb{a}_i, \ldots, \vb{a}_j, \ldots, \vb{a}_n))
+      + c \det(\mqty(\vb{a}_1, \ldots, \vb{a}_j, \ldots, \vb{a}_j, \ldots, \vb{a}_n)) \\
+    &= \det(\mqty(\vb{a}_1, \ldots, \vb{a}_i, \ldots, \vb{a}_j, \ldots, \vb{a}_n))
+  \end{align*}}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第2回: 行列式, トレース}
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item 以下のように示せる.
+  最後の式変形では, ブロック下三角行列の関係を用いる.
+  \begin{align*}
+    \det\left( \mqty(\vb{A} & \vb{B} \\ \vb{B} & \vb{A}) \right)
+      &= \det\left( \mqty(\vb{A} - \vb{B} & \vb{B} - \vb{A} \\ \vb{B} & \vb{A}) \right) \\
+      &= \det\left( \mqty(\vb{A} - \vb{B} & \vb{0} \\ \vb{B} & \vb{A} + \vb{B}) \right) \\
+      &= \det\left( \vb{A} - \vb{B} \right) \det\left( \vb{A} + \vb{B} \right)
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第2回: 行列式, トレース}
+\begin{enumerate}
+  \setcounter{enumi}{4}
+  \item $\left( \adj \vb{A} \right) \vb{A}$の$(i, j)$要素は, 次のようになる.
+  $\delta_{ij}$は, クロネッカーのデルタである.
+  余因子行列$\adj \vb{A}$の$(i, k)$要素は, $\vb{A}$の$(k, i)$余因子$\Delta_{ki}$となることに注意する.
+  \begin{align*}
+    \left( \left( \adj \vb{A} \right) \vb{A} \right)_{ij}
+      &= \sum_k \left( \adj \vb{A} \right)_{ik} a_{kj}
+      = \sum_k \Delta_{ki} a_{kj} \\
+      &= \delta_{ij} \det(\vb{A}) = \left( \det(\vb{A}) \vb{I} \right)_{ij}
+  \end{align*}
+  \item トレースの循環性を用いる.
+  \begin{align*}
+    \tr(\vb{X}^{-1} \vb{A} \vb{X}) = \tr(\vb{A} \vb{X} \vb{X}^{-1}) = \tr(\vb{A})
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\end{document}
