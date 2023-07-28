@@ -1,0 +1,81 @@
+
+% settings.tex
+
+\AtBeginSection[]{\frame[t]{\frametitle{目次}
+  \tableofcontents[currentsection,hideallsubsections]}}
+
+\AtBeginSubsection[]{\frame[t]{\frametitle{目次}
+  \tableofcontents[currentsection,sectionstyle=show/hide,
+  currentsubsection,subsectionstyle=show/shaded/hide]}}
+
+\usefonttheme{professionalfonts}
+\usetheme{Madrid}
+
+\setbeamercovered{transparent=30} 
+% \setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{frametitle}[default][left]
+\setbeamertemplate{frametitle continuation}{}
+\setbeamertemplate{enumerate items}[square]
+\setbeamertemplate{caption}[numbered]
+
+\let\oldframe\frame
+\renewcommand\frame[1][t,allowdisplaybreaks,allowframebreaks]{\oldframe[#1]}
+
+\addtobeamertemplate{block begin}{\setlength{\abovedisplayskip}{2.5pt}}
+
+\usepackage{bxdpx-beamer}
+\usepackage{pxjahyper}
+\usepackage{minijs}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bm}
+\usepackage{physics}
+
+% Set the path to the figure
+\graphicspath{{fig/}}
+
+% Add space in the table
+\usepackage{cellspace}
+
+% Add space in the table
+\setlength\cellspacetoplimit{5pt}
+\setlength\cellspacebottomlimit{5pt}
+
+\usepackage{url}
+
+% \hypersetup{
+%   colorlinks = true,
+%   urlcolor = blue,
+%   linkcolor = black,
+%   citecolor = green
+% }
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+% \DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\KL}{KL}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\adj}{adj}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\setbeamertemplate{theorems}[numbered]
+\theoremstyle{definition}
+\newtheorem{theorem}{定理}
+\newtheorem{definition}{定義}
+\newtheorem{proposition}{命題}
+\newtheorem{lemma}{補題}
+\newtheorem{corollary}{系}
+\newtheorem{conjecture}{予想}
+\newtheorem*{remark}{Remark}
+\renewcommand{\proofname}{}
+
+\renewcommand{\figurename}{図}
+\renewcommand{\tablename}{表}
+
+\renewcommand{\kanjifamilydefault}{\gtdefault}
+
