@@ -35,9 +35,6 @@
     \item 行列のスカラによる微分
     \item スカラの行列による微分
     \item 逆行列, トレースの入った微分
-    % \item 逆行列, 行列式, トレースの入った微分
-    % \item ヤコビの公式
-    % \item スカラのスカラによる微分 (ベクトルや行列を含む場合)
   \end{itemize}
   \item 以下の資料も大変参考になります:
   \begin{itemize}
@@ -285,6 +282,25 @@ $\pdv{\vb{X}}{x_{ij}}$の$(m, n)$成分は, クロネッカーのデルタを使
 \end{frame}
 
 \begin{frame}{行列のスカラによる微分}
+\begin{block}{行列の成分による微分}
+  \begin{align*}
+    \pdv{\vb{X}}{x_{ij}} = \vb{J}^{ij}
+  \end{align*}
+\end{block}
+
+$\vb{J}^{ij}$は, $(i, j)$成分のみが$1$で, それ以外の成分が$0$であるような行列.
+\begin{align*}
+  \vb{J}^{ij} \equiv \mqty(
+    \ddots & & & & \\
+    & 0 & 0 & 0 & \\
+    & 0 & 1 & 0 & \\
+    & 0 & 0 & 0 & \\
+    & & & & \ddots), \quad
+    \left( \vb{J}^{ij} \right)_{kl} = \delta_{ik} \delta_{jl} = \delta_{ki} \delta_{lj}
+\end{align*}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
 \begin{block}{行列積の, 成分による微分}
   \begin{align*}
     \pdv{\left( \vb{X} \vb{A} \right)_{kl}}{x_{ij}} &= \delta_{ki} a_{jl}
@@ -308,6 +324,30 @@ $\pdv{\vb{X}}{x_{ij}}$の$(m, n)$成分は, クロネッカーのデルタを使
     = \sum_m \delta_{mi} \delta_{kj} a_{ml}
     = \delta_{kj} a_{il}
 \end{align*}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列積の, 成分による微分}
+  \begin{align*}
+    \pdv{\left( \vb{X} \vb{A} \right)_{kl}}{x_{ij}} &= \left( \vb{J}^{ij} \vb{A} \right)_{kl}
+      & \text{($\vb{A}$は定数)} \\
+    \pdv{\left( \vb{X}^\top \vb{A} \right)_{kl}}{x_{ij}} &= \left( \vb{J}^{ji} \vb{A} \right)_{kl}
+      & \text{($\vb{A}$は定数)}
+  \end{align*}
+\end{block}
+
+先ほどの結果を用いて, 以下のように示せる.
+\begin{align*}
+  \pdv{\left( \vb{X} \vb{A} \right)_{kl}}{x_{ij}} &= \delta_{ki} a_{jl}
+    = \sum_m \delta_{ki} \delta_{mj} a_{ml}
+    = \sum_m \left( \vb{J}^{ij} \right)_{km} a_{ml}
+    = \left( \vb{J}^{ij} \vb{A} \right)_{kl} \\
+  \pdv{\left( \vb{X}^\top \vb{A} \right)_{kl}}{x_{ij}} &= \delta_{kj} a_{il}
+    = \sum_m \delta_{kj} \delta_{mi} a_{ml}
+    = \sum_m \left( \vb{J}^{ji} \right)_{km} a_{ml}
+    = \left( \vb{J}^{ji} \vb{A} \right)_{kl}
+\end{align*}
+$\vb{J}^{ij}$は, $(i, j)$成分のみが$1$で, それ以外の成分が$0$であるような行列.
 \end{frame}
 
 \begin{frame}{行列のスカラによる微分}
@@ -913,6 +953,26 @@ $\left( \vb{X}^\top \vb{a} \right)^\top \vb{C} \left( \vb{X}^\top \vb{b} \right)
 \end{frame}
 
 \begin{frame}{スカラの行列による微分}
+\begin{block}{行列積のトレースを含む微分}
+  \begin{align*}
+    \pdv{\tr(\vb{U} \vb{V})}{x} &= \tr(\pdv{\vb{U}}{x} \vb{V} + \vb{U} \pdv{\vb{V}}{x})
+      & \text{($\vb{U} = \vb{U}(x)$, $\vb{V} = \vb{V}(x)$)}
+  \end{align*}
+\end{block}
+
+以下のように示せる.
+\begin{align*}
+  & \pdv{\tr(\vb{U} \vb{V})}{x} = \pdv{x} \sum_k \left( \vb{U} \vb{V} \right)_{kk}
+    = \pdv{x} \sum_k \sum_l u_{kl} v_{lk} \\
+    &= \sum_k \sum_l \left( \pdv{u_{kl}}{x} v_{lk} + u_{kl} \pdv{v_{lk}}{x} \right)
+    = \sum_k \sum_l \left( \left( \pdv{\vb{U}}{x} \right)_{kl} v_{lk}
+      + u_{kl} \left( \pdv{\vb{V}}{x} \right)_{lk} \right) \\
+    &= \sum_k \left( \pdv{\vb{U}}{x} \vb{V} \right)_{kk} + \sum_k \left( \vb{U} \pdv{\vb{V}}{x} \right)_{kk}
+    = \tr(\pdv{\vb{U}}{x} \vb{V}) + \tr(\vb{U} \pdv{\vb{V}}{x})
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
 \begin{block}{トレースを含む微分 (行列積)}
   \begin{align*}
     \pdv{\tr(\vb{A} \vb{X})}{\vb{X}} &= \pdv{\tr(\vb{X} \vb{A})}{\vb{X}} = \vb{A}
@@ -1494,6 +1554,3 @@ $\pdv{y_{kl}}{x_{ij}} = -y_{ki} y_{jl}$. \\
 \end{frame}
 
 \end{document}
-
-% 誤差逆伝播と絡めた説明
-% 二次の微分 (ヘッセ行列)
