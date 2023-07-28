@@ -1,0 +1,695 @@
+
+% slide-5.tex
+
+\documentclass[dvipdfmx,notheorems,t]{beamer}
+
+\usepackage{docmute}
+\input{settings}
+
+\title{行列輪講: 第5回 行列とベクトルの微分3}
+\author{杉浦 圭祐}
+\institute[松谷研究室]{慶應義塾大学理工学部情報工学科 松谷研究室}
+\date{\today}
+
+% Always use the \displaystyle
+\everymath{\displaystyle}
+
+\begin{document}
+
+\linespread{1.1}
+
+\frame{\titlepage}
+
+\section{}
+
+\begin{frame}[t,allowdisplaybreaks,allowframebreaks]{目次}
+\tableofcontents
+\end{frame}
+
+\section{概要}
+
+\begin{frame}{このスライドの概要}
+\begin{itemize}
+  \item 行列とベクトルの微分について確認する
+  \begin{itemize}
+    \item ヤコビの公式
+    \item スカラの行列による微分 (行列式の入った微分)
+    \item スカラのスカラによる微分 (ベクトルや行列を関数として含む場合)
+  \end{itemize}
+  \item 以下の資料も大変参考になります:
+  \begin{itemize}
+    \item \url{math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf}
+    \item \url{comp.nus.edu.sg/cs5240/lecture/matrix-differentiation.pdf}
+    \item \url{en.wikipedia.org/wiki/Matrix_calculus}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{ヤコビの公式}
+
+\begin{frame}{余因子展開 (再掲)}
+\begin{block}{余因子展開}
+  $\vb{A}$を, $n$次正方行列とする. 各$i$行目と$j$列目について,
+  \begin{align*}
+    \det(\vb{A}) &= a_{i1} \Delta_{i1} + a_{i2} \Delta_{i2} + \cdots + a_{in} \Delta_{in}
+      = \sum_j a_{ij} \Delta_{ij} \\
+    \det(\vb{A}) &= a_{1j} \Delta_{1j} + a_{2j} \Delta_{2j} + \cdots + a_{nj} \Delta_{nj}
+      = \sum_i a_{ij} \Delta_{ij}
+  \end{align*}
+\end{block}
+
+\begin{itemize}
+  \item 上式の$\Delta_{ij}$は, $\vb{A}$の\textcolor{red}{$(i, j)$余因子} (Cofactor) とよぶ.
+  $$\Delta_{ij} = (-1)^{i + j} \det(\tilde{\vb{A}}_{ij})$$
+  \item $\tilde{\vb{A}}_{ij}$は, $\vb{A}$から$i$行目と$j$列目を取り除いた, $n - 1$次行列である.
+  \item $\Delta_{ij}$は, $i$行目と$j$行目の成分には依存しない.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{余因子展開 (再掲)}
+\begin{block}{余因子展開}
+  $\vb{A}$を, $n$次正方行列とする.
+  $\Delta_{ij}$を$\vb{A}$の$(i, j)$余因子とする.
+  \begin{align*}
+    a_{i1} \Delta_{k1} + a_{i2} \Delta_{k2} + \cdots + a_{in} \Delta_{kn}
+      &= \left\{ \begin{array}{ll} \det(\vb{A}) & i = k \\ 0 & \text{Otherwise} \end{array} \right. \\
+    a_{1j} \Delta_{1k} + a_{2j} \Delta_{2k} + \cdots + a_{nj} \Delta_{nk}
+      &= \left\{ \begin{array}{ll} \det(\vb{A}) & j = k \\ 0 & \text{Otherwise} \end{array} \right.
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{余因子行列 (再掲)}
+\begin{block}{余因子行列}
+  $\vb{A}$を, $n$次行列とする.
+  $\vb{A}$の$(i, j)$余因子$\Delta_{ij}$を並べた行列$\adj \vb{A}$を, $\vb{A}$の余因子行列という.
+  $$\adj \vb{A} = \mqty(\Delta_{11} & \Delta_{21} & \cdots & \Delta_{n1} \\
+    \Delta_{12} & \Delta_{22} & \cdots & \Delta_{n2} \\
+    \vdots & \vdots & \ddots & \vdots \\
+    \Delta_{1n} & \Delta_{2n} & \cdots & \Delta_{nn})$$
+\end{block}
+
+\begin{itemize}
+  \item $\adj \vb{A}$の\textcolor{red}{$(i, j)$成分は, $(j, i)$余因子$\Delta_{ji}$}となる.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{余因子行列, 行列式, 逆行列 (再掲)}
+\begin{block}{余因子行列, 行列式, 逆行列}
+  $\vb{A}$の余因子行列$\adj \vb{A}$, 行列式$\det(\vb{A})$, 逆行列$\vb{A}^{-1}$について,
+  $$\left( \adj \vb{A} \right) \vb{A} = \vb{A} \left( \adj \vb{A} \right)
+    = \left( \det(\vb{A}) \right) \vb{I}$$
+  $$\vb{A}^{-1} = \frac{1}{\det(\vb{A})} \adj \vb{A}$$
+\end{block}
+\end{frame}
+
+\begin{frame}{ヤコビの公式 (Jacobi's Formula)}
+\begin{block}{ヤコビの公式}
+  \begin{align*}
+    \pdv{\det(\vb{U})}{x} &= \tr(\adj \vb{U} \pdv{\vb{U}}{x})
+      = \det(\vb{U}) \tr(\vb{U}^{-1} \pdv{\vb{U}}{x})
+    & \text{($\vb{U} = \vb{U}(x)$)}
+  \end{align*}
+\end{block}
+
+\begin{itemize}
+  \item 行列式と, トレース, 逆行列が関連付けられる.
+  \item 余因子行列, 行列式, 逆行列について, 以下が成り立つ ($\vb{U}$が正則であるとき).
+  \begin{align*}
+    \vb{U}^{-1} = \frac{1}{\det(\vb{U})} \adj \vb{U}
+    \quad \longrightarrow \quad
+    \adj \vb{U} = \det(\vb{U}) \vb{U}^{-1}
+  \end{align*}
+  \item Wikipediaに載っている証明を確認する.
+  \begin{itemize}
+    \item \url{en.wikipedia.org/wiki/Jacobi\%27s_formula}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ヤコビの公式 (Jacobi's Formula)}
+最初に, 以下の補題を示す.
+\begin{block}{補題}
+  \begin{align*}
+    \tr(\vb{A}^\top \vb{B}) = \sum_i \sum_j a_{ij} b_{ij}
+  \end{align*}
+\end{block}
+
+左辺を順に計算すると, 次のようになる.
+\begin{align*}
+  \tr(\vb{A}^\top \vb{B}) &= \sum_j \left( \vb{A}^\top \vb{B} \right)_{jj} \\
+    &= \sum_j \sum_i \left( \vb{A}^\top \right)_{ji} \left( \vb{B} \right)_{ij} \\
+    &= \sum_j \sum_i a_{ij} b_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{ヤコビの公式 (Jacobi's Formula)}
+続いて, ヤコビの公式を示す.
+\begin{block}{ヤコビの公式}
+  \begin{align*}
+    \pdv{\det(\vb{U})}{x} &= \tr(\adj \vb{U} \pdv{\vb{U}}{x})
+    & \text{($\vb{U} = \vb{U}(x)$)}
+  \end{align*}
+\end{block}
+
+$\vb{U}$の各成分を$u_{ij}$とする.
+行列式$\det(\vb{U})$は, $\vb{U}$の全成分についての関数であるから,
+合成関数の微分を使って, 次のようにかける.
+\begin{align*}
+  \pdv{\det(\vb{U})}{x} &= \sum_i \sum_j \pdv{\det(\vb{U})}{u_{ij}} \pdv{u_{ij}}{x} \\
+    &= \sum_i \sum_j \pdv{\det(\vb{U})}{u_{ij}} \left( \pdv{\vb{U}}{x} \right)_{ij}
+\end{align*}
+次に, $\pdv{\det(\vb{U})}{u_{ij}}$を, $\vb{U}$の余因子展開によって求める.
+\end{frame}
+
+\begin{frame}{ヤコビの公式 (Jacobi's Formula)}
+$\vb{U}$の余因子展開は, 次のようになって, 全ての$k$について成立する.
+\begin{align*}
+  \det(\vb{U}) = \sum_l u_{kl} \Delta_{kl}
+\end{align*}
+$k$は自由に選べるが, ここでは$k = i$として, $u_{ij}$により微分すると,
+\begin{align*}
+  \pdv{\det(\vb{U})}{u_{ij}} &= \pdv{u_{ij}} \sum_l u_{il} \Delta_{il}
+    = \sum_l \left( \Delta_{il} \pdv{u_{il}}{u_{ij}} + u_{il} \pdv{\Delta_{il}}{u_{ij}} \right)
+\end{align*}
+$\Delta_{ij} = (-1)^{i + j} \det(\tilde{\vb{U}}_{ij})$である.
+$\tilde{\vb{U}}_{ij}$は, $\vb{U}$から$i$行目と$j$列目を取り除いた行列であるから,
+\textcolor{red}{$u_{ij}$には依存しない定数項}.
+よって, $\pdv{\Delta_{il}}{u_{ij}} = 0$. \\
+また, $\pdv{u_{il}}{u_{ij}}$は, $l = j$のときのみ$1$となるから, $\pdv{u_{il}}{u_{ij}} = \delta_{lj}$.
+\end{frame}
+
+\begin{frame}{ヤコビの公式 (Jacobi's Formula)}
+$\pdv{\Delta_{il}}{u_{ij}} = 0$と$\pdv{u_{il}}{u_{ij}} = \delta_{lj}$を代入すれば,
+\begin{align*}
+  \pdv{\det(\vb{U})}{u_{ij}}
+    &= \sum_l \left( \Delta_{il} \pdv{u_{il}}{u_{ij}} + u_{il} \pdv{\Delta_{il}}{u_{ij}} \right)
+    = \sum_l \left( \Delta_{il} \delta_{lj} \right) = \Delta_{ij}
+\end{align*}
+$\adj \vb{U}$の$(j, i)$成分は, $\vb{U}$の$(i, j)$余因子$\Delta_{ij}$であるから,
+\begin{align*}
+  \pdv{\det(\vb{U})}{u_{ij}} = \Delta_{ij}
+    = \left( \adj \vb{U} \right)_{ji} = \left( \adj^\top \vb{U} \right)_{ij}
+\end{align*}
+これを代入して,
+\begin{align*}
+  \pdv{\det(\vb{U})}{x}
+    &= \sum_i \sum_j \pdv{\det(\vb{U})}{u_{ij}} \left( \pdv{\vb{U}}{x} \right)_{ij}
+    = \sum_i \sum_j \left( \adj^\top \vb{U} \right)_{ij} \left( \pdv{\vb{U}}{x} \right)_{ij}
+\end{align*}
+補題$\tr(\vb{A}^\top \vb{B}) = \sum_i \sum_j a_{ij} b_{ij}$より, ヤコビの公式が得られる:
+\begin{align*}
+  \pdv{\det(\vb{U})}{x}
+    = \sum_i \sum_j \left( \adj^\top \vb{U} \right)_{ij} \left( \pdv{\vb{U}}{x} \right)_{ij}
+    = \tr(\adj \vb{U} \pdv{\vb{U}}{x})
+\end{align*}
+$\vb{U}^{-1} = \frac{1}{\det(\vb{U})} \adj \vb{U}$を代入すれば,
+\begin{align*}
+  \pdv{\det(\vb{U})}{x} = \det(\vb{U}) \tr(\vb{U}^{-1} \pdv{\vb{U}}{x})
+\end{align*}
+\end{frame}
+
+\section{スカラの行列による微分}
+\subsection{行列式を含む微分}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{ヤコビの公式, 行列式の対数}
+  \begin{align*}
+    \pdv{\det(\vb{U})}{x} &= \tr(\adj \vb{U} \pdv{\vb{U}}{x})
+      = \det(\vb{U}) \tr(\vb{U}^{-1} \pdv{\vb{U}}{x})
+      & \text{($\vb{U} = \vb{U}(x)$)} \\
+    \pdv{\ln(\det(\vb{U}))}{x} &= \tr(\vb{U}^{-1} \pdv{\vb{U}}{x})
+      & \text{($\vb{U} = \vb{U}(x)$)}
+  \end{align*}
+\end{block}
+
+2つ目の式は, 以下のように示せる.
+$y = \det(\vb{U})$とおくと,
+\begin{align*}
+  \pdv{\ln(\det(\vb{U}))}{x} &= \pdv{\ln y}{x} = \pdv{\ln y}{y} \pdv{y}{x} = \frac{1}{y} \pdv{y}{x}
+    = \frac{1}{\det(\vb{U})} \pdv{\det(\vb{U})}{x} \\
+    &= \frac{1}{\det(\vb{U})} \cdot \det(\vb{U}) \tr(\vb{U}^{-1} \pdv{\vb{U}}{x})
+    = \tr(\vb{U}^{-1} \pdv{\vb{U}}{x})
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{行列式の2次微分}
+  \begin{align*}
+    \pdv[2]{\det(\vb{U})}{x} &= \det(\vb{U}) \bigg\{
+      \tr(\vb{U}^{-1} \pdv[2]{\vb{U}}{x}) \\
+      & \quad + \tr^2 \left( \vb{U}^{-1} \pdv{\vb{U}}{x} \right)
+      - \tr(\left( \vb{U}^{-1} \pdv{\vb{U}}{x} \right)^2) \bigg\}
+      \quad \quad \text{($\vb{U} = \vb{U}(x)$)}
+  \end{align*}
+\end{block}
+
+以下のように示せる.
+合成関数の微分より,
+\begin{align*}
+  \pdv[2]{\det(\vb{U})}{x} &= \pdv{x} \det(\vb{U}) \tr(\vb{U}^{-1} \pdv{\vb{U}}{x}) \\
+    &= \pdv{\det(\vb{U})}{x} \tr(\vb{U}^{-1} \pdv{\vb{U}}{x})
+      + \det(\vb{U}) \pdv{\tr(\vb{U}^{-1} \pdv{\vb{U}}{x})}{x}
+\end{align*}
+
+$\pdv{\tr(\vb{U} \vb{V})}{x} = \tr(\pdv{\vb{U}}{x} \vb{V}) + \tr(\vb{U} \pdv{\vb{V}}{x})$より,
+\begin{align*}
+    \pdv[2]{\det(\vb{U})}{x}
+    &= \pdv{\det(\vb{U})}{x} \tr(\vb{U}^{-1} \pdv{\vb{U}}{x})
+      + \det(\vb{U}) \pdv{\tr(\vb{U}^{-1} \pdv{\vb{U}}{x})}{x} \\
+    &= \det(\vb{U}) \tr(\vb{U}^{-1} \pdv{\vb{U}}{x}) \tr(\vb{U}^{-1} \pdv{\vb{U}}{x}) \\
+      & \quad + \det(\vb{U}) \left( \tr(\pdv{\vb{U}^{-1}}{x} \pdv{\vb{U}}{x})
+      + \tr(\vb{U}^{-1} \pdv[2]{\vb{U}}{x}) \right)
+\end{align*}
+\newpage
+
+式変形を続けると, 次のようになる.
+\begin{align*}
+  \pdv[2]{\det(\vb{U})}{x}
+    &= \det(\vb{U}) \tr(\vb{U}^{-1} \pdv{\vb{U}}{x}) \tr(\vb{U}^{-1} \pdv{\vb{U}}{x}) \\
+      & \quad + \det(\vb{U}) \left( \tr(\pdv{\vb{U}^{-1}}{x} \pdv{\vb{U}}{x})
+      + \tr(\vb{U}^{-1} \pdv[2]{\vb{U}}{x}) \right) \\
+    &= \det(\vb{U}) \tr(\vb{U}^{-1} \pdv{\vb{U}}{x}) \tr(\vb{U}^{-1} \pdv{\vb{U}}{x}) \\
+      & \quad + \det(\vb{U}) \tr(-\vb{U}^{-1} \pdv{\vb{U}}{x} \vb{U}^{-1} \pdv{\vb{U}}{x})
+      + \det(\vb{U}) \tr(\vb{U}^{-1} \pdv[2]{\vb{U}}{x}) \\
+    &= \det(\vb{U}) \bigg\{ \tr(\vb{U}^{-1} \pdv[2]{\vb{U}}{x})
+      + \tr^2 \left(\vb{U}^{-1} \pdv{\vb{U}}{x} \right) \\
+      & \quad - \tr(\left( \vb{U}^{-1} \pdv{\vb{U}}{x} \right)^2) \bigg\}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{行列式}
+  \begin{align*}
+    \pdv{\det(\vb{X})}{\vb{X}} &= \adj \vb{X} = \det(\vb{X}) \vb{X}^{-1} \\
+    \pdv{\det(a \vb{X})}{\vb{X}}
+      &= a \adj \left( a \vb{X} \right) = \det(a \vb{X}) \vb{X}^{-1} & \text{($a$は定数)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+余因子展開$\det(\vb{X}) = \sum_l x_{lk} \Delta_{lk}$について, $k = i$を選べば,
+\begin{align*}
+  \left( \pdv{\det(\vb{X})}{\vb{X}} \right)_{ij}
+    &= \pdv{\det(\vb{X})}{x_{ji}}
+    = \pdv{x_{ji}} \sum_l x_{li} \Delta_{li} \\
+    &= \sum_l \left( \Delta_{li} \pdv{x_{li}}{x_{ji}} + x_{li} \pdv{\Delta_{li}}{x_{ji}} \right)
+\end{align*}
+$\vb{X}$の$(l, i)$余因子$\Delta_{li} = (-1)^{l + i} \det(\tilde{\vb{X}}_{li})$について,
+$\tilde{\vb{X}}_{li}$は, $\vb{X}$から$l$行目と$i$列目を除いた行列であるから,
+$\Delta_{li}$は$x_{ji}$には依存しない定数項.
+よって, $\pdv{\Delta_{li}}{x_{ji}} = 0$.
+また, $\pdv{x_{li}}{x_{ji}} = \delta_{lj}$.
+よって,
+\begin{align*}
+  \left( \pdv{\det(\vb{X})}{\vb{X}} \right)_{ij}
+    &= \sum_l \left( \Delta_{li} \pdv{x_{li}}{x_{ji}} + x_{li} \pdv{\Delta_{li}}{x_{ji}} \right)
+    = \sum_l \Delta_{li} \delta_{lj} = \Delta_{ji}
+\end{align*}
+余因子行列$\adj \vb{X}$の$(i, j)$成分は, $\vb{X}$の$(j, i)$余因子$\Delta_{ji}$であるから,
+\begin{align*}
+  \left( \pdv{\det(\vb{X})}{\vb{X}} \right)_{ij} = \Delta_{ji} = \left( \adj \vb{X} \right)_{ij}
+\end{align*}
+$\pdv{\det(a \vb{X})}{\vb{X}}$についても, 同様の流れで確認できる.
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{行列式の対数 (重要な式の1つ)}
+  \begin{align*}
+    \pdv{\ln(\det(a \vb{X}))}{\vb{X}} &= \vb{X}^{-1} & \text{($a$は定数)} \\
+    \pdv{\ln(\det(\vb{X}))}{\vb{X}} &= \vb{X}^{-1}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+合成関数の微分より,
+\begin{align*}
+  \left( \pdv{\ln(\det(a \vb{X}))}{\vb{X}} \right)_{ij}
+    &= \pdv{\ln(\det(a \vb{X}))}{x_{ji}}
+    = \frac{1}{\det(a \vb{X})} \pdv{\det(a \vb{X})}{x_{ji}} \\
+    &= \frac{1}{\det(a \vb{X})} \left( \pdv{\det(a \vb{X})}{\vb{X}} \right)_{ij} \\
+    &= \frac{1}{\det(a \vb{X})} \left( \det(a \vb{X}) \vb{X}^{-1} \right)_{ij}
+    = \left( \vb{X}^{-1} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{行列積の行列式}
+  $\vb{A}, \vb{B}$が正方行列であるとき,
+  \begin{align*}
+    \pdv{\det(\vb{A} \vb{X} \vb{B})}{\vb{X}} &= \det(\vb{A} \vb{X} \vb{B}) \vb{X}^{-1}
+      & \text{($\vb{A}, \vb{B}$は定数)}
+  \end{align*}
+  $\vb{A}, \vb{B}$が正方行列ではないとき,
+  \begin{align*}
+    \pdv{\det(\vb{A} \vb{X} \vb{B})}{\vb{X}}
+      &= \det(\vb{A} \vb{X} \vb{B}) \vb{B} \left( \vb{A} \vb{X} \vb{B} \right)^{-1} \vb{A}
+      & \text{($\vb{A}, \vb{B}$は定数)}
+  \end{align*}
+\end{block}
+
+$\vb{A}, \vb{B}$が正方行列であるとき,
+$\det(\vb{A} \vb{B} \vb{C}) = \det(\vb{A}) \det(\vb{B}) \det(\vb{C})$を用いて示せる (練習問題).
+% \begin{align*}
+%   \pdv{\det(\vb{A} \vb{X} \vb{B})}{\vb{X}} &= \det(\vb{A}) \det(\vb{B}) \pdv{\det(\vb{X})}{\vb{X}} \\
+%     &= \det(\vb{A}) \det(\vb{B}) \det(\vb{X}) \vb{X}^{-1} \\
+%     &= \det(\vb{A} \vb{X} \vb{B}) \vb{X}^{-1}
+% \end{align*}
+\newpage
+
+$\vb{A}, \vb{B}$が正方行列ではないとき, 以下のように, 要素ごとに確認できる.
+$\vb{U} = \vb{A} \vb{X} \vb{B}$とおき, ヤコビの公式を用いる.
+\begin{align*}
+  \left( \pdv{\det(\vb{A} \vb{X} \vb{B})}{\vb{X}} \right)_{ij}
+    &= \pdv{\det(\vb{U})}{x_{ji}}
+    = \det(\vb{U}) \tr(\vb{U}^{-1} \pdv{\vb{U}}{x_{ji}})
+\end{align*}
+ここで, 行列積のスカラによる微分から,
+\begin{align*}
+  \pdv{\vb{U}}{x_{ji}} &= \pdv{\vb{A} \vb{X} \vb{B}}{x_{ji}}
+    = \vb{A} \pdv{\vb{X}}{x_{ji}} \vb{B}
+    = \vb{A} \vb{J}^{ji} \vb{B} \\
+    & \text{($\vb{J}^{ji}$は, $(j, i)$成分のみが$1$で, それ以外が$0$であるような行列)}
+\end{align*}
+トレースを計算すると,
+\begin{align*}
+  \tr(\vb{U}^{-1} \pdv{\vb{U}}{x_{ji}}) &= \tr(\vb{U}^{-1} \vb{A} \vb{J}^{ji} \vb{B})
+    = \sum_k \left( \vb{U}^{-1} \vb{A} \vb{J}^{ji} \vb{B} \right)_{kk}
+\end{align*}
+\newpage
+
+$\vb{U}^{-1}$の各成分を$z_{ij}$とおき, 式変形を続けると,
+\begin{align*}
+  & \tr(\vb{U}^{-1} \pdv{\vb{U}}{x_{ji}})
+    = \sum_k \left( \vb{U}^{-1} \vb{A} \vb{J}^{ji} \vb{B} \right)_{kk} \\
+    &= \sum_k \sum_l \sum_m \sum_n z_{kl} a_{lm} \left( \vb{J}^{ji} \right)_{mn} b_{nk}
+    = \sum_k \sum_l \sum_m \sum_n z_{kl} a_{lm} \delta_{jm} \delta_{in} b_{nk} \\
+    &= \sum_k \sum_l z_{kl} a_{lj} b_{ik}
+    = \sum_k b_{ik} \left( \vb{U}^{-1} \vb{A} \right)_{kj}
+    = \left( \vb{B} \vb{U}^{-1} \vb{A} \right)_{ij}
+\end{align*}
+ただし, $\left( \vb{J}^{ji} \right)_{mn} = \delta_{jm} \delta_{in}$.
+よって ($\vb{U} = \vb{A} \vb{X} \vb{B}$),
+\begin{align*}
+  \left( \pdv{\det(\vb{A} \vb{X} \vb{B})}{\vb{X}} \right)_{ij}
+    &= \det(\vb{U}) \tr(\vb{U}^{-1} \pdv{\vb{U}}{x_{ji}})
+    = \det(\vb{U}) \left( \vb{B} \vb{U}^{-1} \vb{A} \right)_{ij} \\
+    &= \det(\vb{A} \vb{X} \vb{B})
+      \left( \vb{B} \left( \vb{A} \vb{X} \vb{B} \right)^{-1} \vb{A} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{累乗の行列式}
+  \begin{align*}
+    \pdv{\det(\vb{X}^n)}{\vb{X}} &= n \det(\vb{X}^n) \vb{X}^{-1}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+$\det(\vb{A}^n) = \left( \det(\vb{A}) \right)^n$と, 合成関数の微分より,
+\begin{align*}
+  & \left( \pdv{\det(\vb{X}^n)}{\vb{X}} \right)_{ij}
+    = \pdv{\det(\vb{X}^n)}{x_{ji}}
+    = \pdv{x_{ji}} \left( \det(\vb{X}) \right)^n \\
+    &= n \left( \det(\vb{X}) \right)^{n - 1} \pdv{\det(\vb{X})}{x_{ji}}
+    = n \left( \det(\vb{X}) \right)^{n - 1} \left( \pdv{\det(\vb{X})}{\vb{X}} \right)_{ij} \\
+    &= n \left( \det(\vb{X}) \right)^{n - 1} \det(\vb{X}) \left( \vb{X}^{-1} \right)_{ij}
+    = n \left( \det(\vb{X}) \right)^n \left( \vb{X}^{-1} \right)_{ij} \\
+    &= n \det(\vb{X}^n) \left( \vb{X}^{-1} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{二次式の行列式}
+  $\vb{X}$が正方行列で, 正則とすると,
+  \begin{align*}
+    \pdv{\det(\vb{X}^\top \vb{A} \vb{X})}{\vb{X}} &= 2 \det(\vb{X}^\top \vb{A} \vb{X}) \vb{X}^{-1}
+      & \text{($\vb{A}$は定数)}
+  \end{align*}
+\end{block}
+
+以下のように示せる.
+$\det(\vb{A}^\top) = \det(\vb{A})$を用いる.
+\begin{align*}
+  \pdv{\det(\vb{X}^\top \vb{A} \vb{X})}{\vb{X}}
+    &= \pdv{\vb{X}} \det(\vb{A}) \det(\vb{X}) \det(\vb{X}^\top)
+    = \det(\vb{A}) \pdv{\vb{X}} \left( \det(\vb{X}) \right)^2 \\
+    &= \det(\vb{A}) \pdv{\vb{X}} \det(\vb{X}^2)
+    = 2 \det(\vb{A}) \det(\vb{X}^2) \vb{X}^{-1} \\
+    &= 2 \det(\vb{A}) \det(\vb{X}) \det(\vb{X}) \vb{X}^{-1} \\
+    &= 2 \det(\vb{X}) \det(\vb{A}) \det(\vb{X}^\top) \vb{X}^{-1}
+    = 2 \det(\vb{X}^\top \vb{A} \vb{X}) \vb{X}^{-1}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{二次式の行列式}
+  $\vb{X}$が正方行列ではないとき,
+  \begin{align*}
+    \pdv{\det(\vb{X}^\top \vb{A} \vb{X})}{\vb{X}}
+      &= \det(\vb{X}^\top \vb{A} \vb{X}) \bigg(
+        \left( \vb{X}^\top \vb{A}^\top \vb{X} \right)^{-1} \vb{X}^\top \vb{A}^\top \\
+      & \quad \quad + \left( \vb{X}^\top \vb{A} \vb{X} \right)^{-1} \vb{X}^\top \vb{A} \bigg)
+      & \text{($\vb{A}$は定数)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+$\vb{U} = \vb{X}^\top \vb{A} \vb{X}$とおき, ヤコビの公式を用いる.
+\begin{align*}
+  \left( \pdv{\det(\vb{X}^\top \vb{A} \vb{X})}{\vb{X}} \right)_{ij}
+    &= \pdv{\det(\vb{U})}{x_{ji}}
+    = \det(\vb{U}) \tr(\vb{U}^{-1} \pdv{\vb{U}}{x_{ji}})
+\end{align*}
+\newpage
+
+ここで, 行列積のスカラによる微分から,
+\begin{align*}
+  \pdv{\vb{U}}{x_{ji}} &= \pdv{\vb{X}^\top \vb{A} \vb{X}}{x_{ji}}
+    = \pdv{\vb{X}^\top}{x_{ji}} \vb{A} \vb{X} + \vb{X}^\top \pdv{\vb{A}}{x_{ji}} \vb{X}
+      + \vb{X}^\top \vb{A} \pdv{\vb{X}}{x_{ji}} \\
+    &= \left( \vb{J}^{ji} \right)^\top \vb{A} \vb{X} + \vb{X}^\top \vb{A} \vb{J}^{ji} \\
+    & \text{($\vb{J}^{ji}$は, $(j, i)$成分のみが$1$で, それ以外が$0$であるような行列)}
+\end{align*}
+トレースを計算すると,
+\begin{align*}
+  \tr(\vb{U}^{-1} \pdv{\vb{U}}{x_{ji}})
+    &= \tr(\vb{U}^{-1} \left(
+      \left( \vb{J}^{ji} \right)^\top \vb{A} \vb{X}
+      + \vb{X}^\top \vb{A} \vb{J}^{ji} \right)) \\
+    &= \sum_k \left( \vb{U}^{-1} \left(
+      \left( \vb{J}^{ji} \right)^\top \vb{A} \vb{X}
+      + \vb{X}^\top \vb{A} \vb{J}^{ji} \right) \right)_{kk}
+\end{align*}
+\newpage
+
+$\vb{U}^{-1}$の各成分を$z_{ij}$とする.
+$\left( \vb{J}^{ji} \right)_{lm} = \delta_{jl} \delta_{im}$であるから,
+\begin{align*}
+  & \tr(\vb{U}^{-1} \pdv{\vb{U}}{x_{ji}})
+    = \sum_k \left( \vb{U}^{-1} \left(
+      \left( \vb{J}^{ji} \right)^\top \vb{A} \vb{X}
+      + \vb{X}^\top \vb{A} \vb{J}^{ji} \right) \right)_{kk} \\
+    &= \sum_k \sum_l z_{kl} \left(
+      \left( \vb{J}^{ji} \right)^\top \vb{A} \vb{X}
+      + \vb{X}^\top \vb{A} \vb{J}^{ji} \right)_{lk} \\
+    &= \sum_k \sum_l z_{kl} \left(
+      \sum_m \sum_n \left( \vb{J}^{ji} \right)_{ml} a_{mn} x_{nk}
+      + \sum_m \sum_n x_{ml} a_{mn} \left( \vb{J}^{ji} \right)_{nk} \right) \\
+    &= \sum_k \sum_l z_{kl} \left(
+      \sum_m \sum_n \delta_{jm} \delta_{il} a_{mn} x_{nk}
+      + \sum_m \sum_n x_{ml} a_{mn} \delta_{jn} \delta_{ik} \right) \\
+    &= \sum_k z_{ki} \sum_n a_{jn} x_{nk} + \sum_l z_{il} \sum_m x_{ml} a_{mj}
+\end{align*}
+\newpage
+
+整理すると,
+\begin{align*}
+  & \tr(\vb{U}^{-1} \pdv{\vb{U}}{x_{ji}})
+    = \sum_k z_{ki} \sum_n a_{jn} x_{nk} + \sum_l z_{il} \sum_m x_{ml} a_{mj} \\
+  &= \sum_k z_{ki} \left( \vb{X}^\top \vb{A}^\top \right)_{kj}
+    + \sum_l z_{il} \left( \vb{X}^\top \vb{A} \right)_{lj} \\
+  &= \left( \left( \vb{U}^{-1} \right)^\top \vb{X}^\top \vb{A}^\top \right)_{ij}
+    + \left( \vb{U}^{-1} \vb{X}^\top \vb{A} \right)_{ij}
+\end{align*}
+これを, 以下の式に代入し直す ($\vb{U} = \vb{X}^\top \vb{A} \vb{X}$).
+\begin{align*}
+  & \left( \pdv{\det(\vb{X}^\top \vb{A} \vb{X})}{\vb{X}} \right)_{ij}
+    = \pdv{\det(\vb{U})}{x_{ji}}
+    = \det(\vb{U}) \tr(\vb{U}^{-1} \pdv{\vb{U}}{x_{ji}})
+\end{align*}
+\newpage
+
+以上をまとめると,
+\begin{align*}
+  & \left( \pdv{\det(\vb{X}^\top \vb{A} \vb{X})}{\vb{X}} \right)_{ij}
+    = \pdv{\det(\vb{U})}{x_{ji}}
+    = \det(\vb{U}) \tr(\vb{U}^{-1} \pdv{\vb{U}}{x_{ji}}) \\
+    &= \det(\vb{U}) \left( \left( \vb{U}^{-1} \right)^\top \vb{X}^\top \vb{A}^\top
+      + \vb{U}^{-1} \vb{X}^\top \vb{A} \right)_{ij} \\
+    &= \det(\vb{X}^\top \vb{A} \vb{X}) \left(
+      \left( \vb{X}^\top \vb{A}^\top \vb{X} \right)^{-1} \vb{X}^\top \vb{A}^\top
+      + \left( \vb{X}^\top \vb{A} \vb{X} \right)^{-1} \vb{X}^\top \vb{A} \right)_{ij}
+\end{align*}
+
+ただし, $\left( \vb{A}^{-1} \right)^\top = \left( \vb{A}^\top \right)^{-1}$と,
+$\left( \vb{A} \vb{B} \vb{C} \right)^\top = \vb{C}^\top \vb{B}^\top \vb{A}^\top$であるから,
+\begin{align*}
+  \left( \vb{U}^{-1} \right)^\top &= \left( \vb{U}^\top \right)^{-1}
+    = \left( \left( \vb{X}^\top \vb{A} \vb{X} \right)^\top \right)^{-1}
+    = \left( \vb{X}^\top \vb{A}^\top \vb{X} \right)^{-1}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{二次式の行列式}
+  $\vb{X}$が正方行列ではなく, $\vb{A}$が対称行列であるとき,
+  \begin{align*}
+    \pdv{\det(\vb{X}^\top \vb{A} \vb{X})}{\vb{X}}
+      &= 2 \det(\vb{X}^\top \vb{A} \vb{X})
+        \left( \vb{X}^\top \vb{A} \vb{X} \right)^{-1} \vb{X}^\top \vb{A} \\
+    \pdv{\det(\vb{X}^\top \vb{X})}{\vb{X}}
+      &= 2 \det(\vb{X}^\top \vb{X}) \left( \vb{X}^\top \vb{X} \right)^{-1} \vb{X}^\top
+      = 2 \det(\vb{X}^\top \vb{X}) \vb{X}^\dagger \\
+      & \text{($\vb{A}$は定数, $\vb{X}^\dagger = \left( \vb{X}^\top \vb{X} \right)^{-1} \vb{X}^\top$は$\vb{X}$の擬似逆行列)}
+  \end{align*}
+\end{block}
+
+以下の式に, $\vb{A} = \vb{A}^\top$を代入して整理すればよい (練習問題).
+\begin{align*}
+  \pdv{\det(\vb{X}^\top \vb{A} \vb{X})}{\vb{X}}
+    &= \det(\vb{X}^\top \vb{A} \vb{X}) \bigg(
+      \left( \vb{X}^\top \vb{A}^\top \vb{X} \right)^{-1} \vb{X}^\top \vb{A}^\top \\
+    & \quad \quad + \left( \vb{X}^\top \vb{A} \vb{X} \right)^{-1} \vb{X}^\top \vb{A} \bigg)
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{二次式の行列式の対数}
+  \begin{align*}
+    \pdv{\ln(\det(\vb{X}^\top \vb{X}))}{\vb{X}} &= 2 \vb{X}^\dagger
+      & \text{($\vb{X}^\dagger = \left( \vb{X}^\top \vb{X} \right)^{-1} \vb{X}^\top$は, $\vb{X}$の擬似逆行列)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  & \left( \pdv{\ln(\det(\vb{X}^\top \vb{X}))}{\vb{X}} \right)_{ij}
+    = \pdv{\ln(\det(\vb{X}^\top \vb{X}))}{x_{ji}}
+    = \frac{1}{\det(\vb{X}^\top \vb{X})} \pdv{\det(\vb{X}^\top \vb{X})}{x_{ji}} \\
+    &= \frac{1}{\det(\vb{X}^\top \vb{X})} \left( \pdv{\det(\vb{X}^\top \vb{X})}{\vb{X}} \right)_{ij}
+    = \frac{1}{\det(\vb{X}^\top \vb{X})} \left( 2 \det(\vb{X}^\top \vb{X}) \vb{X}^\dagger \right)_{ij} \\
+    &= 2 \left( \vb{X}^\dagger \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{二次式の行列式の対数}
+  \begin{align*}
+    \pdv{\ln(\det(\vb{X}^\top \vb{X}))}{\vb{X}^\dagger} &= -2 \vb{X}
+      & \text{($\vb{X}^\dagger = \left( \vb{X}^\top \vb{X} \right)^{-1} \vb{X}^\top$は, $\vb{X}$の擬似逆行列)}
+  \end{align*}
+\end{block}
+
+$\vb{X}^\dagger$の各成分を$z_{ij}$とする.
+以下のように, 要素ごとに調べる.
+\begin{align*}
+  & \left( \pdv{\ln(\det(\vb{X}^\top \vb{X}))}{\vb{X}^\dagger} \right)_{ij}
+    = \pdv{\ln(\det(\vb{X}^\top \vb{X}))}{z_{ji}}
+    = \frac{1}{\det(\vb{X}^\top \vb{X})} \pdv{\det(\vb{X}^\top \vb{X})}{z_{ji}} \\
+    &= \frac{1}{\det(\vb{X}^\top \vb{X})} \det(\vb{X}^\top \vb{X})
+      \tr(\left( \vb{X}^\top \vb{X} \right)^{-1} \pdv{\vb{X}^\top \vb{X}}{z_{ji}}) \\
+    &= \tr(\left( \vb{X}^\top \vb{X} \right)^{-1}
+      \left( \vb{X}^\top \pdv{\vb{X}}{z_{ji}} + \pdv{\vb{X}^\top}{z_{ji}} \vb{X} \right)) \\
+\end{align*}
+\newpage
+
+$\tr(\vb{A}^\top) = \tr(\vb{A})$,
+$\left( \vb{A}^{-1} \right)^\top = \left( \vb{A}^\top \right)^{-1}$と, トレースの循環性より,
+\begin{align*}
+  & \left( \pdv{\ln(\det(\vb{X}^\top \vb{X}))}{\vb{X}^\dagger} \right)_{ij}
+    = \tr(\left( \vb{X}^\top \vb{X} \right)^{-1}
+      \left( \vb{X}^\top \pdv{\vb{X}}{z_{ji}} + \pdv{\vb{X}^\top}{z_{ji}} \vb{X} \right)) \\
+    &= \tr(\left( \vb{X}^\top \vb{X} \right)^{-1} \vb{X}^\top \pdv{\vb{X}}{z_{ji}})
+      + \tr(\left( \vb{X}^\top \vb{X} \right)^{-1} \pdv{\vb{X}^\top}{z_{ji}} \vb{X}) \\
+    &= \tr(\left( \vb{X}^\top \vb{X} \right)^{-1} \vb{X}^\top \pdv{\vb{X}}{z_{ji}})
+      + \tr(\vb{X}^\top \pdv{\vb{X}}{z_{ji}} \left( \vb{X}^\top \vb{X} \right)^{-1})
+      \quad (\because \text{転置}) \\
+    &= \tr(\left( \vb{X}^\top \vb{X} \right)^{-1} \vb{X}^\top \pdv{\vb{X}}{z_{ji}})
+      + \tr(\left( \vb{X}^\top \vb{X} \right)^{-1} \vb{X}^\top \pdv{\vb{X}}{z_{ji}})
+      \quad (\because \text{循環性}) \\
+    &= 2 \tr(\left( \vb{X}^\top \vb{X} \right)^{-1} \vb{X}^\top \pdv{\vb{X}}{z_{ji}})
+\end{align*}
+\newpage
+
+$\pdv{\vb{X}}{z_{ji}} = \left( \pdv{\vb{X}}{\vb{X}^\dagger} \right)_{ij}$を調べる.
+$\vb{X} = \vb{Y}^\dagger, \vb{Y} = \vb{X}^\dagger$と置き換えると,
+\begin{align*}
+  \left( \pdv{\vb{X}}{\vb{X}^\dagger} \right)_{ij}
+    &= \left( \pdv{\vb{Y}^\dagger}{\vb{Y}} \right)_{ij}
+    = \left( \pdv{\left( \vb{Y}^\top \vb{Y} \right)^{-1} \vb{Y}^\top}{\vb{Y}} \right)_{ij}
+    = \pdv{\left( \vb{Y}^\top \vb{Y} \right)^{-1} \vb{Y}^\top}{y_{ji}}
+\end{align*}
+
+行列積のスカラによる微分, 逆行列の微分から,
+\begin{align*}
+  & \pdv{\left( \vb{Y}^\top \vb{Y} \right)^{-1} \vb{Y}^\top}{y_{ji}}
+    = \pdv{\left( \vb{Y}^\top \vb{Y} \right)^{-1}}{y_{ji}} \vb{Y}^\top
+      + \left( \vb{Y}^\top \vb{Y} \right)^{-1} \pdv{\vb{Y}^\top}{y_{ji}} \\
+    &= - \left( \vb{Y}^\top \vb{Y} \right)^{-1} \pdv{\vb{Y}^\top \vb{Y}}{y_{ji}}
+      \left( \vb{Y}^\top \vb{Y} \right)^{-1} \vb{Y}^\top
+      + \left( \vb{Y}^\top \vb{Y} \right)^{-1} \left( \vb{J}^{ji} \right)^\top \\
+    &= - \left( \vb{Y}^\top \vb{Y} \right)^{-1}
+      \left( \pdv{\vb{Y}^\top}{y_{ji}} \vb{Y} + \vb{Y}^\top \pdv{\vb{Y}}{y_{ji}} \right)
+      \left( \vb{Y}^\top \vb{Y} \right)^{-1} \vb{Y}^\top
+      + \left( \vb{Y}^\top \vb{Y} \right)^{-1} \left( \vb{J}^{ji} \right)^\top \\
+    &= - \left( \vb{Y}^\top \vb{Y} \right)^{-1}
+      \left( \left( \vb{J}^{ji} \right)^\top \vb{Y} + \vb{Y}^\top \vb{J}^{ji} \right)
+      \left( \vb{Y}^\top \vb{Y} \right)^{-1} \vb{Y}^\top
+      + \left( \vb{Y}^\top \vb{Y} \right)^{-1} \left( \vb{J}^{ji} \right)^\top \\
+    &= - \left( \vb{Y}^\top \vb{Y} \right)^{-1} \left( \vb{J}^{ji} \right)^\top
+      \left( \vb{Y} \left( \vb{Y}^\top \vb{Y} \right)^{-1} \vb{Y}^\top - \vb{I} \right) \\
+      & \quad - \left( \vb{Y}^\top \vb{Y} \right)^{-1} \vb{Y}^\top \vb{J}^{ji}
+      \left( \vb{Y}^\top \vb{Y} \right)^{-1} \vb{Y}^\top \\
+    &= - \left( \vb{Y}^\top \vb{Y} \right)^{-1} \left( \vb{J}^{ji} \right)^\top
+      \left( \vb{Y} \vb{Y}^\dagger - \vb{I} \right)
+      - \vb{Y}^\dagger \vb{J}^{ji} \vb{Y}^\dagger \\
+    &= - \left( \vb{Y}^\top \vb{Y} \right)^{-1} \left( \vb{J}^{ji} \right)^\top
+      \left( \vb{Y} \vb{X} - \vb{I} \right) - \vb{X} \vb{J}^{ji} \vb{X}
+\end{align*}
+$\vb{J}^{ji}$は, $(j, i)$成分のみが$1$, それ以外の成分が$0$の行列.
+$\vb{Y} = \vb{X}^\dagger = \left( \vb{X}^\top \vb{X} \right)^{-1} \vb{X}^\top$より,
+$\vb{Y} \vb{X} - \vb{I} = \vb{0}$であるから, 結局,
+\begin{align*}
+  \pdv{\vb{X}}{z_{ji}} = \left( \pdv{\vb{X}}{\vb{X}^\dagger} \right)_{ij}
+    = \left( \pdv{\vb{Y}^\dagger}{\vb{Y}} \right)_{ij}
+    = \pdv{\left( \vb{Y}^\top \vb{Y} \right)^{-1} \vb{Y}^\top}{y_{ji}}
+    = -\vb{X} \vb{J}^{ji} \vb{X}
+\end{align*}
+\newpage
+
+よって, トレースの定義と, $\left( \vb{J}^{ji} \right)_{kl} = \delta_{jk} \delta_{il}$を使うと,
+\begin{align*}
+  & \left( \pdv{\ln(\det(\vb{X}^\top \vb{X}))}{\vb{X}^\dagger} \right)_{ij}
+    = 2 \tr(\left( \vb{X}^\top \vb{X} \right)^{-1} \vb{X}^\top \pdv{\vb{X}}{z_{ji}}) \\
+    &= -2 \tr(\left( \vb{X}^\top \vb{X} \right)^{-1} \vb{X}^\top \vb{X} \vb{J}^{ji} \vb{X})
+    = -2 \tr(\vb{J}^{ji} \vb{X}) \\
+    &= -2 \sum_k \left( \vb{J}^{ji} \vb{X} \right)_{kk}
+    = -2 \sum_k \sum_l \left( \vb{J}^{ji} \right)_{kl} x_{lk} \\
+    &= -2 \sum_k \sum_l \delta_{jk} \delta_{il} x_{lk}
+    = -2 x_{ij}
+\end{align*}
+
+以上で, 行列式を含む微分を確認できました. 長かったですね.
+\end{frame}
+
+\section{スカラのスカラによる微分}
+\subsection{ベクトルを含む場合}
+
+\subsection{行列を含む場合}
+
+\end{document}
+
+% 誤差逆伝播と絡めた説明
+% 二次の微分 (ヘッセ行列)
