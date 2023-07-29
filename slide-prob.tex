@@ -11,6 +11,9 @@
 \institute[松谷研究室]{慶應義塾大学理工学部情報工学科 松谷研究室}
 \date{\today}
 
+% Always use the \displaystyle
+\everymath{\displaystyle}
+
 \begin{document}
 
 \linespread{1.1}
@@ -98,7 +101,7 @@
 \end{enumerate}
 \end{frame}
 
-\begin{frame}{第3回: 行列とベクトルの微分}
+\begin{frame}{第3回: 行列とベクトルの微分1}
 \begin{enumerate}
   \item $\vb{x}, \vb{y}$を$n$, $m$次縦ベクトルとします.
   以下の微分の形 (サイズ) を確認しましょう.
@@ -106,6 +109,196 @@
   \begin{align*}
     \pdv{\vb{y}}{x}, \ \pdv{y}{\vb{x}}, \ \pdv{\vb{y}}{\vb{x}}
   \end{align*}
+
+  \item 以下を確認してください (成分ごとに書き下す).
+  \begin{align*}
+    \pdv{\vb{a}^\top \vb{x}}{\vb{x}} &= \pdv{\vb{x}^\top \vb{a}}{\vb{x}} = \vb{a}^\top
+  \end{align*}
+
+  \item 以下を確認してください ($\pdv{\vb{x}^\top \vb{A} \vb{x}}{\vb{x}} =
+  \vb{x}^\top \left( \vb{A} + \vb{A}^\top \right)$を用いる).
+  \begin{align*}
+    \pdv{\left( \vb{a}^\top \vb{x} \right) \left( \vb{b}^\top \vb{x} \right)}{\vb{x}}
+      &= \vb{x}^\top \left( \vb{a} \vb{b}^\top + \vb{b} \vb{a}^\top \right)
+      & \text{($\vb{a}, \vb{b}$は定数)}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第3回: 行列とベクトルの微分1}
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item 以下を確認してください ($\vb{A}, \vb{B}, \vb{C}$は定数, $\vb{C}$は対称行列).
+  \begin{align*}
+    \pdv{\left( \vb{x} - \vb{A} \vb{b} \right)^\top \vb{C} \left( \vb{x} - \vb{A} \vb{b} \right)}{\vb{x}}
+      = 2 \left( \vb{x} - \vb{A} \vb{b} \right)^\top \vb{C}
+  \end{align*}
+
+  \item 以下を確認してください ($\vb{A}, \vb{B}, \vb{C}$は定数, $\vb{C}$は対称行列).
+  \begin{align*}
+    \pdv{\left( \vb{b} - \vb{A} \vb{x} \right)^\top \vb{C} \left( \vb{b} - \vb{A} \vb{x} \right)}{\vb{x}}
+      = -2 \left( \vb{b} - \vb{A} \vb{x} \right)^\top \vb{C} \vb{A}
+  \end{align*}
+  上の2つの導出では, 以下の式を用いること.
+  \begin{align*}
+    \pdv{\left( \vb{x} + \vb{A} \vb{b} \right)^\top \vb{C} \left( \vb{x} + \vb{D} \vb{e} \right)}{\vb{x}}
+    = \left( \vb{x} + \vb{A} \vb{b} \right)^\top \vb{C}
+      + \left( \vb{x} + \vb{D} \vb{e} \right)^\top \vb{C}^\top
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第3回: 行列とベクトルの微分1}
+\begin{enumerate}
+  \setcounter{enumi}{5}
+  \item 以下を確認してください (成分ごとに書き下す).
+  \begin{align*}
+    \pdv{\vb{A} \vb{u}}{\vb{x}} &= \vb{A} \pdv{\vb{u}}{\vb{x}}
+      & \text{($\vb{u} = \vb{u}(\vb{x})$, $\vb{A}$は定数)}
+  \end{align*}
+
+  \item 分子レイアウトに関する以下の式を, 分母レイアウトに直してください.
+  \begin{align*}
+    \pdv{\vb{A} \vb{u}}{x} &= \vb{A} \pdv{\vb{u}}{x} \\
+    \pdv{\left( \vb{A} \vb{x} + \vb{b} \right)^\top \vb{C} \left( \vb{D} \vb{x} + \vb{e} \right)}{\vb{x}}
+      &= \left( \vb{D} \vb{x} + \vb{e} \right)^\top \vb{C}^\top \vb{A}
+      + \left( \vb{A} \vb{x} + \vb{b} \right)^\top \vb{C} \vb{D} \\
+    \pdv{\left( \vb{x} - \vb{b} \right)^\top \vb{C} \left( \vb{x} - \vb{b} \right)}{\vb{x}}
+      &= 2 \left( \vb{x} - \vb{b} \right)^\top \vb{C} \\
+    \pdv{\vb{g}(\vb{u})}{\vb{x}} &= \pdv{\vb{g}(\vb{u})}{\vb{u}} \pdv{\vb{u}}{\vb{x}}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第4回: 行列とベクトルの微分2}
+\begin{enumerate}
+  \item 2次元の回転行列$\vb{R}(\theta)$と, その逆行列$\vb{R}(\theta)^{-1}$は, 次のように表される.
+  \begin{align*}
+    \vb{R}(\theta) = \mqty(\cos \theta & -\sin \theta \\ \sin \theta & \cos \theta), \quad
+    \vb{R}(\theta)^{-1} = \mqty(\cos \theta & \sin \theta \\ -\sin \theta & \cos \theta)
+  \end{align*}
+  $\vb{R}(\theta)^{-1} = \vb{R}(\theta)^\top = \vb{R}(-\theta)$であることを確認してください.
+  また, $\displaystyle \pdv{\vb{R}(\theta)^{-1}}{\theta}$を2通りの方法で求めてください
+  (上式を直接微分する方法と, 逆行列の微分の式を用いる方法).
+  \begin{align*}
+    \pdv{\vb{U}^{-1}}{x} &= -\vb{U}^{-1} \pdv{\vb{U}}{x} \vb{U}^{-1}
+      & \text{($\vb{U} = \vb{U}(x)$)}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第4回: 行列とベクトルの微分2}
+\begin{enumerate}
+  \setcounter{enumi}{1}
+  \item 2次元の回転行列を用いた, 次のような式を考える (2次元ロボットの動作を記述している).
+  \begin{align*}
+    \mqty(x' \\ y' \\ \theta')
+      = \mqty(x \\ y \\ \theta)
+        + \mqty(\vb{R}(\theta) & \vb{0} \\ \vb{0}^\top & 1)
+          \mqty(u \\ v \\ \omega)
+      = \mqty(x + u \cos \theta - v \sin \theta \\
+        y + u \sin \theta + v \cos \theta \\ \theta + \omega)
+  \end{align*}
+  $\vb{x}' = \mqty(x' & y' & \theta)^\top$, $\vb{x} = \mqty(x & y & \theta)^\top$,
+  $\vb{u} = \mqty(u & v & \omega)^\top$としたとき,
+  $\displaystyle \pdv{\vb{x}'}{\vb{x}}$と$\displaystyle \pdv{\vb{x}'}{\vb{u}}$を求めてください.
+\end{enumerate}
+
+\begin{itemize}
+  \item 2次元ロボットの姿勢推定を拡張カルマンフィルタで行うとき, 必要になる微分です.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{第4回: 行列とベクトルの微分2}
+\begin{enumerate}
+  \setcounter{enumi}{2}
+  \item 以下の微分を, $\pdv{\vb{Y}}{x}$, $\vb{Y}^{-1}$, $\vb{A}$, $\vb{B}$, $\vb{C}$を用いて表してください.
+  \begin{align*}
+    \pdv{\left( \vb{Y}^{-1} \vb{A} + \vb{B} \right)^{-1} \vb{C} \left( \vb{Y}^{-1} \vb{A} + \vb{B} \right)^{-1}}{x}
+    \quad \text{($\vb{A}, \vb{B}, \vb{C}$は定数, $\vb{Y} = \vb{Y}(x)$)}
+  \end{align*}
+
+  \item 以下を確認してください.
+  \begin{align*}
+    \pdv{\exp(x \vb{A})}{x} = \vb{A} \exp(x \vb{A}) = \exp(x \vb{A}) \vb{A}
+  \end{align*}
+  ただし, $\exp(\vb{A})$は行列指数関数で, 次のように定義されます.
+  \begin{align*}
+    \exp(\vb{A}) \equiv \sum_{n = 0}^\infty \frac{1}{n!} \vb{A}^n
+      = \vb{I} + \vb{A} + \frac{1}{2!} \vb{A}^2 + \frac{1}{3!} \vb{A}^3 + \cdots
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第4回: 行列とベクトルの微分2}
+\begin{enumerate}
+  \setcounter{enumi}{4}
+  \item 以下を確認してください.
+  \begin{align*}
+    \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{X}^\top \vb{b}}{\vb{X}}
+      &= \pdv{\vb{a}^\top \vb{X} \vb{X}^\top \vb{b}}{\vb{X}}
+      = \vb{X}^\top \left( \vb{a} \vb{b}^\top + \vb{b} \vb{a}^\top \right)
+      & \text{($\vb{a}, \vb{b}$は定数)}
+  \end{align*}
+
+  \item 以下を確認してください.
+  \begin{align*}
+    \pdv{\tr(\vb{X} \vb{A} \vb{X}^\top)}{\vb{X}} = \pdv{\tr(\vb{A} \vb{X}^\top \vb{X})}{\vb{X}}
+      = \pdv{\tr(\vb{X}^\top \vb{X} \vb{A})}{\vb{X}}
+      = \left( \vb{A} + \vb{A}^\top \right) \vb{X}^\top \\
+      \text{($\vb{A}$は定数)}
+  \end{align*}
+
+  \item 以下を確認してください.
+  \begin{align*}
+    \pdv{\tr(\vb{A} \vb{X} \vb{B} \vb{X}^\top \vb{C})}{\vb{X}}
+      &= \vb{B} \vb{X}^\top \vb{C} \vb{A} + \vb{B}^\top \vb{X}^\top \vb{A}^\top \vb{C}^\top
+      & \text{($\vb{A}, \vb{B}, \vb{C}$は定数)}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第5回: 行列とベクトルの微分3}
+\begin{enumerate}
+  \item 以下を確認してください.
+  \begin{align*}
+    \pdv{\det(a \vb{X})}{\vb{X}}
+      &= a \adj \left( a \vb{X} \right) = \det(a \vb{X}) \vb{X}^{-1} & \text{($a$は定数)}
+  \end{align*}
+
+  \item 以下を確認してください. $\vb{A}, \vb{B}$が正方行列であるとき,
+  \begin{align*}
+    \pdv{\det(\vb{A} \vb{X} \vb{B})}{\vb{X}} &= \det(\vb{A} \vb{X} \vb{B}) \vb{X}^{-1}
+      & \text{($\vb{A}, \vb{B}$は定数)}
+  \end{align*}
+
+  \item 以下を確認してください. $\vb{A}$が対称行列であるとき,
+  \begin{align*}
+    \pdv{\det(\vb{X}^\top \vb{A} \vb{X})}{\vb{X}}
+      &= 2 \det(\vb{X}^\top \vb{A} \vb{X})
+        \left( \vb{X}^\top \vb{A} \vb{X} \right)^{-1} \vb{X}^\top \vb{A}
+      & \text{($\vb{A}$は定数)}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第5回: 行列とベクトルの微分3}
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item $\vb{Z} = g(\vb{W}_2 \vb{Y})$, $\vb{Y} = f(\vb{W}_1 \vb{X})$としたとき,
+  $\pdv{L}{\vb{Z}}$を使って逆伝播を行ってください.
+  $f, g$は, 入力の要素ごとに適用される関数 (Element-wise function) とします.
+  即ち, $z_{ij} = g(\left( \vb{W}_2 \vb{Y} \right)_{ij})$,
+  $y_{ij} = f(\left( \vb{W}_1 \vb{X} \right)_{ij})$です.
+
+  \item 2次元の回転行列$\vb{R}(\theta)$について, $\pdv{\det(\vb{R}(\theta))}{\theta}$を計算し,
+  ヤコビの公式を確認してください.
+  \begin{align*}
+    \vb{R}(\theta) = \mqty(\cos \theta & -\sin \theta \\ \sin \theta & \cos \theta), \quad
+    \vb{R}(\theta)^{-1} = \mqty(\cos \theta & \sin \theta \\ -\sin \theta & \cos \theta)
+  \end{align*}
+  ただし, 2次正方行列$\vb{A} = \mqty(a_{11} & a_{12} \\ a_{21} & a_{22})$に対する行列式は,
+  $\det(\vb{A}) = a_{11} a_{22} - a_{12} a_{21}$です.
 \end{enumerate}
 \end{frame}
 
@@ -198,6 +391,265 @@
   \begin{align*}
     \tr(\vb{X}^{-1} \vb{A} \vb{X}) = \tr(\vb{A} \vb{X} \vb{X}^{-1}) = \tr(\vb{A})
   \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第3回: 行列とベクトルの微分1}
+\begin{enumerate}
+  \item 以下のようになる ($\vb{x}$は$n$次, $\vb{y}$は$m$次縦ベクトル).
+  \begin{table}[h]
+    \centering
+    \begin{tabular}{ScScSc} \hline
+      & 分子レイアウト & 分母レイアウト \\ \hline
+      $\displaystyle \pdv{\vb{y}}{x}$ & $m \times 1$ & $1 \times m$ \\
+      $\displaystyle \pdv{y}{\vb{x}}$ & $1 \times n$ & $n \times 1$ \\
+      $\displaystyle \pdv{\vb{y}}{\vb{x}}$ & $m \times n$ & $n \times m$ \\ \hline
+    \end{tabular}
+  \end{table}
+
+  \item 省略.
+  \item 省略.
+  \item 省略.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第3回: 行列とベクトルの微分1}
+\begin{enumerate}
+  \setcounter{enumi}{4}
+  \item 省略.
+  \item 省略.
+  \item 以下のようになる.
+  \begin{align*}
+    \pdv{\vb{A} \vb{u}}{x} &= \pdv{\vb{u}}{x} \vb{A}^\top \\
+    \pdv{\left( \vb{A} \vb{x} + \vb{b} \right)^\top \vb{C} \left( \vb{D} \vb{x} + \vb{e} \right)}{\vb{x}}
+      &= \vb{A}^\top \vb{C} \left( \vb{D} \vb{x} + \vb{e} \right)
+        + \vb{D}^\top \vb{C}^\top \left( \vb{A} \vb{x} + \vb{b} \right) \\
+    \pdv{\left( \vb{x} - \vb{b} \right)^\top \vb{C} \left( \vb{x} - \vb{b} \right)}{\vb{x}}
+      &= 2 \vb{C}^\top \left( \vb{x} - \vb{b} \right) \\
+    \pdv{\vb{g}(\vb{u})}{\vb{x}} &= \pdv{\vb{u}}{\vb{x}} \pdv{\vb{g}(\vb{u})}{\vb{u}}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第4回: 行列とベクトルの微分2}
+\begin{enumerate}
+  \item $\displaystyle \pdv{\vb{R}(\theta)^{-1}}{\theta}$を2通りの方法で求めると, 以下のようになる.
+  \begin{align*}
+    \pdv{\vb{R}(\theta)^{-1}}{\theta}
+      &= \pdv{\theta} \mqty(\cos \theta & \sin \theta \\ -\sin \theta & \cos \theta)
+      = \mqty(-\sin \theta & \cos \theta \\ -\cos \theta & -\sin \theta) \\
+    \pdv{\vb{R}(\theta)^{-1}}{\theta}
+      &= - \vb{R}(\theta)^{-1} \pdv{\vb{R}(\theta)}{\theta} \vb{R}(\theta)^{-1} \\
+      &= - \mqty(\cos \theta & \sin \theta \\ -\sin \theta & \cos \theta)
+        \pdv{\theta} \mqty(\cos \theta & -\sin \theta \\ \sin \theta & \cos \theta)
+        \mqty(\cos \theta & \sin \theta \\ -\sin \theta & \cos \theta) \\
+      &= - \mqty(\cos \theta & \sin \theta \\ -\sin \theta & \cos \theta)
+        \mqty(-\sin \theta & -\cos \theta \\ \cos \theta & -\sin \theta)
+        \mqty(\cos \theta & \sin \theta \\ -\sin \theta & \cos \theta) \\
+      &= - \mqty(0 & -1 \\ 1 & 0) \mqty(\cos \theta & \sin \theta \\ -\sin \theta & \cos \theta)
+      = \mqty(-\sin \theta & \cos \theta \\ -\cos \theta & -\sin \theta)
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第4回: 行列とベクトルの微分2}
+\begin{enumerate}
+  \setcounter{enumi}{1}
+  \item 次のようになる.
+  \begin{align*}
+    \pdv{\vb{x}'}{\vb{x}} &= \mqty(\pdv{x'}{x} & \pdv{x'}{y} & \pdv{x'}{\theta} \\
+      \pdv{y'}{x} & \pdv{y'}{y} & \pdv{y'}{\theta} \\
+      \pdv{\theta'}{x} & \pdv{\theta'}{y} & \pdv{\theta'}{\theta})
+      = \mqty(1 & 0 & -u \sin \theta - v \cos \theta \\
+        0 & 1 & u \cos \theta - v \sin \theta \\ 0 & 0 & 1) \\
+    \pdv{\vb{x}'}{\vb{u}} &= \mqty(\pdv{x'}{u} & \pdv{x'}{v} & \pdv{x'}{\omega} \\
+      \pdv{y'}{u} & \pdv{y'}{v} & \pdv{y'}{\omega} \\
+      \pdv{\theta'}{u} & \pdv{\theta'}{v} & \pdv{\theta'}{\omega})
+      = \mqty(\cos \theta & -\sin \theta & 0 \\
+        \sin \theta & \cos \theta & 0 \\ 0 & 0 & 1)
+      = \mqty(\vb{R}(\theta) & \vb{0} \\ \vb{0}^\top & 1)
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第4回: 行列とベクトルの微分2}
+\begin{enumerate}
+  \setcounter{enumi}{2}
+  \item 次のようになる. 合成関数の微分, 逆行列の微分を用いる.
+  $\vb{Z} = \vb{Y}^{-1} \vb{A} + \vb{B}$とおいて,
+  \begin{align*}
+    & \pdv{\left( \vb{Y}^{-1} \vb{A} + \vb{B} \right)^{-1}
+      \vb{C} \left( \vb{Y}^{-1} \vb{A} + \vb{B} \right)^{-1}}{x} \\
+      &= \pdv{\vb{Z}^{-1} \vb{C} \vb{Z}^{-1}}{x}
+      = \pdv{\vb{Z}^{-1}}{x} \vb{C} \vb{Z}^{-1} + \vb{Z}^{-1} \vb{C} \pdv{\vb{Z}^{-1}}{x} \\
+      &= -\vb{Z}^{-1} \pdv{\vb{Z}}{x} \vb{Z}^{-1} \vb{C} \vb{Z}^{-1}
+        - \vb{Z}^{-1} \vb{C} \vb{Z}^{-1} \pdv{\vb{Z}}{x} \vb{Z}^{-1} \\
+      &= -\vb{Z}^{-1} \left( \pdv{\vb{Z}}{x} \vb{Z}^{-1} \vb{C} + \vb{C} \vb{Z}^{-1} \pdv{\vb{Z}}{x} \right) \vb{Z}^{-1}
+  \end{align*}
+  $\pdv{\vb{Z}}{x}$は以下のようになるから,
+  \begin{align*}
+    \pdv{\vb{Z}}{x} = \pdv{\vb{Y}^{-1} \vb{A} + \vb{B}}{x}
+      = \pdv{\vb{Y}^{-1}}{x} \vb{A}
+      = -\vb{Y}^{-1} \pdv{\vb{Y}}{x} \vb{Y}^{-1} \vb{A}
+  \end{align*}
+  次が得られる.
+  \begin{align*}
+    & \pdv{\left( \vb{Y}^{-1} \vb{A} + \vb{B} \right)^{-1}
+      \vb{C} \left( \vb{Y}^{-1} \vb{A} + \vb{B} \right)^{-1}}{x} \\
+    &= \left( \vb{Y}^{-1} \vb{A} + \vb{B} \right)^{-1}
+      \bigg( \vb{Y}^{-1} \pdv{\vb{Y}}{x} \vb{Y}^{-1} \vb{A}
+      \left( \vb{Y}^{-1} \vb{A} + \vb{B} \right)^{-1} \vb{C} \\
+      & \quad + \vb{C} \left( \vb{Y}^{-1} \vb{A} + \vb{B} \right)^{-1}
+      \vb{Y}^{-1} \pdv{\vb{Y}}{x} \vb{Y}^{-1} \vb{A} \bigg)
+      \left( \vb{Y}^{-1} \vb{A} + \vb{B} \right)^{-1}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第4回: 行列とベクトルの微分2}
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item 次のように示せる.
+  \begin{align*}
+    \pdv{\exp(x \vb{A})}{x} &= \pdv{x} \sum_{n = 0}^\infty \frac{1}{n!} \left( x \vb{A} \right)^n
+      = \sum_{n = 1}^\infty \frac{1}{n!} n x^{n - 1} \vb{A}^n \\
+      &= \sum_{n = 1}^\infty \frac{1}{(n - 1)!} x^{n - 1} \vb{A}^n
+      = \sum_{n = 0}^\infty \frac{1}{n!} x^n \vb{A}^{n + 1} \\
+      &= \left( \sum_{n = 0}^\infty \frac{1}{n!} x^n \vb{A}^n \right) \vb{A}
+      = \vb{A} \left( \sum_{n = 0}^\infty \frac{1}{n!} x^n \vb{A}^n \right) \\
+      &= \exp(x \vb{A}) \vb{A} = \vb{A} \exp(x \vb{A})
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第4回: 行列とベクトルの微分2}
+\begin{enumerate}
+  \setcounter{enumi}{4}
+  \item 次のように, 要素ごとに確認できる.
+  {\small \begin{align*}
+    & \left( \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{X}^\top \vb{b}}{\vb{X}} \right)_{ij}
+      = \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{X}^\top \vb{b}}{x_{ji}}
+      = \pdv{x_{ji}} \sum_k \left( \vb{X}^\top \vb{a} \right)_k \left( \vb{X}^\top \vb{b} \right)_k \\
+      &= \pdv{x_{ji}} \sum_k \left( \sum_l x_{lk} a_l \right) \left( \sum_m x_{mk} b_m \right) \\
+      &= \sum_k \sum_l a_l \sum_m b_m
+        \left( x_{mk} \pdv{x_{lk}}{x_{ji}} + x_{lk} \pdv{x_{mk}}{x_{ji}} \right) \\
+      &= \sum_k \sum_l a_l \sum_m b_m
+        \left( x_{mk} \delta_{lj} \delta_{ki} + x_{lk} \delta_{mj} \delta_{ki} \right) \\
+      &= a_j \sum_m b_m x_{mi} + b_j \sum_l a_l x_{li}
+      = a_j \left( \vb{X}^\top \vb{b} \right)_i + b_j \left( \vb{X}^\top \vb{a} \right)_i \\
+      &= \left( \vb{X}^\top \vb{b} \vb{a}^\top \right)_{ij}
+        + \left( \vb{X}^\top \vb{a} \vb{b}^\top \right)_{ij}
+      = \left( \vb{X}^\top \vb{b} \vb{a}^\top + \vb{X}^\top \vb{a} \vb{b}^\top \right)_{ij}
+  \end{align*}}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第4回: 行列とベクトルの微分2}
+\begin{enumerate}
+  \setcounter{enumi}{5}
+  \item 次のように, 要素ごとに確認できる.
+  \begin{align*}
+    & \left( \pdv{\tr(\vb{X}^\top \vb{X} \vb{A})}{\vb{X}} \right)_{ij}
+      = \pdv{\tr(\vb{X}^\top \vb{X} \vb{A})}{x_{ji}}
+      = \pdv{x_{ji}} \sum_k \left( \vb{X}^\top \vb{X} \vb{A} \right)_{kk} \\
+      &= \pdv{x_{ji}} \sum_k \sum_l x_{lk} \left( \vb{X} \vb{A} \right)_{lk}
+      = \pdv{x_{ji}} \sum_k \sum_l x_{lk} \sum_m x_{lm} a_{mk} \\
+      &= \sum_k \sum_l \sum_m a_{mk} \left( x_{lm} \pdv{x_{lk}}{x_{ji}}
+        + x_{lk} \pdv{x_{lm}}{x_{ji}} \right) \\
+      &= \sum_k \sum_l \sum_m a_{mk} \left( \delta_{ki} \delta_{lj} x_{lm}
+        + \delta_{lj} \delta_{mi} x_{lk} \right) \\
+      &= \sum_m a_{mi} x_{jm} + \sum_k a_{ik} x_{jk}
+      = \left( \vb{A}^\top \vb{X}^\top \right)_{ij} + \left( \vb{A} \vb{X}^\top \right)_{ij}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第4回: 行列とベクトルの微分2}
+\begin{enumerate}
+  \setcounter{enumi}{6}
+  \item 次のように, 要素ごとに確認できる.
+  \begin{align*}
+    & \pdv{\tr(\vb{A} \vb{X} \vb{B} \vb{X}^\top \vb{C})}{\vb{X}}
+      = \pdv{\tr(\vb{X} \vb{B} \vb{X}^\top \vb{C} \vb{A})}{\vb{X}} \quad (\because \text{循環性}) \\
+      &= \vb{B} \vb{X}^\top \left( \vb{C} \vb{A} \right)
+        + \vb{B}^\top \vb{X}^\top \left( \vb{C} \vb{A} \right)^\top \quad (\because \text{文字の置き換え}) \\
+      &= \vb{B} \vb{X}^\top \vb{C} \vb{A} + \vb{B}^\top \vb{X}^\top \vb{A}^\top \vb{C}^\top \\
+      &= \left( \vb{A}^\top \vb{C}^\top \vb{X} \vb{B}^\top + \vb{C} \vb{A} \vb{X} \vb{B} \right)^\top
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第5回: 行列とベクトルの微分3}
+\begin{enumerate}
+  \item 次のように示せる. $\vb{Y} = a \vb{X}$とおいて, 各成分について確かめると,
+  {\small \begin{align*}
+    \left( \pdv{\det(a \vb{X})}{\vb{X}} \right)_{ij}
+      &= \pdv{\det(\vb{Y})}{x_{ji}}
+      = \tr(\pdv{\det(\vb{Y})}{\vb{Y}} \pdv{\vb{Y}}{x_{ji}}) \\
+      &= \det(\vb{Y}) \tr(\vb{Y}^{-1} \pdv{a \vb{X}}{x_{ji}})
+      = \det(a \vb{X}) \tr(a^{-1} \vb{X}^{-1} a \vb{J}^{ji}) \\
+      &= \det(a \vb{X}) \tr(\vb{X}^{-1} \vb{J}^{ji})
+      = \det(a \vb{X}) \sum_k \left( \vb{X}^{-1} \vb{J}^{ji} \right)_{kk} \\
+      &= \det(a \vb{X}) \sum_k \sum_l \left( \vb{X}^{-1} \right)_{kl} \left( \vb{J}^{ji} \right)_{lk} \\
+      &= \det(a \vb{X}) \sum_k \sum_l \left( \vb{X}^{-1} \right)_{kl} \delta_{ik} \delta_{jl}
+      = \det(a \vb{X}) \left( \vb{X}^{-1} \right)_{ij}
+  \end{align*}}
+  ただし, 以下を用いている.
+  {\small \begin{align*}
+    \pdv{\vb{X}}{x_{ji}} = \vb{J}^{ji}, \quad
+    \left( \vb{J}^{ji} \right)_{lk} = \delta_{ik} \delta_{jl}, \quad
+    \pdv{g(\vb{U})}{x_{ij}} = \tr(\pdv{g(\vb{U})}{\vb{U}} \pdv{\vb{U}}{x_{ij}})
+  \end{align*}}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第5回: 行列とベクトルの微分3}
+\begin{enumerate}
+  \setcounter{enumi}{1}
+  \item 次のように示せる.
+  \begin{align*}
+    \pdv{\det(\vb{A} \vb{X} \vb{B})}{\vb{X}} &= \det(\vb{A}) \det(\vb{B}) \pdv{\det(\vb{X})}{\vb{X}} \\
+      &= \det(\vb{A}) \det(\vb{B}) \det(\vb{X}) \vb{X}^{-1} \\
+      &= \det(\vb{A} \vb{X} \vb{B}) \vb{X}^{-1}
+  \end{align*}
+
+  \item 省略.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第5回: 行列とベクトルの微分3}
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item 次のようになる.
+  \begin{align*}
+    \pdv{L}{\vb{Y}} &= \vb{W}_2 \left( \pdv{L}{\vb{Z}} \odot \vb{G}' \right) \\
+    \pdv{L}{\vb{W}_2} &= \left( \pdv{L}{\vb{Z}} \odot \vb{G}' \right) \vb{Y} \\
+    \pdv{L}{\vb{X}} &= \vb{W}_1 \left( \pdv{L}{\vb{Y}} \odot \vb{F}' \right) \\
+    \pdv{L}{\vb{W}_1} &= \left( \pdv{L}{\vb{Y}} \odot \vb{F}' \right) \vb{X}
+  \end{align*}
+  ただし, $\left( \vb{G}' \right)_{ij} = g'(\left( \vb{W}_2 \vb{Y} \right)_{ji})$,
+  $\left( \vb{F}' \right)_{ij} = f'(\left( \vb{W}_1 \vb{X} \right)_{ji})$.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第5回: 行列とベクトルの微分3}
+\begin{enumerate}
+  \setcounter{enumi}{4}
+  \item 次のようになる.
+  {\small \begin{align*}
+    \pdv{\det(\vb{R}(\theta))}{\theta}
+      &= \pdv{\theta} \det \left( \mqty(\cos \theta & -\sin \theta \\ \sin \theta & \cos \theta) \right)
+      = \pdv{\theta} \left( \cos^2 \theta + \sin^2 \theta \right) = 0
+  \end{align*}}
+  また,
+  {\small \begin{align*}
+    & \det(\vb{R}(\theta)) \tr(\vb{R}(\theta)^{-1} \pdv{\vb{R}(\theta)}{\theta}) \\
+      &= 1 \cdot \tr \left( \mqty(\cos \theta & \sin \theta \\ -\sin \theta & \cos \theta)
+        \pdv{\theta} \mqty(\cos \theta & -\sin \theta \\ \sin \theta & \cos \theta) \right) \\
+      &= \tr \left( \mqty(\cos \theta & \sin \theta \\ -\sin \theta & \cos \theta)
+        \mqty(-\sin \theta & -\cos \theta \\ \cos \theta & -\sin \theta) \right) \\
+      &= \tr \left( \mqty(0 & -1 \\ 1 & 0) \right) = 0
+  \end{align*}}
 \end{enumerate}
 \end{frame}
 
