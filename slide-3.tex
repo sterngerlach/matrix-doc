@@ -875,27 +875,138 @@ $\vb{f}(\vb{g})$の各成分を$f_i$, $\vb{g}(\vb{u})$の各成分を$g_i$, そ�
 
 \begin{frame}{分子レイアウトと分母レイアウト}
 \begin{itemize}
+  \item 分子, 分母レイアウトでは, 微分の形が, 転置の関係になっている.
+  \item $\vb{x}, \vb{y}$は縦ベクトルとする.
+  \begin{table}[h]
+    \centering
+    \begin{tabular}{ScScSc} \hline
+      \multirow{2}{*}{表記} & \multicolumn{2}{c}{実際の意味} \\
+      & 分子レイアウト & 分母レイアウト \\ \hline
+      $\pdv{\vb{y}}{x}$ & $\pdv{\vb{y}}{x}$ & $\pdv{\vb{y}^\top}{x}$ \\
+      $\pdv{y}{\vb{x}}$ & $\pdv{y}{\vb{x}^\top}$ & $\pdv{y}{\vb{x}}$ \\
+      $\pdv{\vb{y}}{\vb{x}}$ & $\pdv{\vb{y}}{\vb{x}^\top}$ & $\pdv{\vb{y}^\top}{\vb{x}}$ \\
+      $\pdv{y}{\vb{X}}$ & $\pdv{y}{\vb{X}^\top}$ & $\pdv{y}{\vb{X}}$ \\ \hline
+    \end{tabular}
+  \end{table}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{分子レイアウトと分母レイアウト}
+\begin{itemize}
   \item 分子レイアウトを採用した.
-  \item 分母レイアウトの場合は, 先ほど得られた結果を, 転置すればよい.
+  \item 分母レイアウトの場合の式は, 基本的には, 分子レイアウトで得られた式を転置すれば得られる.
   \item 幾つかの例を示す.
-  {\small \begin{align*}
-    \pdv{\vb{u}^\top \vb{A} \vb{v}}{\vb{x}} &= \left\{ \begin{array}{ll}
+  {\small \begin{gather*}
+    \pdv{\vb{u}^\top \vb{A} \vb{v}}{\vb{x}} = \left\{ \begin{array}{ll}
       \vb{u}^\top \vb{A} \pdv{\vb{v}}{\vb{x}} + \vb{v}^\top \vb{A}^\top \pdv{\vb{u}}{\vb{x}}
         & \text{(分子レイアウト)} \\
       \pdv{\vb{v}}{\vb{x}} \vb{A}^\top \vb{u} + \pdv{\vb{u}}{\vb{x}} \vb{A} \vb{v}
         & \text{(分母レイアウト)} \end{array} \right. \\
-    \pdv{\vb{f}(\vb{g}(\vb{u}))}{\vb{x}} &= \left\{ \begin{array}{ll}
+    \pdv{\vb{f}(\vb{g}(\vb{u}))}{\vb{x}} = \left\{ \begin{array}{ll}
       \pdv{\vb{f}(\vb{g})}{\vb{g}} \pdv{\vb{g}(\vb{u})}{\vb{u}} \pdv{\vb{u}}{\vb{x}}
         & \text{(分子レイアウト)} \\
       \pdv{\vb{u}}{\vb{x}} \pdv{\vb{g}(\vb{u})}{\vb{u}} \pdv{\vb{f}(\vb{g})}{\vb{g}}
         & \text{(分母レイアウト)} \end{array} \right. \\
     \pdv{\left( \vb{A} \vb{x} + \vb{b} \right)^\top \vb{C} \left( \vb{D} \vb{x} + \vb{e} \right)}{\vb{x}}
-      &= \left\{ \begin{array}{ll} \left( \vb{D} \vb{x} + \vb{e} \right)^\top \vb{C}^\top \vb{A}
+      = \left\{ \begin{array}{ll} \left( \vb{D} \vb{x} + \vb{e} \right)^\top \vb{C}^\top \vb{A}
         + \left( \vb{A} \vb{x} + \vb{b} \right)^\top \vb{C} \vb{D} & \text{(分子)} \\
         \vb{A}^\top \vb{C} \left( \vb{D} \vb{x} + \vb{e} \right)
         + \vb{D}^\top \vb{C}^\top \left( \vb{A} \vb{x} + \vb{b} \right) & \text{(分母)}
         \end{array} \right.
-  \end{align*}}
+  \end{gather*}}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{分子レイアウトと分母レイアウト}
+\begin{itemize}
+  \item 例えば, 分子レイアウトにおける, 以下の式を考える.
+  \begin{align*}
+    \pdv{\vb{f}(\vb{g}(\vb{u}))}{x} &= \pdv{\vb{f}(\vb{g})}{\vb{g}}
+      \pdv{\vb{g}(\vb{u})}{\vb{u}} \pdv{\vb{u}}{x}
+      & \text{($\vb{u} = \vb{u}(x)$)}
+  \end{align*}
+
+  \item この式の実際の意味は, 次のようになる (分母に転置を入れた).
+  \begin{align*}
+    \pdv{\vb{f}(\vb{g}(\vb{u}))}{x} &= \pdv{\vb{f}(\vb{g})}{\vb{g}^\top}
+      \pdv{\vb{g}(\vb{u})}{\vb{u}^\top} \pdv{\vb{u}}{x}
+      & \text{($\vb{u} = \vb{u}(x)$)}
+  \end{align*}
+
+  \item 転置すれば, 次を得る.
+  \begin{align*}
+    & \left( \pdv{\vb{f}(\vb{g}(\vb{u}))}{x} \right)^\top
+      = \pdv{\vb{f}(\vb{g}(\vb{u}))^\top}{x}
+      = \left( \pdv{\vb{f}(\vb{g})}{\vb{g}^\top}
+        \pdv{\vb{g}(\vb{u})}{\vb{u}^\top} \pdv{\vb{u}}{x} \right)^\top \\
+      &= \left( \pdv{\vb{u}}{x} \right)^\top \left( \pdv{\vb{g}(\vb{u})}{\vb{u}^\top} \right)^\top
+        \left( \pdv{\vb{f}(\vb{g})}{\vb{g}^\top} \right)^\top
+      = \pdv{\vb{u}^\top}{x} \pdv{\vb{g}(\vb{u})^\top}{\vb{u}} \pdv{\vb{f}(\vb{g})^\top}{\vb{g}}
+  \end{align*}
+
+  \item 分母レイアウトの表記に直すと, 次を得る (分子から転置を取り去る).
+  \begin{align*}
+    \pdv{\vb{f}(\vb{g}(\vb{u}))}{x} &= \pdv{\vb{u}}{x} \pdv{\vb{g}(\vb{u})}{\vb{u}}
+      \pdv{\vb{f}(\vb{g})}{\vb{g}}
+  \end{align*}
+
+  \item 分子, 分母レイアウトの結果を比べると, ちょうど入れ替わっている.
+  \begin{align*}
+    \pdv{\vb{f}(\vb{g}(\vb{u}))}{x} &= \left\{ \begin{array}{ll}
+      \pdv{\vb{f}(\vb{g})}{\vb{g}} \pdv{\vb{g}(\vb{u})}{\vb{u}} \pdv{\vb{u}}{x}
+        & \text{(分子レイアウト)} \\
+      \pdv{\vb{u}}{x} \pdv{\vb{g}(\vb{u})}{\vb{u}} \pdv{\vb{f}(\vb{g})}{\vb{g}}
+        & \text{(分母レイアウト)} \end{array} \right.
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{分子レイアウトと分母レイアウト}
+\begin{itemize}
+  \item もう1つの例として, 分子レイアウトにおける, 以下の式を考える.
+  \begin{align*}
+    \pdv{\vb{u}^\top \vb{A} \vb{v}}{\vb{x}}
+      &= \vb{u}^\top \vb{A} \pdv{\vb{v}}{\vb{x}} + \vb{v}^\top \vb{A}^\top \pdv{\vb{u}}{\vb{x}}
+      & \text{($\vb{u} = \vb{u}(\vb{x})$, $\vb{v} = \vb{v}(\vb{x})$, $\vb{A}$は定数)}
+  \end{align*}
+
+  \item この式の実際の意味は, 次のようになる (分母に転置を入れた).
+  \begin{align*}
+    \pdv{\vb{u}^\top \vb{A} \vb{v}}{\vb{x}}
+      = \vb{u}^\top \vb{A} \pdv{\vb{v}}{\vb{x}^\top}
+      + \vb{v}^\top \vb{A}^\top \pdv{\vb{u}}{\vb{x}^\top}
+  \end{align*}
+
+  \item 転置すれば, 次を得る.
+  \begin{align*}
+    & \left( \pdv{\vb{u}^\top \vb{A} \vb{v}}{\vb{x}} \right)^\top
+      = \pdv{\vb{u}^\top \vb{A} \vb{v}}{\vb{x}^\top}
+      = \left( \vb{u}^\top \vb{A} \pdv{\vb{v}}{\vb{x}^\top} \right)^\top
+      + \left( \vb{v}^\top \vb{A}^\top \pdv{\vb{u}}{\vb{x}^\top} \right)^\top \\
+    &= \left( \pdv{\vb{v}}{\vb{x}^\top} \right)^\top \vb{A}^\top \vb{u}
+      + \left( \pdv{\vb{u}}{\vb{x}^\top} \right)^\top \vb{A} \vb{v}
+    = \pdv{\vb{v}^\top}{\vb{x}} \vb{A}^\top \vb{u}
+      + \pdv{\vb{u}^\top}{\vb{x}} \vb{A} \vb{v}
+  \end{align*}
+
+  \item 分母レイアウトの表記に直すと, 次を得る (分子から転置を取り去る).
+  \begin{align*}
+    \pdv{\vb{u}^\top \vb{A} \vb{v}}{\vb{x}^\top}
+      = \pdv{\vb{v}}{\vb{x}} \vb{A}^\top \vb{u} + \pdv{\vb{u}}{\vb{x}} \vb{A} \vb{v}
+  \end{align*}
+
+  \item 分子, 分母レイアウトの結果を比べると, 左右が入れ替わって, 行列やベクトルは転置されている.
+  \begin{align*}
+    \pdv{\vb{u}^\top \vb{A} \vb{v}}{\vb{x}^\top}
+      &= \left\{ \begin{array}{ll}
+      \vb{u}^\top \vb{A} \pdv{\vb{v}}{\vb{x}} + \vb{v}^\top \vb{A}^\top \pdv{\vb{u}}{\vb{x}}
+        & \text{(分子レイアウト)} \\
+      \pdv{\vb{v}}{\vb{x}} \vb{A}^\top \vb{u} + \pdv{\vb{u}}{\vb{x}} \vb{A} \vb{v}
+        & \text{(分母レイアウト)} \end{array} \right.
+  \end{align*}
+
+  \item The Matrix Cookbookなどの資料は分母レイアウトを採用している.
+  \item 上記のような方法で入れ替えることで, 分子, 分母レイアウトを交換できる.
 \end{itemize}
 \end{frame}
 
