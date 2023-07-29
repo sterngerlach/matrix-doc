@@ -687,7 +687,185 @@ $\vb{Y} \vb{X} - \vb{I} = \vb{0}$であるから, 結局,
 \section{スカラのスカラによる微分}
 \subsection{ベクトルを含む場合}
 
+\begin{frame}{スカラのスカラによる微分 (ベクトルを含む場合)}
+\begin{block}{合成関数}
+  \begin{align*}
+    \pdv{g(\vb{u})}{x} &= \pdv{g(\vb{u})}{\vb{u}} \pdv{\vb{u}}{x}
+      & \text{($\vb{u} = \vb{u}(x)$)}
+  \end{align*}
+\end{block}
+
+合成関数の微分から示せる.
+\begin{align*}
+  \pdv{g(\vb{u})}{x} = \sum_i \pdv{g(\vb{u})}{u_i} \pdv{u_i}{x}
+    = \sum_i \left( \pdv{g(\vb{u})}{\vb{u}} \right)_i \left( \pdv{\vb{u}}{x} \right)_i
+    = \underbrace{\pdv{g(\vb{u})}{\vb{u}}}_{\text{横ベクトル}}
+      \underbrace{\pdv{\vb{u}}{x}}_{\text{縦ベクトル}}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラのスカラによる微分 (ベクトルを含む場合)}
+\begin{block}{合成関数}
+  \begin{align*}
+    \pdv{\vb{u}^\top \vb{v}}{x} &= \vb{u}^\top \pdv{\vb{v}}{x}
+      + \left( \pdv{\vb{u}}{x} \right)^\top \vb{v}
+      & \text{($\vb{u} = \vb{u}(x)$, $\vb{v} = \vb{v}(x)$)}
+  \end{align*}
+\end{block}
+
+合成関数の微分から示せる.
+\begin{align*}
+  \pdv{\vb{u}^\top \vb{v}}{x} &= \pdv{x} \sum_i u_i v_i
+    = \sum_i \left( u_i \pdv{v_i}{x} + \pdv{u_i}{x} v_i \right) \\
+    &= \sum_i \left( u_i \left( \pdv{\vb{v}}{x} \right)_i
+      + \left( \pdv{\vb{u}}{x} \right)_i v_i \right)
+    = \vb{u}^\top \pdv{\vb{v}}{x} + \left( \pdv{\vb{u}}{x} \right)^\top \vb{v}
+\end{align*}
+\end{frame}
+
 \subsection{行列を含む場合}
+
+\begin{frame}{スカラのスカラによる微分 (行列を含む場合)}
+\begin{block}{合成関数}
+  \begin{align*}
+    \pdv{g(\vb{U})}{x} &= \tr(\pdv{g(\vb{U})}{\vb{U}} \pdv{\vb{U}}{x})
+      & \text{($\vb{U} = \vb{U}(x)$)}
+  \end{align*}
+\end{block}
+
+合成関数の微分から示せる.
+\begin{align*}
+  \pdv{g(\vb{U})}{x} &= \sum_i \sum_j \pdv{g(\vb{U})}{u_{ij}} \pdv{u_{ij}}{x}
+    = \sum_i \sum_j \left( \pdv{g(\vb{U})}{\vb{U}} \right)_{ji} \left( \pdv{\vb{U}}{x} \right)_{ij} \\
+    &= \sum_j \left( \pdv{g(\vb{U})}{\vb{U}} \pdv{\vb{U}}{x} \right)_{jj}
+    = \tr(\pdv{g(\vb{U})}{\vb{U}} \pdv{\vb{U}}{x})
+\end{align*}
+\end{frame}
+
+\begin{frame}{このスライドの概要}
+\begin{itemize}
+  \item 行列とベクトルの入った微分を, 大体確認した.
+  \begin{itemize}
+    \item ベクトルのスカラによる微分
+    \item スカラのベクトルによる微分
+    \item ベクトルのベクトルによる微分
+    \item 行列積のスカラによる微分
+    \item スカラの行列による微分
+    \item スカラのスカラによる微分 (ベクトルや行列を関数として含む場合)
+    \item 逆行列, トレース, 行列式の入った微分
+  \end{itemize}
+  \item お疲れ様でした!
+\end{itemize}
+\end{frame}
+
+\section{おまけ}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{行列積の逆伝播}
+  $\vb{W}$を$C_\mathrm{In} \times C_\mathrm{Out}$行列, $\vb{X}$を$B \times C_\mathrm{In}$行列,
+  $\vb{Y} = \vb{X} \vb{W}$を$B \times C_\mathrm{Out}$行列とする.
+  このとき, 関数$L = L(\vb{Y}) = L(\vb{X}, \vb{W})$の$\vb{X}, \vb{W}$に対する偏微分は,
+  \begin{align*}
+    \pdv{L}{\vb{X}} = \vb{W} \pdv{L}{\vb{Y}}, \qquad
+    \pdv{L}{\vb{W}} = \pdv{L}{\vb{Y}} \vb{X}
+  \end{align*}
+\end{block}
+
+分子レイアウトを使っているから, $\pdv{L}{\vb{Y}}$は$C_\mathrm{Out} \times B$行列,
+$\pdv{L}{\vb{X}}$は$C_\mathrm{In} \times B$行列,
+$\pdv{L}{\vb{W}}$は$C_\mathrm{Out} \times C_\mathrm{In}$行列であることに注意. \\
+分母レイアウトを使った場合は, 次のようになる:
+\begin{align*}
+  \pdv{L}{\vb{X}} = \pdv{L}{\vb{Y}} \vb{W}^\top, \quad
+  \pdv{L}{\vb{W}} = \vb{X}^\top \pdv{L}{\vb{Y}}
+\end{align*}
+$\pdv{L}{\vb{Y}}, \pdv{L}{\vb{X}}, \pdv{L}{\vb{W}}$は,
+元と同じく$B \times C_\mathrm{Out}$, $B \times C_\mathrm{In}$, $C_\mathrm{In} \times C_\mathrm{Out}$行列である.
+
+以下のように, 合成関数の微分を用いて, 要素ごとに確認できる.
+$L$は, $\vb{Y}$の全成分についての関数であるから,
+\begin{align*}
+  \left( \pdv{L}{\vb{X}} \right)_{ij} &= \pdv{L}{x_{ji}}
+    = \sum_k \sum_l \pdv{L}{y_{kl}} \pdv{y_{kl}}{x_{ji}}
+\end{align*}
+$\vb{Y} = \vb{X} \vb{W}$より, $y_{kl} = \sum_m x_{km} w_{ml}$であるから,
+\begin{align*}
+  \left( \pdv{L}{\vb{X}} \right)_{ij}
+    &= \sum_k \sum_l \pdv{L}{y_{kl}} \pdv{y_{kl}}{x_{ji}}
+    = \sum_k \sum_l \pdv{L}{y_{kl}} \pdv{x_{ji}} \sum_m x_{km} w_{ml} \\
+    &= \sum_k \sum_l \pdv{L}{y_{kl}} \sum_m \pdv{x_{km}}{x_{ji}} w_{ml}
+\end{align*}
+$\pdv{x_{km}}{x_{ji}} = \delta_{kj} \delta_{mi}$であるから,
+\begin{align*}
+  \left( \pdv{L}{\vb{X}} \right)_{ij}
+    &= \sum_k \sum_l \pdv{L}{y_{kl}} \sum_m \delta_{kj} \delta_{mi} w_{ml} \\
+    &= \sum_l \pdv{L}{y_{jl}} w_{il}
+    = \sum_l \left( \pdv{L}{\vb{Y}} \right)_{lj} w_{il}
+    = \left( \vb{W} \pdv{L}{\vb{Y}} \right)_{ij}
+\end{align*}
+
+また$\pdv{L}{\vb{W}}$についても, 合成関数の微分を用いて,
+\begin{align*}
+  \left( \pdv{L}{\vb{W}} \right)_{ij} &= \pdv{L}{w_{ji}}
+    = \sum_k \sum_l \pdv{L}{y_{kl}} \pdv{y_{kl}}{w_{ji}}
+\end{align*}
+$\vb{Y} = \vb{X} \vb{W}$より, $y_{kl} = \sum_m x_{km} w_{ml}$であるから,
+\begin{align*}
+  \left( \pdv{L}{\vb{W}} \right)_{ij}
+    &= \sum_k \sum_l \pdv{L}{y_{kl}} \pdv{y_{kl}}{w_{ji}}
+    = \sum_k \sum_l \pdv{L}{y_{kl}} \pdv{w_{ji}} \sum_m x_{km} w_{ml} \\
+    &= \sum_k \sum_l \pdv{L}{y_{kl}} \sum_m x_{km} \pdv{w_{ml}}{w_{ji}}
+\end{align*}
+$\pdv{w_{ml}}{w_{ji}} = \delta_{mj} \delta_{li}$であるから,
+\begin{align*}
+  \left( \pdv{L}{\vb{W}} \right)_{ij}
+    &= \sum_k \sum_l \pdv{L}{y_{kl}} \sum_m x_{km} \delta_{mj} \delta_{li} \\
+    &= \sum_k \pdv{L}{y_{ki}} x_{kj}
+    = \sum_k \left( \pdv{L}{\vb{Y}} \right)_{ik} x_{kj}
+    = \left( \pdv{L}{\vb{Y}} \vb{X} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{行列積と活性化関数の逆伝播}
+  $\vb{W}$を$C_\mathrm{In} \times C_\mathrm{Out}$行列, $\vb{X}$を$B \times C_\mathrm{In}$行列,
+  $\vb{Y} = \vb{X} \vb{W}$を$B \times C_\mathrm{Out}$行列とする.
+  $B \times C_\mathrm{Out}$行列$\vb{Z}$の$(i, j)$成分を, 何らかの関数を使って, $z_{ij} = f(y_{ij})$と表す.
+  即ち, $f$は, $\vb{Y}$の要素ごとの関数である. \\
+  このとき, 関数$L = L(\vb{Z})$の$\vb{X}, \vb{W}$に対する偏微分は,
+  \begin{align*}
+    \pdv{L}{\vb{X}} = \vb{W} \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right), \quad
+    \pdv{L}{\vb{W}} = \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right) \vb{X} \\
+    \quad \text{($\vb{F}'$の$(i, j)$成分は, $f'(y_{ji}) = \pdv{z_{ji}}{y_{ji}}$)}
+  \end{align*}
+\end{block}
+
+以下のように, 合成関数の微分を用いて, 要素ごとに確認できる.
+$L$は, $\vb{Z}$の全成分についての関数であるから,
+\begin{align*}
+  \left( \pdv{L}{\vb{X}} \right)_{ij} &= \pdv{L}{x_{ji}}
+    = \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{z_{kl}}{x_{ji}}
+    = \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{z_{kl}}{y_{kl}} \pdv{y_{kl}}{x_{ji}} \\
+    &= \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{f(y_{kl})}{y_{kl}} \pdv{x_{ji}} \sum_m x_{km} w_{ml} \\
+    &= \sum_k \sum_l \pdv{L}{z_{kl}} f'(y_{kl}) \sum_m \delta_{kj} \delta_{mi} w_{ml}
+    = \sum_l \pdv{L}{z_{jl}} f'(y_{jl}) w_{il} \\
+    &= \sum_l \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right)_{lj} w_{il}
+    = \left( \vb{W} \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right) \right)_{ij}
+\end{align*}
+また,
+\begin{align*}
+  \left( \pdv{L}{\vb{W}} \right)_{ij} &= \pdv{L}{w_{ji}}
+    = \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{z_{kl}}{w_{ji}}
+    = \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{z_{kl}}{y_{kl}} \pdv{y_{kl}}{w_{ji}} \\
+    &= \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{f(y_{kl})}{y_{kl}} \pdv{w_{ji}} \sum_m x_{km} w_{ml} \\
+    &= \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{f(y_{kl})}{y_{kl}} \sum_m x_{km} \delta_{mj} \delta_{li}
+    = \sum_k \pdv{L}{z_{ki}} f'(y_{ki}) x_{kj} \\
+    &= \sum_k \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right)_{ik} x_{kj}
+    = \left( \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right) \vb{X} \right)_{ij}
+\end{align*}
+\end{frame}
+
+% \left( \pdv{L}{\vb{Z}} \right)_{lk}
 
 \end{document}
 
