@@ -57,10 +57,17 @@
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
 % \DeclareMathOperator{\Tr}{Tr}
-\DeclareMathOperator{\KL}{KL}
+% \DeclareMathOperator{\KL}{KL}
 \DeclareMathOperator{\diag}{diag}
 \DeclareMathOperator{\sgn}{sgn}
 \DeclareMathOperator{\adj}{adj}
+\DeclareMathOperator{\EOp}{\mathbb{E}}
+\DeclareMathOperator{\HOp}{H}
+\DeclareMathOperator{\KLOp}{KL}
+\newcommand\E[1]{\EOp \left[ #1 \right]}
+\newcommand\Entropy[1]{\HOp \left[ #1 \right]}
+\newcommand\MutualInfo[1]{I \left( #1 \right)}
+\newcommand\KL[2]{\KLOp \left( #1 \parallel #2 \right)}
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
