@@ -233,17 +233,17 @@
     \E{f(x)} &= \int f(x) p(x) \dd{x}
   \end{align*}
   \item 1次モーメント: \textcolor{red}{平均} $\mu = \E{x}$ (Mean)
-  \item 2次モーメント: \textcolor{red}{分散} $\sigma^2 = \E{(x - \mu)^2}$ (Variance)
+  \item 2次モーメント: \textcolor{red}{分散} $\sigma^2 = \Var{x} = \E{(x - \mu)^2}$ (Variance)
   \item 3次モーメント: \textcolor{red}{歪度} $\E{(x - \mu)^3}$ (Skewness; わいど)
   \item 4次モーメント: \textcolor{red}{尖度} $\E{(x - \mu)^4}$ (Kurtosis; せんど)
   \begin{align*}
     \mu &= \E{x} = \int x p(x) \dd{x} \\
-    \sigma^2 &= \E{(x - \mu)^2} = \int (x - \mu)^2 p(x) \dd{x}
+    \sigma^2 &= \Var{x} = \E{(x - \mu)^2} = \int (x - \mu)^2 p(x) \dd{x}
   \end{align*}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{モーメント, 平均, 分散 (多変数の場合)}
+\begin{frame}{モーメント, 平均, 共分散 (多変数の場合)}
 \begin{itemize}
   \item 行列関数$\vb{F}(\vb{x})$の, 確率分布$p(\vb{x})$のもとでの期待値:
   \begin{align*}
@@ -254,25 +254,99 @@
     \left( \E{\vb{F}(\vb{x})} \right)_{ij} &= \E{f_{ij}(\vb{x})}
       = \int f_{ij}(\vb{x}) p(\vb{x}) \dd{\vb{x}}
   \end{align*}
-  \item 平均$\vb*{\mu}$と分散$\vb{\Sigma}$は, 次のようにかける.
+  \item 平均$\vb*{\mu}$と\textcolor{red}{共分散}$\vb{\Sigma}$ (Covariance) は, 次のようにかける.
   \begin{align*}
     \vb*{\mu} &= \E{\vb{x}} = \int \vb{x} p(\vb{x}) \dd{\vb{x}} \\
-    \vb{\Sigma} &= \E{\left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top}
+    \vb{\Sigma} &= \Var{\vb{x}} = \E{\left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top}
       = \int \left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top p(\vb{x}) \dd{\vb{x}}
   \end{align*}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{モーメント, 平均, 分散 (多変数の場合)}
+\begin{frame}{モーメント, 平均, 共分散 (多変数の場合)}
 \begin{itemize}
-  \item 確率分布$p(\vb{x})$の分散$\vb{\Sigma}$について, 次が成り立つ.
+  \item 2つの変数$\vb{x}, \vb{y}$について, 次が成り立つ.
   \begin{align*}
-    \vb{\Sigma} &= \E{\vb{x} \vb{x}^\top} - \E{\vb{x}} \E{\vb{x}}^\top
+    \E{\vb{x} + \vb{y}} = \E{\vb{x}} + \E{\vb{y}}
+  \end{align*}
+  \item $n$個の変数$\vb{x}_1, \ldots, \vb{x}_n$について, 次が成り立つ.
+  \begin{align*}
+    \E{\sum_{i = 1}^n \vb{x}_i} = \sum_{i = 1}^n \E{\vb{x}_i}
+  \end{align*}
+  \item 和の期待値と, 期待値の和が等しい.
+  \item スカラの場合にも, 同様に成立する.
+  \begin{align*}
+    \E{x + y} &= \E{x} + \E{y}, \quad
+    \E{\sum_{i = 1}^n x_i} = \sum_{i = 1}^n \E{x_i}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{モーメント, 平均, 共分散 (多変数の場合)}
+\begin{itemize}
+  \item 変数$\vb{x}$と, ある定数$\vb{A}$について, 次が成り立つ.
+  \begin{align*}
+    \E{\vb{A} \vb{x}} = \vb{A} \E{\vb{x}}, \quad
+    \E{\vb{x} \vb{A}} = \E{\vb{x}} \vb{A}
+  \end{align*}
+  \item 変数$\vb{x}$と, ある定数$\vb{a}$について, 次が成り立つ.
+  \begin{align*}
+    \E{\vb{x} + \vb{a}} = \E{\vb{x}} + \vb{a}
+  \end{align*}
+  \item スカラの場合にも, 同様に成立する.
+  \begin{align*}
+    \E{a x} = a \E{x}, \quad
+    \E{x + a} = \E{x} + a
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{モーメント, 平均, 共分散 (多変数の場合)}
+\begin{itemize}
+  \item 確率分布$p(\vb{x})$の共分散が$\vb{\Sigma} = \Var{\vb{x}}$であるとする.
+  \item $\vb{y} = \vb{A} \vb{x}$としたとき, $p(\vb{y})$の共分散$\Var{\vb{y}}$は,
+  \begin{align*}
+    \Var{\vb{y}}
+    &= \E{\left( \vb{y} - \E{\vb{y}} \right) \left( \vb{y} - \E{\vb{y}} \right)^\top} \\
+    &= \E{\left( \vb{A} \vb{x} - \E{\vb{A} \vb{x}} \right)
+      \left( \vb{A} \vb{x} - \E{\vb{A} \vb{x}} \right)^\top} \\
+    &= \E{\vb{A} \left( \vb{x} - \E{\vb{x}} \right) \left( \vb{x} - \E{\vb{x}} \right)^\top \vb{A}^\top} \\
+    &= \vb{A} \E{\left( \vb{x} - \E{\vb{x}} \right) \left( \vb{x} - \E{\vb{x}} \right)^\top} \vb{A}^\top
+    = \vb{A} \vb{\Sigma} \vb{A}^\top
+  \end{align*}
+  \item ただし, $\E{\vb{A} \vb{x}} = \vb{A} \E{\vb{x}}$.
+  \item 同様に, $p(x)$の分散が$\sigma^2$であれば, $y = ax$の分散は$a^2 \sigma^2$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{モーメント, 平均, 共分散 (多変数の場合)}
+\begin{itemize}
+  \item 確率分布$p(\vb{x})$の共分散が$\vb{\Sigma} = \Var{\vb{x}}$であるとする.
+  \item $\vb{y} = \vb{x} + \vb{a}$としたとき ($\vb{a}$は定数), $p(\vb{y})$の共分散$\Var{\vb{y}}$は,
+  \begin{align*}
+    \Var{\vb{y}}
+    &= \E{\left( \vb{y} - \E{\vb{y}} \right) \left( \vb{y} - \E{\vb{y}} \right)^\top} \\
+    &= \E{\left( \vb{x} + \vb{a} - \E{\vb{x} + \vb{a}} \right)
+      \left( \vb{x} + \vb{a} - \E{\vb{x} + \vb{a}} \right)^\top} \\
+    &= \E{\left( \vb{x} + \vb{a} - \E{\vb{x}} - \vb{a} \right)
+      \left( \vb{x} + \vb{a} - \E{\vb{x}} - \vb{a} \right)^\top} \\
+    &= \E{\left( \vb{x} - \E{\vb{x}} \right) \left( \vb{x} - \E{\vb{x}} \right)^\top} = \vb{\Sigma}
+  \end{align*}
+  \item ただし, $\E{\vb{x} + \vb{a}} = \E{\vb{x}} + \vb{a}$.
+  \item 同様に, $p(x)$の分散が$\sigma^2$であれば, $y = x + a$の分散も$\sigma^2$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{モーメント, 平均, 共分散 (多変数の場合)}
+\begin{itemize}
+  \item 確率分布$p(\vb{x})$の共分散$\vb{\Sigma} = \Var{\vb{x}}$について, 次が成り立つ.
+  \begin{align*}
+    \vb{\Sigma} &= \Var{\vb{x}} = \E{\vb{x} \vb{x}^\top} - \E{\vb{x}} \E{\vb{x}}^\top
       = \E{\vb{x} \vb{x}^\top} - \vb*{\mu} \vb*{\mu}^\top
   \end{align*}
   \item スカラの場合は, 次のようになる.
   \begin{align*}
-    \sigma^2 &= \E{x^2} - \left( \E{x} \right)^2 = \E{x^2} - \mu^2
+    \sigma^2 &= \Var{x} = \E{x^2} - \left( \E{x} \right)^2 = \E{x^2} - \mu^2
   \end{align*}
   \item 以下のように示せる.
   \begin{align*}
@@ -308,11 +382,12 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}{共分散 (Covariance)}
+\begin{frame}{相互共分散 (Cross-covariance)}
 \begin{itemize}
-  \item $\vb{x}, \vb{y}$について, \textcolor{red}{共分散}は次のようにかける.
+  \item $\vb{x}$と$\vb{y}$との間の\textcolor{red}{相互共分散}$\Cov{\vb{x}}{\vb{y}}$は, 次のようにかける.
   \begin{align*}
-    \E{\left( \vb{x} - \E{\vb{x}} \right) \left( \vb{y} - \E{\vb{y}} \right)^\top}
+    \Cov{\vb{x}}{\vb{y}}
+      = \E{\left( \vb{x} - \E{\vb{x}} \right) \left( \vb{y} - \E{\vb{y}} \right)^\top}
       &= \E{\vb{x} \vb{y}^\top} - \E{\vb{x}} \E{\vb{y}}^\top
   \end{align*}
   \item 左辺を展開すれば, 次のように示せる.
@@ -323,8 +398,300 @@
       &= \E{\vb{x} \vb{y}^\top} - \E{\vb{x}} \E{\vb{y}}^\top
         - \E{\vb{x}} \E{\vb{y}}^\top + \E{\vb{x}} \E{\vb{y}}^\top
   \end{align*}
-  \item $\vb{x}, \vb{y}$が無相関 ($\E{\vb{x} \vb{y}^\top} = \E{\vb{x}} \E{\vb{y}}^\top$) であれば, 共分散は$\vb{0}$である.
-  \item 独立$\Rightarrow$無相関であるから, 独立であれば, 共分散は$\vb{0}$である.
+  \item $\vb{x}, \vb{y}$が無相関 ($\E{\vb{x} \vb{y}^\top} = \E{\vb{x}} \E{\vb{y}}^\top$) であれば, 相互共分散は$\vb{0}$.
+  \item 独立$\Rightarrow$無相関であるから, 独立であれば, 相互共分散は$\vb{0}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{相互共分散 (Cross-covariance)}
+\begin{itemize}
+  \item $\Cov{\vb{x}}{\vb{y}} = \Cov{\vb{y}}{\vb{x}}^\top$が成り立つ:
+  \begin{align*}
+    \Cov{\vb{x}}{\vb{y}}
+      &= \E{\left( \vb{x} - \E{\vb{x}} \right) \left( \vb{y} - \E{\vb{y}} \right)^\top} \\
+      &= \E{\left( \vb{y} - \E{\vb{y}} \right) \left( \vb{x} - \E{\vb{x}} \right)^\top}^\top
+      = \Cov{\vb{y}}{\vb{x}}^\top
+  \end{align*}
+  \item $\Cov{\vb{x} + \vb{y}}{\vb{z}} = \Cov{\vb{x}}{\vb{z}} + \Cov{\vb{y}}{\vb{z}}$も成り立つ:
+  {\small \begin{align*}
+    \Cov{\vb{x} + \vb{y}}{\vb{z}}
+      &= \E{\left( \vb{x} + \vb{y} - \E{\vb{x} + \vb{y}} \right)
+        \left( \vb{z} - \E{\vb{z}} \right)^\top} \\
+      &= \E{\left( \left( \vb{x} - \E{\vb{x}} \right) + \left( \vb{y} - \E{\vb{y}} \right) \right)
+        \left( \vb{z} - \E{\vb{z}} \right)^\top} \\
+      &= \E{\left( \vb{x} - \E{\vb{x}} \right) \left( \vb{z} - \E{\vb{z}} \right)^\top}
+        + \E{\left( \vb{y} - \E{\vb{y}} \right) \left( \vb{z} - \E{\vb{z}} \right)^\top} \\
+      &= \Cov{\vb{x}}{\vb{z}} + \Cov{\vb{y}}{\vb{z}}
+  \end{align*}}
+  \item ただし, $\E{\vb{x} + \vb{y}} = \E{\vb{x}} + \E{\vb{y}}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{相互共分散 (Cross-covariance)}
+\begin{itemize}
+  \item $\Cov{\vb{A} \vb{x}}{\vb{B} \vb{y}} = \vb{A} \Cov{\vb{x}}{\vb{y}} \vb{B}^\top$も成り立つ:
+  {\small \begin{align*}
+    \Cov{\vb{A} \vb{x}}{\vb{B} \vb{y}}
+    &= \E{\left( \vb{A} \vb{x} - \E{\vb{A} \vb{x}} \right)
+      \left( \vb{B} \vb{y} - \E{\vb{B} \vb{y}} \right)^\top} \\
+    &= \E{\vb{A} \left( \vb{x} - \E{\vb{x}} \right)
+      \left( \vb{B} \left( \vb{y} - \E{\vb{y}} \right) \right)^\top} \\
+    &= \E{\vb{A} \left( \vb{x} - \E{\vb{x}} \right)
+      \left( \vb{y} - \E{\vb{y}} \right)^\top \vb{B}^\top} \\
+    &= \vb{A} \E{\left( \vb{x} - \E{\vb{x}} \right)
+      \left( \vb{y} - \E{\vb{y}} \right)^\top} \vb{B}^\top
+    = \vb{A} \Cov{\vb{x}}{\vb{y}} \vb{B}^\top
+  \end{align*}}
+  \item $\Cov{\vb{x} + \vb{a}}{\vb{y} + \vb{b}} = \Cov{\vb{x}}{\vb{y}}$も成り立つ:
+  \begin{align*}
+    \Cov{\vb{x} + \vb{a}}{\vb{y} + \vb{b}}
+    &= \E{\left( \vb{x} + \vb{a} - \E{\vb{x} + \vb{a}} \right)
+      \left( \vb{y} + \vb{b} - \E{\vb{y} + \vb{b}} \right)} \\
+    &= \E{\left( \vb{x} + \vb{a} - \E{\vb{x}} - \vb{a} \right)
+      \left( \vb{y} + \vb{b} - \E{\vb{y}} - \vb{b} \right)} \\
+    &= \E{\left( \vb{x} - \E{\vb{x}} \right)
+      \left( \vb{y} - \E{\vb{y}} \right)^\top} = \Cov{\vb{x}}{\vb{y}}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{共分散と相互共分散}
+\begin{itemize}
+  \item $\vb{x}, \vb{y}$の共分散を$\Var{\vb{x}}, \Var{\vb{y}}$, 相互共分散を$\Cov{\vb{x}}{\vb{y}}$とする.
+  \item $\vb{z} = \vb{x} + \vb{y}$としたとき, $p(\vb{z})$の共分散$\Var{\vb{z}}$は,
+  {\small \begin{align*}
+    & \E{\left( \vb{z} - \E{\vb{z}} \right) \left( \vb{z} - \E{\vb{z}} \right)^\top} \\
+    &= \E{\left( \vb{x} + \vb{y} - \E{\vb{x} + \vb{y}} \right)
+      \left( \vb{x} + \vb{y} - \E{\vb{x} + \vb{y}} \right)^\top} \\
+    &= \E{\left( \left( \vb{x} - \E{\vb{x}} \right) + \left( \vb{y} - \E{\vb{y}} \right) \right)
+      \left( \left( \vb{x} - \E{\vb{x}} \right) + \left( \vb{y} - \E{\vb{y}} \right) \right)^\top} \\
+    &= \E{\left( \vb{x} - \E{\vb{x}} \right) \left( \vb{x} - \E{\vb{x}} \right)^\top}
+      + \E{\left( \vb{y} - \E{\vb{y}} \right) \left( \vb{y} - \E{\vb{y}} \right)^\top} \\
+    & \quad + \E{\left( \vb{x} - \E{\vb{x}} \right) \left( \vb{y} - \E{\vb{y}} \right)^\top}
+      + \E{\left( \vb{y} - \E{\vb{y}} \right) \left( \vb{x} - \E{\vb{x}} \right)^\top} \\
+    &= \Var{\vb{x}} + \Var{\vb{y}} + \Cov{\vb{x}}{\vb{y}} + \Cov{\vb{y}}{\vb{x}}
+  \end{align*}}
+  \item 同様に, $z = x + y$の分散は, $\Var{z} = \Var{x} + \Var{y} + 2 \Cov{x}{y}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{平均, 共分散, 相互共分散 (1変数の場合)}
+\begin{block}{平均, 共分散, 相互共分散 (1変数の場合)}
+  \begin{align*}
+    \E{x + y} &= \E{x} + \E{y} \\
+    \E{x + a} &= \E{x} + a \\
+    \E{ax} &= a \E{x} \\
+    \Var{x} &= \E{(x - \E{x})^2} \\
+    \Var{ax} &= a^2 \Var{x} \\
+    \Var{x + a} &= \Var{x} \\
+    \Var{x} &= \E{x^2} - \E{x}^2
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{平均, 共分散, 相互共分散 (1変数の場合)}
+\begin{block}{平均, 共分散, 相互共分散 (1変数の場合)}
+  \begin{align*}
+    \Cov{x}{y} &= \E{(x - \E{x}) (y - \E{y})} \\
+    \Cov{x}{y} &= \E{xy} - \E{x} \E{y} \\
+    \Cov{x + y}{z} &= \Cov{x}{z} + \Cov{y}{z} \\
+    \Cov{ax}{by} &= ab \Cov{x}{y} \\
+    \Cov{x + a}{y + b} &= \Cov{x}{y} \\
+    \Var{x + y} &= \Var{x} + \Var{y} + 2 \Cov{x}{y}
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{平均, 共分散, 相互共分散 (1変数の場合)}
+\begin{block}{無相関 (Uncorrelated)}
+  $x, y$が無相関であれば, $\E{xy} = \E{x} \E{y}$. \\
+  独立であれば ($p(x, y) = p(x) p(y)$), 無相関.
+  \begin{align*}
+    \Cov{x}{y} &= 0 \\
+    \Var{x + y} &= \Var{x} + \Var{y}
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{平均, 共分散, 相互共分散 (多変数の場合)}
+\begin{block}{平均, 共分散, 相互共分散 (多変数の場合)}
+  \begin{align*}
+    \E{\vb{x} + \vb{y}} &= \E{\vb{x}} + \E{\vb{y}} \\
+    \E{\vb{x} + \vb{a}} &= \E{\vb{x}} + \vb{a} \\
+    \E{\vb{A} \vb{x}} &= \vb{A} \E{\vb{x}} \\
+    \E{\vb{x} \vb{A}} &= \E{\vb{x}} \vb{A} \\
+    \Var{\vb{x}} &= \E{\left( \vb{x} - \E{\vb{x}} \right) \left( \vb{x} - \E{\vb{x}} \right)^\top} \\
+    \Var{\vb{A} \vb{x}} &= \vb{A} \Var{\vb{x}} \vb{A}^\top \\
+    \Var{\vb{x} + \vb{a}} &= \Var{\vb{x}} \\
+    \Var{\vb{x}} &= \E{\vb{x} \vb{x}^\top} - \E{\vb{x}} \E{\vb{x}}^\top
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{平均, 共分散, 相互共分散 (多変数の場合)}
+\begin{block}{平均, 共分散, 相互共分散 (多変数の場合)}
+  \begin{align*}
+    \Cov{\vb{x}}{\vb{y}} &= \E{\left( \vb{x} - \E{\vb{x}} \right) \left( \vb{y} - \E{\vb{y}} \right)^\top} \\
+    \Cov{\vb{x}}{\vb{y}} &= \E{\vb{x} \vb{y}^\top} - \E{\vb{x}} \E{\vb{y}}^\top \\
+    \Cov{\vb{x}}{\vb{y}} &= \Cov{\vb{y}}{\vb{x}}^\top \\
+    \Cov{\vb{x} + \vb{y}}{\vb{z}} &= \Cov{\vb{x}}{\vb{z}} + \Cov{\vb{y}}{\vb{z}} \\
+    \Cov{\vb{A} \vb{x}}{\vb{B} \vb{y}} &= \vb{A} \Cov{\vb{x}}{\vb{y}} \vb{B}^\top \\
+    \Cov{\vb{x} + \vb{a}}{\vb{y} + \vb{b}} &= \Cov{\vb{x}}{\vb{y}} \\
+    \Var{\vb{x} + \vb{y}} &= \Var{\vb{x}} + \Var{\vb{y}}
+      + \Cov{\vb{x}}{\vb{y}} + \Cov{\vb{y}}{\vb{x}}
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{平均, 共分散, 相互共分散 (多変数の場合)}
+\begin{block}{無相関 (Uncorrelated)}
+  $\vb{x}, \vb{y}$が無相関であれば, $\E{\vb{x} \vb{y}^\top} = \E{\vb{x}} \E{\vb{y}}^\top$. \\
+  独立であれば ($p(\vb{x}, \vb{y}) = p(\vb{x}) p(\vb{y})$), 無相関.
+  \begin{align*}
+    \Cov{\vb{x}}{\vb{y}} &= \vb{0} \\
+    \Var{\vb{x} + \vb{y}} &= \Var{\vb{x}} + \Var{\vb{y}}
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{平均, 共分散, 相互共分散の関係 (発展)}
+\begin{block}{二次形式}
+  {\small \begin{align*}
+    \E{\left( \vb{A} \vb{x} + \vb{b} \right)^\top \left( \vb{C} \vb{x} + \vb{d} \right)}
+      = \tr(\vb{A} \Var{\vb{x}} \vb{C}^\top)
+      + \left( \vb{A} \E{\vb{x}} + \vb{b} \right)^\top
+        \left( \vb{C} \E{\vb{x}} + \vb{d} \right)
+  \end{align*}}
+\end{block}
+
+\begin{itemize}
+  \item これまでにみてきた公式を駆使すれば, 導出できる.
+  \item 上式を基に, 次が直ちに得られる:
+  \begin{align*}
+    \E{\vb{x}^\top \vb{x}} &= \tr(\Var{\vb{x}}) + \E{\vb{x}}^\top \E{\vb{x}} \\
+    \E{\vb{x}^\top \vb{C} \vb{x}} &= \tr(\vb{C} \Var{\vb{x}}) + \E{\vb{x}}^\top \vb{C} \E{\vb{x}} \\
+    \E{\left( \vb{A} \vb{x} \right)^\top \left( \vb{A} \vb{x} \right)}
+      &= \tr(\vb{A} \Var{\vb{x}} \vb{A}^\top)
+      + \left( \vb{A} \E{\vb{x}} \right)^\top \left( \vb{A} \E{\vb{x}} \right) \\
+    \E{\left( \vb{x} + \vb{a} \right)^\top \left( \vb{x} + \vb{a} \right)}
+      &= \tr(\Var{\vb{x}}) + \left( \E{\vb{x}} + \vb{a} \right)^\top \left( \E{\vb{x}} + \vb{a} \right)
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{平均, 共分散, 相互共分散の関係 (発展)}
+\begin{itemize}
+  \item $\E{\cdot}$の中身がスカラーであることを考えて, 式を変形すると,
+  {\small \begin{align*}
+    & \E{\left( \vb{A} \vb{x} + \vb{b} \right)^\top \left( \vb{C} \vb{x} + \vb{d} \right)} \\
+    &= \E{\tr(\left( \vb{C} \vb{x} + \vb{d} \right) \left( \vb{A} \vb{x} + \vb{b} \right)^\top)}
+    = \tr(\E{\left( \vb{C} \vb{x} + \vb{d} \right) \left( \vb{A} \vb{x} + \vb{b} \right)^\top}) \\
+    &= \tr(\Cov{\vb{C} \vb{x} + \vb{d}}{\vb{A} \vb{x} + \vb{b}}
+      + \E{\vb{C} \vb{x} + \vb{d}} \E{\vb{A} \vb{x} + \vb{b}}^\top) \\
+    &= \tr(\Cov{\vb{C} \vb{x} + \vb{d}}{\vb{A} \vb{x} + \vb{b}})
+      + \tr(\E{\vb{C} \vb{x} + \vb{d}} \E{\vb{A} \vb{x} + \vb{b}}^\top) \\
+    &= \tr(\Cov{\vb{C} \vb{x} + \vb{d}}{\vb{A} \vb{x} + \vb{b}})
+      + \E{\vb{A} \vb{x} + \vb{b}}^\top \E{\vb{C} \vb{x} + \vb{d}} \\
+    &= \tr(\Cov{\vb{C} \vb{x} + \vb{d}}{\vb{A} \vb{x} + \vb{b}})
+      + \left( \vb{A} \E{\vb{x}} + \vb{b} \right)^\top
+      \left( \vb{C} \E{\vb{x}} + \vb{d} \right)
+  \end{align*}}
+  \item ただし, 以下の関係を用いた:
+  {\small \begin{align*}
+    \E{\tr(\vb{A})} = \tr(\E{\vb{A}}), \quad
+    \tr(\vb{a} \vb{b}^\top) = \vb{b}^\top \vb{a} \\
+    \E{\vb{x} \vb{y}^\top} = \Cov{\vb{x}}{\vb{y}} + \E{\vb{x}} \E{\vb{y}}^\top
+  \end{align*}}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{平均, 共分散, 相互共分散の関係 (発展)}
+\begin{itemize}
+  \item 続いて, $\tr(\Cov{\vb{C} \vb{x} + \vb{d}}{\vb{A} \vb{x} + \vb{b}})
+    = \tr(\vb{A} \Var{\vb{x}} \vb{C}^\top)$を示す.
+  \begin{align*}
+    \tr(\Cov{\vb{C} \vb{x} + \vb{d}}{\vb{A} \vb{x} + \vb{b}})
+    &= \tr(\Cov{\vb{C} \vb{x}}{\vb{A} \vb{x}}) \\
+    &= \tr(\vb{C} \Cov{\vb{x}}{\vb{x}} \vb{A}^\top) \\
+    &= \tr(\vb{C} \Var{\vb{x}} \vb{A}^\top)
+    = \tr(\vb{A} \Var{\vb{x}} \vb{C}^\top)
+  \end{align*}
+  \item ただし, 以下の関係を用いた:
+  \begin{gather*}
+    \Cov{\vb{x} + \vb{a}}{\vb{y} + \vb{b}} = \Cov{\vb{x}}{\vb{y}} \\
+    \Cov{\vb{A} \vb{x}}{\vb{B} \vb{y}} = \vb{A} \Cov{\vb{x}}{\vb{y}} \vb{B}^\top \\
+    \Cov{\vb{x}}{\vb{x}} = \E{\left( \vb{x} - \E{\vb{x}} \right)
+      \left( \vb{x} - \E{\vb{x}} \right)^\top} = \Var{\vb{x}} \\
+    \tr(\vb{A}^\top) = \tr(\vb{A}), \quad \Var{\vb{x}}^\top = \Var{\vb{x}}
+  \end{gather*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{平均, 共分散, 相互共分散の関係 (発展)}
+\begin{block}{二次関数}
+  \begin{align*}
+    \E{\left( \vb{A} \vb{x} + \vb{b} \right) \left( \vb{C} \vb{x} + \vb{d} \right)^\top}
+    = \vb{A} \Var{\vb{x}} \vb{C}^\top
+    + \left( \vb{A} \E{\vb{x}} + \vb{b} \right)
+      \left( \vb{C} \E{\vb{x}} + \vb{d} \right)^\top
+  \end{align*}
+\end{block}
+
+\begin{itemize}
+  \item 上式を基に, 次が直ちに得られる:
+  \begin{align*}
+    \E{\vb{x} \vb{x}^\top} &= \Var{\vb{x}} + \E{\vb{x}} \E{\vb{x}}^\top \\
+    \E{\left( \vb{A} \vb{x} \right) \left( \vb{A} \vb{x} \right)^\top}
+      &= \vb{A} \left( \Var{\vb{x}} + \E{\vb{x}} \E{\vb{x}}^\top \right) \vb{A}^\top \\
+    \E{\left( \vb{x} + \vb{a} \right) \left( \vb{x} + \vb{a} \right)^\top}
+      &= \Var{\vb{x}} + \left( \E{\vb{x}} + \vb{a} \right) \left( \E{\vb{x}} + \vb{a} \right)^\top
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{平均, 共分散, 相互共分散の関係 (発展)}
+\begin{itemize}
+  \item 次のように変形できる:
+  {\small \begin{align*}
+    & \E{\left( \vb{A} \vb{x} + \vb{b} \right) \left( \vb{C} \vb{x} + \vb{d} \right)^\top} \\
+    &= \Cov{\vb{A} \vb{x} + \vb{b}}{\vb{C} \vb{x} + \vb{d}}
+      + \E{\vb{A} \vb{x} + \vb{b}} \E{\vb{C} \vb{x} + \vb{d}}^\top \\
+    &= \Cov{\vb{A} \vb{x}}{\vb{C} \vb{x}}
+      + \left( \vb{A} \E{\vb{x}} + \vb{b} \right) \left( \vb{C} \E{\vb{x}} + \vb{d} \right)^\top \\
+    &= \vb{A} \Cov{\vb{x}}{\vb{x}} \vb{C}^\top
+      + \left( \vb{A} \E{\vb{x}} + \vb{b} \right) \left( \vb{C} \E{\vb{x}} + \vb{d} \right)^\top \\
+    &= \vb{A} \Var{\vb{x}} \vb{C}^\top
+      + \left( \vb{A} \E{\vb{x}} + \vb{b} \right) \left( \vb{C} \E{\vb{x}} + \vb{d} \right)^\top
+  \end{align*}}
+  \item ただし, 以下の関係を用いた:
+  {\small \begin{gather*}
+    \E{\vb{x} \vb{y}^\top} = \Cov{\vb{x}}{\vb{y}} + \E{\vb{x}} \E{\vb{y}}^\top \\
+    \Cov{\vb{x} + \vb{a}}{\vb{y} + \vb{b}} = \Cov{\vb{x}}{\vb{y}}, \quad
+    \Cov{\vb{A} \vb{x}}{\vb{B} \vb{y}} = \vb{A} \Cov{\vb{x}}{\vb{y}} \vb{B}^\top \\
+    \Cov{\vb{x}}{\vb{x}} = \E{\left( \vb{x} - \E{\vb{x}} \right)
+      \left( \vb{x} - \E{\vb{x}} \right)^\top} = \Var{\vb{x}}
+  \end{gather*}}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{平均, 共分散, 相互共分散の関係 (発展)}
+\begin{block}{二次関数}
+  \begin{align*}
+    \E{\vb{x} \vb{a}^\top \vb{x}} &= \left( \Var{\vb{x}} + \E{\vb{x}} \E{\vb{x}}^\top \right) \vb{a} \\
+    \E{\vb{x}^\top \vb{a} \vb{x}^\top} &= \vb{a}^\top \left( \Var{\vb{x}} + \E{\vb{x}} \E{\vb{x}}^\top \right)
+  \end{align*}
+\end{block}
+
+\begin{itemize}
+  \item 次のように確認できる:
+  \begin{align*}
+    \E{\vb{x} \left( \vb{a}^\top \vb{x} \right)} &= \E{\vb{x} \vb{x}^\top \vb{a}}
+      = \E{\vb{x} \vb{x}^\top} \vb{a} \\
+      &= \left( \Var{\vb{x}} + \E{\vb{x}} \E{\vb{x}}^\top \right) \vb{a} \\
+    \E{\left( \vb{x}^\top \vb{a} \right) \vb{x}^\top} &= \E{\vb{a}^\top \vb{x} \vb{x}^\top}
+      = \vb{a}^\top \E{\vb{x} \vb{x}^\top} \\
+      &= \vb{a}^\top \left( \Var{\vb{x}} + \E{\vb{x}} \E{\vb{x}}^\top \right)
+  \end{align*}
 \end{itemize}
 \end{frame}
 
@@ -567,7 +934,7 @@
       \left( \vb{x}_{i, \mathrm{meas}} - \hat{\vb*{\mu}} \right)
       \left( \vb{x}_{i, \mathrm{meas}} - \hat{\vb*{\mu}} \right)^\top
   \end{align*}
-  \item 分散については, 分母が$N$の代わりに\textcolor{red}{$N - 1$となる}ことに注意.
+  \item 共分散については, 分母が$N$の代わりに\textcolor{red}{$N - 1$となる}ことに注意.
   \item $\hat{\vb*{\mu}}$は, \textcolor{red}{標本平均}という.
   \item $\hat{\vb{\Sigma}}$は, \textcolor{red}{不偏分散}という (分母が$N$のときは, \textcolor{red}{標本分散}).
 \end{itemize}
@@ -581,7 +948,7 @@
       \left( \vb{x}_{i, \mathrm{meas}} - \hat{\vb*{\mu}} \right)
       \left( \vb{x}_{i, \mathrm{meas}} - \hat{\vb*{\mu}} \right)^\top
   \end{align*}
-  \item 分散の計算に, 真の平均$\vb*{\mu}$ではなく,
+  \item 共分散の計算に, 真の平均$\vb*{\mu}$ではなく,
   \textcolor{red}{観測データから計算された}標本平均$\hat{\vb*{\mu}}$を使っているから.
   \begin{itemize}
     \item 観測データ$\vb{x}_{i, \mathrm{meas}}$と, 標本平均$\hat{\vb*{\mu}}$の間には相関がある.
@@ -626,7 +993,7 @@
 
 \begin{frame}{不偏推定量 (Unbiased Estimate)}
 \begin{itemize}
-  \item $\hat{\vb*{\mu}}$の分散$\E{\left( \hat{\vb*{\mu}} - \E{\hat{\vb*{\mu}}} \right)
+  \item $\hat{\vb*{\mu}}$の共分散$\E{\left( \hat{\vb*{\mu}} - \E{\hat{\vb*{\mu}}} \right)
   \left( \hat{\vb*{\mu}} - \E{\hat{\vb*{\mu}}} \right)^\top}$は,
   {\small \begin{align*}
     \E{\left( \hat{\vb*{\mu}} - \E{\hat{\vb*{\mu}}} \right)
@@ -642,7 +1009,7 @@
   \end{align*}}
   \item $\E{\hat{\vb*{\mu}} \hat{\vb*{\mu}}^\top} = \frac{1}{N} \vb{\Sigma} + \vb*{\mu} \vb*{\mu}^\top$,
   $\E{\hat{\vb*{\mu}}} = \vb*{\mu}$を用いた.
-  \item 観測データが増えれば ($N \to \infty$), 上記の分散は$\vb{0}$に近づく.
+  \item 観測データが増えれば ($N \to \infty$), 上記の共分散は$\vb{0}$に近づく.
   \item 言い換えると, 平均の不偏推定量$\hat{\vb*{\mu}}$は, $\E{\hat{\vb*{\mu}}} = \vb*{\mu}$に近づいてゆく.
 \end{itemize}
 \end{frame}
@@ -731,7 +1098,7 @@
   \begin{align*}
     \E{\hat{\vb*{\theta}} - \vb*{\theta}} = \vb{0}
   \end{align*}
-  \item 不偏推定量$\hat{\vb*{\theta}}$の分散について, 以下が成り立つ:
+  \item 不偏推定量$\hat{\vb*{\theta}}$の共分散について, 以下が成り立つ:
   \begin{align*}
     \E{\left( \hat{\vb*{\theta}} - \vb*{\theta} \right)
       \left( \hat{\vb*{\theta}} - \vb*{\theta} \right)^\top} \ge \vb{I}^{-1}(\vb{x} \mid \vb*{\theta})
