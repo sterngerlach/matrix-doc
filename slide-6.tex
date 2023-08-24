@@ -234,12 +234,31 @@
   \end{align*}
   \item 1次モーメント: \textcolor{red}{平均} $\mu = \E{x}$ (Mean)
   \item 2次モーメント: \textcolor{red}{分散} $\sigma^2 = \Var{x} = \E{(x - \mu)^2}$ (Variance)
-  \item 3次モーメント: \textcolor{red}{歪度} $\E{(x - \mu)^3}$ (Skewness; わいど)
-  \item 4次モーメント: \textcolor{red}{尖度} $\E{(x - \mu)^4}$ (Kurtosis; せんど)
+  \item 3次モーメント: $\E{(x - \mu)^3}$
+  \item 4次モーメント: $\E{(x - \mu)^4}$
   \begin{align*}
     \mu &= \E{x} = \int x p(x) \dd{x} \\
     \sigma^2 &= \Var{x} = \E{(x - \mu)^2} = \int (x - \mu)^2 p(x) \dd{x}
   \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{モーメント, 平均, 分散, 歪度, 尖度}
+\begin{itemize}
+  \item 確率分布$p(x)$の\textcolor{red}{歪度} (Skewness; わいど):
+  \begin{align*}
+    \E{\left( \frac{x - \mu}{\sigma} \right)^3} = \frac{\E{\left( x - \mu \right)^3}}{\sigma^3}
+      = \frac{\E{\left( x - \mu \right)^3}}{\E{\left( x - \mu \right)^2}^\frac{3}{2}}
+  \end{align*}
+  \item 確率分布$p(x)$の\textcolor{red}{尖度} (Kurtosis; せんど):
+  \begin{align*}
+    \E{\left( \frac{x - \mu}{\sigma} \right)^4} = \frac{\E{\left( x - \mu \right)^4}}{\sigma^4}
+      = \frac{\E{\left( x - \mu \right)^4}}{\E{\left( x - \mu \right)^2}^2}
+  \end{align*}
+  \item 尖度は, $\E{\left( \frac{x - \mu}{\sigma} \right)^4} - 3$とすることもある.
+  \begin{itemize}
+    \item ガウス分布の尖度を$0$とするため.
+  \end{itemize}
 \end{itemize}
 \end{frame}
 
