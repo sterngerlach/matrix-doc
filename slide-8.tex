@@ -1,0 +1,1606 @@
+
+% slide-8.tex
+
+\documentclass[dvipdfmx,notheorems,t]{beamer}
+
+\usepackage{docmute}
+\input{settings}
+
+\title{行列輪講: 第8回 ガウス分布2}
+\author{杉浦 圭祐}
+\institute[松谷研究室]{慶應義塾大学理工学部情報工学科 松谷研究室}
+\date{\today}
+
+% Always use the \displaystyle
+\everymath{\displaystyle}
+
+\begin{document}
+
+\linespread{1.1}
+
+\frame{\titlepage}
+
+\section{}
+
+\begin{frame}[t,allowdisplaybreaks,allowframebreaks]{目次}
+\tableofcontents
+\end{frame}
+
+\begin{frame}{このスライドの概要}
+\begin{itemize}
+  \item ガウス分布について確認する
+  \begin{itemize}
+    \item Isserlisの定理
+  \end{itemize}
+  \item 以下の資料を参考に作成しました:
+  \begin{itemize}
+    \item パターン認識と機械学習 (上巻)
+    \item State Estimation For Robotics
+  \end{itemize}
+  \item 重要な分布なので, 考えることがたくさんある
+\end{itemize}
+\end{frame}
+
+\section{Isserlisの定理}
+
+\begin{frame}{Isserlisの定理}
+\begin{itemize}
+  \item $\vb{x} = (x_1, \ldots, x_D)$が, 平均$\vb{0}$のガウス分布$\mathcal{N}(\vb{x} \mid \vb{0}, \vb{\Sigma})$に従うとき,
+  \textcolor{red}{Isserlisの定理}が成り立つ:
+  \begin{align*}
+    \E{x_1 x_2 \ldots x_n} = \sum_{p \in P_n^2} \prod_{(i, j) \in p} \E{x_i x_j}
+      = \sum_{p \in P_n^2} \prod_{(i, j) \in p} \Cov{x_i}{x_j}
+  \end{align*}
+  \item 総和: $\{ 1, \ldots, n \}$を, 互いに素な$\frac{n}{2}$個のペアに分割する方法について
+  \item $n = 4$であれば, 以下の3通りある:
+  \begin{align*}
+    \{ 1, 2, 3, 4 \} &\to \left\{ \{ 1, 2 \}, \{ 3, 4 \} \right\}, \
+      \left\{ \{ 1, 3 \}, \{ 2, 4 \} \right\}, \
+      \left\{ \{ 1, 4 \}, \{ 2, 3 \} \right\} \equiv P_4^2
+  \end{align*}
+  \item $n = 4$のときは, Isserlisの定理は次のようになる:
+  \begin{align*}
+    \E{x_1 x_2 x_3 x_4} = \E{x_1 x_2} \E{x_3 x_4}
+      + \E{x_1 x_3} \E{x_2 x_4} + \E{x_1 x_4} \E{x_2 x_3}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Isserlisの定理}
+\begin{itemize}
+  \item $\vb{x} = (x_1, \ldots, x_D)$が, 平均$\vb{0}$のガウス分布$\mathcal{N}(\vb{x} \mid \vb{0}, \vb{\Sigma})$に従うとき,
+  \textcolor{red}{Isserlisの定理}が成り立つ:
+  \begin{align*}
+    \E{x_1 x_2 \ldots x_n} = \sum_{p \in P_n^2} \prod_{(i, j) \in p} \E{x_i x_j}
+      = \sum_{p \in P_n^2} \prod_{(i, j) \in p} \Cov{x_i}{x_j}
+  \end{align*}
+  \item 総和: $\{ 1, \ldots, n \}$を, 互いに素な$\frac{n}{2}$個のペアに分割する方法について
+  \item $n$が奇数 ($n = 2m + 1$) のときは, ペアを作れないので, 0になる.
+  \item $n$が偶数 ($n = 2m$) であれば, 項の総数 (分割の方法) は
+  \begin{align*}
+    \frac{(2m)!}{(2^m m!)} = (2m - 1) (2m - 3) \cdots 3 \cdot 1 = (2m - 1)!!
+  \end{align*}
+  \item $n = 4$のとき3, $n = 6$のとき15, $n = 8$のとき105個の項が出現する.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Isserlisの定理}
+\begin{itemize}
+  \item 簡単な例として, $x$がガウス分布$\mathcal{N}(x \mid 0, \sigma^2)$に従うとする.
+  \item $\E{x^4}$は次のように分かる:
+  \begin{align*}
+    \E{x^4} = 3 \E{x^2} \E{x^2} = 3 \sigma^2 \sigma^2 = 3 \sigma^4
+  \end{align*}
+  \item $\E{x^6}$は
+  \begin{align*}
+    \E{x^6} = 15 \E{x^2} \E{x^2} \E{x^2} = 15 \sigma^2 \sigma^2 \sigma^2 = 15 \sigma^6
+  \end{align*}
+  \item $\E{x^8}$は
+  \begin{align*}
+    \E{x^8} = 105 \E{x^2} \E{x^2} \E{x^2} \E{x^2} = 105 \sigma^2 \sigma^2 \sigma^2 \sigma^2 = 105 \sigma^8
+  \end{align*}
+  \item 奇数の$n$に対しては, $\E{x^n} = 0$.
+  \item 分布の平均は0だから, $\E{x^2} = \Var{x} + \E{x}^2 = \Var{x} = \sigma^2$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Isserlisの定理の応用1}
+\begin{itemize}
+  \item 続いて, $\vb{x} = (x_1, \ldots, x_D)$がガウス分布$\mathcal{N}(\vb{x} \mid \vb{0}, \vb{\Sigma})$に従うとする.
+  \item 分布の平均は$\vb{0}$だから, 次が成り立つことに注意しよう:
+  \begin{align*}
+    \Cov{x_i}{x_j} &= \E{\left( x_i - \E{x_i} \right) \left( x_j - \E{x_j} \right)} = \E{x_i x_j} \\
+    \Var{x_i} &= \Cov{x_i}{x_i} = \E{x_i^2}
+  \end{align*}
+  \item このとき, 共分散$\vb{\Sigma}$の$(i, j)$成分は, $\Cov{x_i}{x_j} = \E{x_i x_j}$となる:
+  \begin{align*}
+    \left( \vb{\Sigma} \right)_{ij} = \Cov{x_i}{x_j} = \E{x_i x_j}
+  \end{align*}
+  \item 以上を踏まえて, 期待値$\E{\vb{x} \vb{x}^\top \vb{x} \vb{x}^\top}$を求めよう.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Isserlisの定理の応用1}
+\begin{itemize}
+  \item 期待値$\E{\vb{x} \vb{x}^\top \vb{x} \vb{x}^\top}$を求めよう. $(i, j)$成分は
+  \begin{align*}
+    & \E{\left( \vb{x} \left( \vb{x}^\top \vb{x} \right) \vb{x}^\top \right)_{ij}}
+    = \E{x_i \left( \sum_{k = 1}^D x_k^2 \right) x_j}
+    = \sum_k \E{x_i x_j x_k^2} \\
+    &= \sum_k \E{x_i x_j} \E{x_k^2} + 2 \E{x_i x_k} {\color{red} \E{x_j x_k}} \\
+    &= \E{x_i x_j} \left( \sum_k \E{x_k^2} \right)
+      + 2 \sum_k \E{x_i x_k} {\color{red} \E{x_k x_j}} \\
+    &= \left( \vb{\Sigma} \right)_{ij} \left( \sum_k \left( \vb{\Sigma} \right)_{kk} \right)
+      + 2 \sum_k \left( \vb{\Sigma} \right)_{ik} \left( \vb{\Sigma} \right)_{kj}
+    = \left( \vb{\Sigma} \right)_{ij} \tr(\vb{\Sigma}) + 2 \left( \vb{\Sigma}^2 \right)_{ij}
+  \end{align*}
+  であるから, $\E{\vb{x} \vb{x}^\top \vb{x} \vb{x}^\top} = \vb{\Sigma} \tr(\vb{\Sigma}) + 2 \vb{\Sigma}^2
+    = \vb{\Sigma} \left( \tr(\vb{\Sigma}) + 2 \vb{\Sigma} \right)$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Isserlisの定理の応用2}
+\begin{itemize}
+  \item 続いて, 期待値$\E{\vb{x} \vb{x}^\top \vb{A} \vb{x} \vb{x}^\top}$を求めよう. $(i, j)$成分は
+  \begin{align*}
+    & \E{\left( \vb{x} \left( \vb{x}^\top \vb{A} \vb{x} \right) \vb{x}^\top \right)_{ij}}
+    = \E{x_i \left( \sum_{k = 1}^D \sum_{l = 1}^D x_k a_{kl} x_l \right) x_j} \\
+    &= \sum_k \sum_l a_{kl} \E{x_i x_j x_k x_l} \\
+    &= \sum_k \sum_l a_{kl} \left( \E{x_i x_j} \E{x_k x_l}
+      + \E{x_i x_k} \E{x_j x_l} + \E{x_i x_l} \E{x_j x_k} \right) \\
+    &= \E{x_i x_j} \sum_k \sum_l a_{kl} \E{x_l x_k} \\
+    & \quad + \sum_k \sum_l \E{x_i x_k} a_{kl} \E{x_l x_j}
+      + \sum_k \sum_l \E{x_i x_l} a_{kl} \E{x_k x_j}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Isserlisの定理の応用2}
+\begin{itemize}
+  \item $\E{x_i x_j} = \left( \vb{\Sigma} \right)_{ij}$を使って, 式変形を続けると,
+  \begin{align*}
+    & \E{x_i x_j} \sum_k \sum_l a_{kl} \E{x_l x_k} \\
+    & \quad + \sum_k \sum_l \E{x_i x_k} a_{kl} \E{x_l x_j}
+      + \sum_k \sum_l \E{x_i x_l} a_{kl} \E{x_k x_j} \\
+    &= \left( \vb{\Sigma} \right)_{ij} \sum_k \sum_l a_{kl} \left( \vb{\Sigma} \right)_{lk} \\
+    & \quad + \sum_k \sum_l \left( \vb{\Sigma} \right)_{ik} a_{kl} \left( \vb{\Sigma} \right)_{lj}
+      + \sum_k \sum_l \left( \vb{\Sigma} \right)_{il}
+      \left( \vb{A}^\top \right)_{lk} \left( \vb{\Sigma} \right)_{kj} \\
+    &= \left( \vb{\Sigma} \right)_{ij} \sum_k \left( \vb{A} \vb{\Sigma} \right)_{kk}
+      + \left( \vb{\Sigma} \vb{A} \vb{\Sigma} \right)_{ij}
+      + \left( \vb{\Sigma} \vb{A}^\top \vb{\Sigma} \right)_{ij} \\
+    &= \left( \vb{\Sigma} \right)_{ij} \tr(\vb{A} \vb{\Sigma})
+      + \left( \vb{\Sigma} \vb{A} \vb{\Sigma} \right)_{ij}
+      + \left( \vb{\Sigma} \vb{A}^\top \vb{\Sigma} \right)_{ij}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Isserlisの定理の応用2}
+\begin{itemize}
+  \item 期待値$\E{\vb{x} \vb{x}^\top \vb{A} \vb{x} \vb{x}^\top}$の$(i, j)$成分は
+  \begin{align*}
+    \E{\left( \vb{x} \left( \vb{x}^\top \vb{A} \vb{x} \right) \vb{x}^\top \right)_{ij}}
+    &= \left( \vb{\Sigma} \right)_{ij} \tr(\vb{A} \vb{\Sigma})
+      + \left( \vb{\Sigma} \vb{A} \vb{\Sigma} \right)_{ij}
+      + \left( \vb{\Sigma} \vb{A}^\top \vb{\Sigma} \right)_{ij}
+  \end{align*}
+  となるから,
+  \begin{align*}
+    \E{\vb{x} \vb{x}^\top \vb{A} \vb{x} \vb{x}^\top}
+    &= \vb{\Sigma} \tr(\vb{A} \vb{\Sigma})
+      + \vb{\Sigma} \vb{A} \vb{\Sigma} + \vb{\Sigma} \vb{A}^\top \vb{\Sigma} \\
+    &= \vb{\Sigma} \left( \tr(\vb{A} \vb{\Sigma}) \vb{I}
+      + \left( \vb{A} + \vb{A}^\top \right) \vb{\Sigma} \right)
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Isserlisの定理の応用3}
+\begin{itemize}
+  \item 続いて, $\vb{x} = (x_1, \ldots, x_D)$が標準正規分布$\mathcal{N}(\vb{x} \mid \vb{0}, \vb{I})$に従うとする.
+  \item $\vb{x}$の各成分は互いに独立であり, $x_i$は$\mathcal{N}(x_i \mid 0, 1)$に従う.
+  \item このとき, $z = \vb{x}^\top \vb{x} = \sum_{i = 1}^D x_i^2$は,
+  自由度$D$の\textcolor{red}{カイ二乗分布}に従う.
+  \item 期待値は$D$, 分散は$2D$になる.
+  \item 期待値$\E{z} = \E{\vb{x}^\top \vb{x}}$を求めよう:
+  \begin{align*}
+    \E{\vb{x}^\top \vb{x}} = \E{\sum_i x_i^2} = \sum_i \E{x_i^2} = \sum_i 1 = D
+  \end{align*}
+  \item 分布の平均は0だから, $\E{x_i^2} = \Var{x_i} + \E{x_i}^2 = 1$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Isserlisの定理の応用3}
+\begin{itemize}
+  \item 続いて, 分散$\Var{z} = \E{\left( z - \E{z} \right)^2}$を求めよう ($z = \vb{x}^\top \vb{x}$):
+  \begin{align*}
+    & \E{\left( \vb{x}^\top \vb{x} - \E{\vb{x}^\top \vb{x}} \right)^2}
+    = \E{\left( \vb{x}^\top \vb{x} - D \right)^2}
+    = \E{\left( \sum_i x_i^2 - D \right)^2} \\
+    &= \E{\left( \sum_i x_i^2 \right)^2 - 2D \left( \sum_i x_i^2 \right) + D^2} \\
+    &= \sum_i \sum_j \E{x_i^2 x_j^2} - 2D \sum_i \E{x_i^2} + D^2 \\
+    &= \sum_i \sum_j \left( \E{x_i^2} \E{x_j^2} + 2 \E{x_i x_j}^2 \right)
+      - 2D \sum_i 1 + D^2
+  \end{align*}
+  \item 最後の式変形で, Isserlisの定理を用いた.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Isserlisの定理の応用3}
+\begin{itemize}
+  \item さらに式変形を続けると, 自由度$D$のカイ二乗分布の分散は,
+  \begin{align*}
+    &= \sum_i \sum_j \left( \E{x_i^2} \E{x_j^2} + 2 \E{x_i x_j}^2 \right)
+      - 2D \sum_i 1 + D^2 \\
+    &= \sum_i \sum_{j \neq i} \left( \E{x_i^2} \E{x_j^2} + 2 \E{x_i x_j}^2 \right)
+      + \sum_i 3 \E{x_i^2}^2 - 2D^2 + D^2 \\
+    &= \sum_i \sum_{j \neq i} \left( 1 \cdot 1 + 2 \cdot 0^2 \right) + 3 \sum_i 1^2 - D^2 \\
+    &= \sum_i \sum_{j \neq i} 1 + 3 \sum_i 1 - D^2 \\
+    &= D(D - 1) + 3D - D^2 = 2D
+  \end{align*}
+  \item $\vb{x}$の各成分は独立だから, $\E{x_i x_j} = \E{x_i} \E{x_j}$.
+  平均は0なので, $\E{x_i x_j} = 0$.
+  また, $\E{x_i^2} = 1$.
+\end{itemize}
+\end{frame}
+
+\section{条件付きガウス分布と周辺ガウス分布}
+
+\begin{frame}{条件付きガウス分布と周辺ガウス分布}
+\begin{itemize}
+  \item $\vb{x}, \vb{y}$の同時分布が, ガウス分布で表されるとする:
+  \begin{align*}
+    p(\vb{x}, \vb{y}) = \mathcal{N} \left( \mqty(\vb{x} \\ \vb{y}) \middlerel|
+      \mqty(\vb*{\mu}_x \\ \vb*{\mu}_y),
+      \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xy} \\
+        \vb{\Sigma}_{yx} & \vb{\Sigma}_{yy}) \right)
+  \end{align*}
+  \item まずは, 形から確認してみよう.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{条件付きガウス分布と周辺ガウス分布}
+\begin{itemize}
+  \item $\vb{x}, \vb{y}$の同時分布が, ガウス分布で表されるとする:
+  \begin{align*}
+    p(\vb{x}, \vb{y}) = \mathcal{N} \left( \mqty(\vb{x} \\ \vb{y}) \middlerel|
+      \mqty(\vb*{\mu}_x \\ \vb*{\mu}_y),
+      \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xy} \\
+        \vb{\Sigma}_{yx} & \vb{\Sigma}_{yy}) \right)
+  \end{align*}
+  \item $\vb{x}$を$M$次元, $\vb{y}$を$N$次元とすると, $\vb*{\mu}_x$は$M$次, $\vb*{\mu}_y$は$N$次ベクトル.
+  \item $\vb{\Sigma}_{xx}$は$M \times M$, $\vb{\Sigma}_{yy}$は$N \times N$,
+  $\vb{\Sigma}_{xy}$は$M \times N$, $\vb{\Sigma}_{yx}$は$N \times M$行列.
+  {\small \begin{gather*}
+    \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xy} \\
+      \vb{\Sigma}_{yx} & \vb{\Sigma}_{yy})
+      = \E{\mqty(\vb{x} - \vb*{\mu}_x \\ \vb{y} - \vb*{\mu}_y)
+      \mqty(\vb{x} - \vb*{\mu}_x \\ \vb{y} - \vb*{\mu}_y)^\top}
+      = \mqty(\Cov{\vb{x}}{\vb{x}} & \Cov{\vb{x}}{\vb{y}} \\
+        \Cov{\vb{y}}{\vb{x}} & \Cov{\vb{y}}{\vb{y}}) \\
+    \vb{\Sigma}_{xx} = \E{\left( \vb{x} - \vb*{\mu}_x \right) \left( \vb{x} - \vb*{\mu}_x \right)^\top}, \quad
+    \vb{\Sigma}_{yy} = \E{\left( \vb{y} - \vb*{\mu}_y \right) \left( \vb{y} - \vb*{\mu}_y \right)^\top} \\
+    \vb{\Sigma}_{xy} = \E{\left( \vb{x} - \vb*{\mu}_x \right) \left( \vb{y} - \vb*{\mu}_y \right)^\top}, \quad
+    \vb{\Sigma}_{yx} = \E{\left( \vb{y} - \vb*{\mu}_y \right) \left( \vb{x} - \vb*{\mu}_x \right)^\top}
+  \end{gather*}}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{条件付きガウス分布と周辺ガウス分布}
+\begin{itemize}
+  \item $\vb{x}, \vb{y}$の同時分布が, ガウス分布で表されるとする:
+  \begin{align*}
+    p(\vb{x}, \vb{y}) = \mathcal{N} \left( \mqty(\vb{x} \\ \vb{y}) \middlerel|
+      \mqty(\vb*{\mu}_x \\ \vb*{\mu}_y),
+      \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xy} \\
+        \vb{\Sigma}_{yx} & \vb{\Sigma}_{yy}) \right)
+  \end{align*}
+  \item 共分散は対称行列なので,
+  \begin{align*}
+    \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xy} \\
+      \vb{\Sigma}_{yx} & \vb{\Sigma}_{yy})^\top
+    = \mqty(\vb{\Sigma}_{xx}^\top & \vb{\Sigma}_{yx}^\top \\
+      \vb{\Sigma}_{xy}^\top & \vb{\Sigma}_{yy}^\top)
+    = \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xy} \\
+      \vb{\Sigma}_{yx} & \vb{\Sigma}_{yy})
+  \end{align*}
+  \item 以上より, $\vb{\Sigma}_{xx}^\top = \vb{\Sigma}_{xx}$,
+  $\vb{\Sigma}_{yy} = \vb{\Sigma}_{yy}^\top$だから,
+  $\vb{\Sigma}_{xx}$と$\vb{\Sigma}_{yy}$は\textcolor{red}{対称行列}.
+  \item また, 右上と左下に関しては, \textcolor{red}{$\vb{\Sigma}_{xy}^\top = \vb{\Sigma}_{yx}$}が成り立つ.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{条件付きガウス分布と周辺ガウス分布}
+\begin{itemize}
+  \item ガウス分布では, $\exp(\cdot)$の中に, 共分散の逆行列$\vb{\Sigma}^{-1}$が現れる.
+  \item $\vb{\Sigma}^{-1} = \vb{\Lambda}$を\textcolor{red}{精度行列} (Precision Matrix) とよぶ.
+  \item 前回は$\vb{\Lambda}$を, $\vb{\Sigma}$の固有値を並べた対角行列としたので, 混同に注意.
+  \item ブロック行列の逆行列の関係から (第1回で扱った),
+  \begin{align*}
+    \mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D})^{-1}
+    &= \mqty(\vb{X}^{-1} & -\vb{X}^{-1} \vb{B} \vb{D}^{-1} \\
+      -\vb{D}^{-1} \vb{C} \vb{X}^{-1}
+      & \vb{D}^{-1} + \vb{D}^{-1} \vb{C} \vb{X}^{-1} \vb{B} \vb{D}^{-1}) \\
+    &= \mqty(\vb{A}^{-1} + \vb{A}^{-1} \vb{B} \vb{Y}^{-1} \vb{C} \vb{A}^{-1}
+      & -\vb{A}^{-1} \vb{B} \vb{Y}^{-1} \\
+      -\vb{Y}^{-1} \vb{C} \vb{A}^{-1} & \vb{Y}^{-1})
+  \end{align*}
+  $\vb{X} = \vb{A} - \vb{B} \vb{D}^{-1} \vb{C}$, $\vb{Y} = \vb{D} - \vb{C} \vb{A}^{-1} \vb{B}$は,
+  $\vb{A}, \vb{D}$のシューア補行列.
+  \item 上の関係を使って, $\vb{\Lambda}$の各成分を調べてみよう.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{条件付きガウス分布と周辺ガウス分布}
+\begin{itemize}
+  \item 精度行列の各成分を, 次のように表す:
+  \begin{align*}
+    \mqty(\vb{\Lambda}_{xx} & \vb{\Lambda}_{xy} \\
+      \vb{\Lambda}_{yx} & \vb{\Lambda}_{yy})
+      = \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xy} \\
+        \vb{\Sigma}_{yx} & \vb{\Sigma}_{yy})^{-1}
+  \end{align*}
+  \item $\vb{\Sigma}_{xx}$のシューア補行列$\vb{\Sigma}_{xx} - \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx}$を使えば,
+  \begin{align*}
+    \vb{\Lambda}_{xx} &= \left(
+      \vb{\Sigma}_{xx} - \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx} \right)^{-1} \\
+    \vb{\Lambda}_{xy} &= -\left(
+      \vb{\Sigma}_{xx} - \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx} \right)^{-1}
+      \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \\
+    \vb{\Lambda}_{yx} &= -\vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx} \left(
+      \vb{\Sigma}_{xx} - \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx} \right)^{-1} \\
+    \vb{\Lambda}_{yy} &= \vb{\Sigma}_{yy}^{-1} + \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx} \left(
+      \vb{\Sigma}_{xx} - \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx} \right)^{-1}
+      \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{条件付きガウス分布と周辺ガウス分布}
+\begin{itemize}
+  \item 精度行列の各成分を, 次のように表す:
+  \begin{align*}
+    \mqty(\vb{\Lambda}_{xx} & \vb{\Lambda}_{xy} \\
+      \vb{\Lambda}_{yx} & \vb{\Lambda}_{yy})
+      = \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xy} \\
+        \vb{\Sigma}_{yx} & \vb{\Sigma}_{yy})^{-1}
+  \end{align*}
+  \item 共分散$\vb{\Sigma}$は対称行列なので, $\vb{\Lambda} = \vb{\Sigma}^{-1}$も対称行列になる:
+  \begin{align*}
+    \vb{\Lambda}^\top = \left( \vb{\Sigma}^{-1} \right)^\top
+      = \left( \vb{\Sigma}^\top \right)^{-1} = \vb{\Sigma}^{-1} = \vb{\Lambda}
+  \end{align*}
+  \item $\vb{\Lambda}$は対称行列だから,
+  \begin{align*}
+    \mqty(\vb{\Lambda}_{xx} & \vb{\Lambda}_{xy} \\
+      \vb{\Lambda}_{yx} & \vb{\Lambda}_{yy})^\top
+    = \mqty(\vb{\Lambda}_{xx}^\top & \vb{\Lambda}_{yx}^\top \\
+      \vb{\Lambda}_{xy}^\top & \vb{\Lambda}_{yy}^\top)
+    = \mqty(\vb{\Lambda}_{xx} & \vb{\Lambda}_{xy} \\
+      \vb{\Lambda}_{yx} & \vb{\Lambda}_{yy})
+  \end{align*}
+  \item 以上より, $\vb{\Lambda}_{xx}^\top = \vb{\Lambda}_{xx}$, $\vb{\Lambda}_{yy}^\top = \vb{\Lambda}_{yy}$だから,
+  $\vb{\Lambda}_{xx}$と$\vb{\Lambda}_{yy}$は対称行列.
+  \item また, $\vb{\Lambda}_{xy}^\top = \vb{\Lambda}_{yx}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{条件付きガウス分布と周辺ガウス分布}
+\begin{itemize}
+  \item $\vb{x}, \vb{y}$の同時分布が, ガウス分布で表されるとする:
+  \begin{align*}
+    p(\vb{x}, \vb{y}) = \mathcal{N} \left( \mqty(\vb{x} \\ \vb{y}) \middlerel|
+      \mqty(\vb*{\mu}_x \\ \vb*{\mu}_y),
+      \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xy} \\
+        \vb{\Sigma}_{yx} & \vb{\Sigma}_{yy}) \right)
+  \end{align*}
+  \item $\exp(\cdot)$の中身を調べてみよう ($-\frac{1}{2}$を除く):
+  \begin{align*}
+    & \mqty(\vb{x} - \vb*{\mu}_x \\ \vb{y} - \vb*{\mu}_y)^\top
+      \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xy} \\
+        \vb{\Sigma}_{yx} & \vb{\Sigma}_{yy})^{-1}
+      \mqty(\vb{x} - \vb*{\mu}_x \\ \vb{y} - \vb*{\mu}_y) \\
+    &= \mqty(\vb{x} - \vb*{\mu}_x \\ \vb{y} - \vb*{\mu}_y)^\top
+      \mqty(\vb{\Lambda}_{xx} & \vb{\Lambda}_{xy} \\
+        \vb{\Lambda}_{yx} & \vb{\Lambda}_{yy})
+      \mqty(\vb{x} - \vb*{\mu}_x \\ \vb{y} - \vb*{\mu}_y) \\
+    &= \left( \vb{x} - \vb*{\mu}_x \right)^\top \vb{\Lambda}_{xx}
+      \left( \vb{x} - \vb*{\mu}_x \right)
+      + \left( \vb{x} - \vb*{\mu}_x \right)^\top \vb{\Lambda}_{xy}
+      \left( \vb{y} - \vb*{\mu}_y \right) \\
+    & \quad + \left( \vb{y} - \vb*{\mu}_y \right)^\top \vb{\Lambda}_{yx}
+      \left( \vb{x} - \vb*{\mu}_x \right)
+      + \left( \vb{y} - \vb*{\mu}_y \right)^\top \vb{\Lambda}_{yy}
+      \left( \vb{y} - \vb*{\mu}_y \right)
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{条件付きガウス分布と周辺ガウス分布}
+\begin{itemize}
+  \item $\vb{\Sigma}_{xx}, \vb{\Sigma}_{yy}, \vb{\Lambda}_{xx}, \vb{\Lambda}_{yy}$は対称.
+  $\vb{\Sigma}_{xy}^\top = \vb{\Sigma}_{yx}^\top$,
+  $\vb{\Lambda}_{xy}^\top = \vb{\Lambda}_{yx}$であるから,
+  \begin{align*}
+    \vb{\Lambda}_{xx} &= \left(
+      \vb{\Sigma}_{xx} - \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx} \right)^{-1} \\
+    \vb{\Lambda}_{xy} &= -\left(
+      \vb{\Sigma}_{xx} - \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx} \right)^{-1}
+      \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} = -\vb{\Lambda}_{xx} \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \\
+    \vb{\Lambda}_{yx} &= -\vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx} \left(
+      \vb{\Sigma}_{xx} - \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx} \right)^{-1}
+      = -\vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{xy}^\top \vb{\Lambda}_{xx} \\
+    \vb{\Lambda}_{yy} &= \vb{\Sigma}_{yy}^{-1} + \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx} \left(
+      \vb{\Sigma}_{xx} - \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx} \right)^{-1}
+      \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \\
+    &= \vb{\Sigma}_{yy}^{-1} + \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{xy}^\top \vb{\Lambda}_{xx}
+      \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1}
+  \end{align*}
+  \item これらを使うと, $\exp(\cdot)$の中身は,
+  \begin{align*}
+    & \left( \vb{x} - \vb*{\mu}_x \right)^\top \vb{\Lambda}_{xx}
+      \left( \vb{x} - \vb*{\mu}_x \right)
+      - \left( \vb{x} - \vb*{\mu}_x \right)^\top
+      \vb{\Lambda}_{xx} \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1}
+      \left( \vb{y} - \vb*{\mu}_y \right) \\
+    & \quad - \left( \vb{y} - \vb*{\mu}_y \right)^\top
+      \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{xy}^\top \vb{\Lambda}_{xx}
+      \left( \vb{x} - \vb*{\mu}_x \right) \\
+    & \quad + \left( \vb{y} - \vb*{\mu}_y \right)^\top
+      \left( \vb{\Sigma}_{yy}^{-1} + \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{xy}^\top
+      \vb{\Lambda}_{xx} \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \right)
+      \left( \vb{y} - \vb*{\mu}_y \right)
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{条件付きガウス分布と周辺ガウス分布}
+\begin{itemize}
+  \item 続いて, 項を頑張って整理すると, 2つの二次形式の和となる:
+  \begin{align*}
+    & \left( \vb{x} - \vb*{\mu}_x \right)^\top \vb{\Lambda}_{xx}
+      \left( \vb{x} - \vb*{\mu}_x \right)
+      - \left( \vb{x} - \vb*{\mu}_x \right)^\top
+      \vb{\Lambda}_{xx} \left( \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1}
+      \left( \vb{y} - \vb*{\mu}_y \right) \right) \\
+    & \quad - \left( \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1}
+      \left( \vb{y} - \vb*{\mu}_y \right) \right)^\top \vb{\Lambda}_{xx}
+      \left( \vb{x} - \vb*{\mu}_x \right) \\
+    & \quad + \left( \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1}
+      \left( \vb{y} - \vb*{\mu}_y \right) \right)^\top \vb{\Lambda}_{xx}
+      \left( \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1}
+      \left( \vb{y} - \vb*{\mu}_y \right) \right) \\
+    & \quad + \left( \vb{y} - \vb*{\mu}_y \right)^\top \vb{\Sigma}_{yy}^{-1}
+      \left( \vb{y} - \vb*{\mu}_y \right) \\
+    &= \left( \vb{x} - \vb*{\mu}_x - \left( \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1}
+      \left( \vb{y} - \vb*{\mu}_y \right) \right) \right)^\top \\
+    & \quad \vb{\Lambda}_{xx}
+      \left( \vb{x} - \vb*{\mu}_x - \left( \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1}
+      \left( \vb{y} - \vb*{\mu}_y \right) \right) \right)
+      + \left( \vb{y} - \vb*{\mu}_y \right)^\top \vb{\Sigma}_{yy}^{-1}
+      \left( \vb{y} - \vb*{\mu}_y \right)
+  \end{align*}
+  \item 上の変形で, $\vb{\Sigma}_{yy}$が対称だから, $\vb{\Sigma}_{yy}^{-1}$も対称であることを使った.
+  \item $\exp(\cdot)$の中身が2つの二次形式の和だから, 同時ガウス分布$p(\vb{x}, \vb{y})$は,
+  \textcolor{red}{2つのガウス分布に分解できる}ことを示唆する.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{条件付きガウス分布と周辺ガウス分布}
+\begin{itemize}
+  \item $\exp(\cdot)$の中身は, 2つの二次形式の和として表現できる:
+  \begin{align*}
+    & \left( \vb{x} - \vb*{\mu}_x - \left( \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1}
+      \left( \vb{y} - \vb*{\mu}_y \right) \right) \right)^\top \\
+    & \quad \vb{\Lambda}_{xx}
+      \left( \vb{x} - \vb*{\mu}_x - \left( \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1}
+      \left( \vb{y} - \vb*{\mu}_y \right) \right) \right)
+      + \left( \vb{y} - \vb*{\mu}_y \right)^\top \vb{\Sigma}_{yy}^{-1}
+      \left( \vb{y} - \vb*{\mu}_y \right)
+  \end{align*}
+  \item 第1項: $p(\vb{x} \mid \vb{y}) = \mathcal{N}(\vb{x} \mid \vb*{\mu}_x
+  + \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \left( \vb{y} - \vb*{\mu}_y \right), \vb{\Lambda}_{xx}^{-1})$に対応
+  \item 第2項: $p(\vb{y}) = \mathcal{N}(\vb{y} \mid \vb*{\mu}_y, \vb{\Sigma}_{yy})$に対応
+  \item 同時ガウス分布$p(\vb{x}, \vb{y})$は次のように分解できる:
+  \begin{align*}
+    p(\vb{x}, \vb{y}) &= p(\vb{x} \mid \vb{y}) p(\vb{y}) \\
+    p(\vb{x} \mid \vb{y}) &= \mathcal{N}(\vb{x} \mid \vb*{\mu}_x
+      + \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \left( \vb{y} - \vb*{\mu}_y \right),
+      \vb{\Sigma}_{xx} - \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx}) \\
+    p(\vb{y}) &= \mathcal{N}(\vb{y} \mid \vb*{\mu}_y, \vb{\Sigma}_{yy})
+  \end{align*}
+  \item 定数係数の部分について確認しておこう.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{条件付きガウス分布と周辺ガウス分布}
+\begin{itemize}
+  \item 同時ガウス分布$p(\vb{x}, \vb{y})$は次のように分解できる:
+  \begin{align*}
+    p(\vb{x}, \vb{y}) &= p(\vb{x} \mid \vb{y}) p(\vb{y}) \\
+    p(\vb{x} \mid \vb{y}) &= \mathcal{N}(\vb{x} \mid \vb*{\mu}_x
+      + \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \left( \vb{y} - \vb*{\mu}_y \right),
+      \vb{\Sigma}_{xx} - \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx}) \\
+    p(\vb{y}) &= \mathcal{N}(\vb{y} \mid \vb*{\mu}_y, \vb{\Sigma}_{yy})
+  \end{align*}
+  \item $\vb{x}$を$M$次元, $\vb{y}$を$N$次元とする. ガウス分布$p(\vb{x}, \vb{y})$の定数係数は,
+  \begin{align*}
+    & \frac{1}{\left( 2\pi \right)^\frac{M + N}{2} \sqrt{\det \vb{\Sigma}}}
+    = \frac{1}{\left( 2\pi \right)^\frac{M + N}{2}
+      \sqrt{\det \vb{\Sigma}_{yy} \det(\vb{\Sigma}_{xx} - \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx})}} \\
+    &= \frac{1}{\left( 2\pi \right)^\frac{N}{2} \sqrt{\det \vb{\Sigma}_{yy}}}
+      \times \frac{1}{\left( 2\pi \right)^\frac{M}{2} \sqrt{
+      \det(\vb{\Sigma}_{xx} - \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx})}}
+  \end{align*}
+  \item ガウス分布$p(\vb{y})$, $p(\vb{x} \mid \vb{y})$の定数係数の積となっている.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{条件付きガウス分布と周辺ガウス分布}
+\begin{itemize}
+  \item ただし, ブロック行列の行列式に関する, 次の式を使った:
+  \begin{align*}
+    \det\left( \mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D}) \right)
+      &= \det(\vb{A}) \det(\vb{D} - \vb{C} \vb{A}^{-1} \vb{B}) & \text{$\vb{A}$が正則} \\
+    \det\left( \mqty(\vb{A} & \vb{B} \\ \vb{C} & \vb{D}) \right)
+      &= \det(\vb{D}) \det(\vb{A} - \vb{B} \vb{D}^{-1} \vb{C}) & \text{$\vb{D}$が正則}
+  \end{align*}
+  \item 上記より,
+  \begin{align*}
+    \det \vb{\Sigma} &= \det(\mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xy} \\
+      \vb{\Sigma}_{yx} & \vb{\Sigma}_{yy})) \\
+    &= \det \vb{\Sigma}_{yy} \times
+      \det(\vb{\Sigma}_{xx} - \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx}) \\
+    &= \det \vb{\Sigma}_{xx} \times
+      \det(\vb{\Sigma}_{yy} - \vb{\Sigma}_{yx} \vb{\Sigma}_{xx}^{-1} \vb{\Sigma}_{xy})
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{条件付きガウス分布と周辺ガウス分布}
+\begin{itemize}
+  \item 同時ガウス分布$p(\vb{x}, \vb{y})$について, 次が分かった:
+  \item $p(\vb{x}, \vb{y})$の指数部の中身は, $p(\vb{x} \mid \vb{y})$, $p(\vb{y})$の指数部の和.
+  \item $p(\vb{x}, \vb{y})$の定数係数は, $p(\vb{x} \mid \vb{y})$, $p(\vb{y})$の定数係数の積.
+  \item よって$p(\vb{x}, \vb{y})$は, 2つのガウス分布$p(\vb{x} \mid \vb{y})$, $p(\vb{y})$に分解できる.
+  \begin{align*}
+    p(\vb{x}, \vb{y}) &= p(\vb{x} \mid \vb{y}) p(\vb{y}) \\
+    p(\vb{x} \mid \vb{y}) &= \mathcal{N}(\vb{x} \mid \vb*{\mu}_x
+      + \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \left( \vb{y} - \vb*{\mu}_y \right),
+      \vb{\Sigma}_{xx} - \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx}) \\
+    p(\vb{y}) &= \mathcal{N}(\vb{y} \mid \vb*{\mu}_y, \vb{\Sigma}_{yy})
+  \end{align*}
+  \item 2つのガウス分布$p(\vb{y} \mid \vb{x})$, $p(\vb{x})$にも分解できる (練習問題):
+  \begin{align*}
+    p(\vb{x}, \vb{y}) &= p(\vb{y} \mid \vb{x}) p(\vb{x}) \\
+    p(\vb{y} \mid \vb{x}) &= \mathcal{N}(\vb{y} \mid \vb*{\mu}_y
+      + \vb{\Sigma}_{yx} \vb{\Sigma}_{xx}^{-1} \left( \vb{x} - \vb*{\mu}_x \right),
+      \vb{\Sigma}_{yy} - \vb{\Sigma}_{yx} \vb{\Sigma}_{xx}^{-1} \vb{\Sigma}_{xy}) \\
+    p(\vb{x}) &= \mathcal{N}(\vb{x} \mid \vb*{\mu}_x, \vb{\Sigma}_{xx})
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{条件付きガウス分布と周辺ガウス分布}
+\begin{itemize}
+  \item 上記の議論より, 周辺ガウス分布についても簡単に得られる:
+  \begin{align*}
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}} p(\vb{x}, \vb{y}) \dd{\vb{y}}
+    &= \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}} p(\vb{y} \mid \vb{x}) p(\vb{x}) \dd{\vb{y}}
+    = p(\vb{x}) \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}} p(\vb{y} \mid \vb{x}) \dd{\vb{y}} \\
+    &= p(\vb{x}) = \mathcal{N}(\vb{x} \mid \vb*{\mu}_x, \vb{\Sigma}_{xx}) \\
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}} p(\vb{x}, \vb{y}) \dd{\vb{x}}
+    &= \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}} p(\vb{x} \mid \vb{y}) p(\vb{y}) \dd{\vb{x}}
+    = p(\vb{y}) \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}} p(\vb{x} \mid \vb{y}) \dd{\vb{x}} \\
+    &= p(\vb{y}) = \mathcal{N}(\vb{y} \mid \vb*{\mu}_y, \vb{\Sigma}_{yy})
+  \end{align*}
+  \item 同時分布$p(\vb{x}, \vb{y})$がガウス分布であれば, \textcolor{red}{条件付き分布と周辺分布もガウス分布}となる.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{条件付きガウス分布と周辺ガウス分布}
+\begin{block}{条件付きガウス分布と周辺ガウス分布}
+  $\vb{x}, \vb{y}$の同時分布が, ガウス分布で表されるとする:
+  \begin{align*}
+    p(\vb{x}, \vb{y}) = \mathcal{N} \left( \mqty(\vb{x} \\ \vb{y}) \middlerel|
+      \mqty(\vb*{\mu}_x \\ \vb*{\mu}_y),
+      \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xy} \\
+        \vb{\Sigma}_{yx} & \vb{\Sigma}_{yy}) \right)
+  \end{align*}
+  このとき, 条件付き分布$p(\vb{x} \mid \vb{y})$と周辺分布$p(\vb{y})$もガウス分布となる:
+  \begin{align*}
+    p(\vb{x}, \vb{y}) &= p(\vb{x} \mid \vb{y}) p(\vb{y}) \\
+    p(\vb{x} \mid \vb{y}) &= \mathcal{N}(\vb{x} \mid \vb*{\mu}_x
+      + \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \left( \vb{y} - \vb*{\mu}_y \right),
+      \vb{\Sigma}_{xx} - \vb{\Sigma}_{xy} \vb{\Sigma}_{yy}^{-1} \vb{\Sigma}_{yx}) \\
+    p(\vb{y}) &= \mathcal{N}(\vb{y} \mid \vb*{\mu}_y, \vb{\Sigma}_{yy})
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{条件付きガウス分布と周辺ガウス分布}
+\begin{block}{条件付きガウス分布と周辺ガウス分布}
+  $\vb{x}, \vb{y}$の同時分布が, ガウス分布で表されるとする:
+  \begin{align*}
+    p(\vb{x}, \vb{y}) = \mathcal{N} \left( \mqty(\vb{x} \\ \vb{y}) \middlerel|
+      \mqty(\vb*{\mu}_x \\ \vb*{\mu}_y),
+      \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xy} \\
+        \vb{\Sigma}_{yx} & \vb{\Sigma}_{yy}) \right)
+  \end{align*}
+  このとき, 条件付き分布$p(\vb{y} \mid \vb{x})$と周辺分布$p(\vb{x})$もガウス分布となる:
+  \begin{align*}
+    p(\vb{x}, \vb{y}) &= p(\vb{y} \mid \vb{x}) p(\vb{x}) \\
+    p(\vb{y} \mid \vb{x}) &= \mathcal{N}(\vb{y} \mid \vb*{\mu}_y
+      + \vb{\Sigma}_{yx} \vb{\Sigma}_{xx}^{-1} \left( \vb{x} - \vb*{\mu}_x \right),
+      \vb{\Sigma}_{yy} - \vb{\Sigma}_{yx} \vb{\Sigma}_{xx}^{-1} \vb{\Sigma}_{xy}) \\
+    p(\vb{x}) &= \mathcal{N}(\vb{x} \mid \vb*{\mu}_x, \vb{\Sigma}_{xx})
+  \end{align*}
+\end{block}
+\end{frame}
+
+\section{ガウス分布の線形変換}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item $\vb{x}$がガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$に従うとする.
+  \item $\vb{y} = \vb{A} \vb{x} + \vb{b}$の変数変換を施したとき, $\vb{y}$が従う分布を考える.
+  \item 次のように, $\vb{y}$の期待値と共分散が求まる:
+  \begin{align*}
+    \E{\vb{y}} &= \E{\vb{A} \vb{x} + \vb{b}} = \vb{A} \E{\vb{x}} + \vb{b}
+      = \vb{A} \vb*{\mu} + \vb{b} \\
+    \Var{\vb{y}} &= \E{\left( \vb{y} - \E{\vb{y}} \right) \left( \vb{y} - \E{\vb{y}} \right)^\top} \\
+    &= \E{\left( \left( \vb{A} \vb{x} + \vb{b} \right) - \left( \vb{A} \vb*{\mu} + \vb{b} \right) \right)
+      \left( \left( \vb{A} \vb{x} + \vb{b} \right) - \left( \vb{A} \vb*{\mu} + \vb{b} \right) \right)^\top} \\
+    &= \E{\vb{A} \left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top \vb{A}^\top} \\
+    &= \vb{A} \E{\left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top} \vb{A}^\top
+    = \vb{A} \vb{\Sigma} \vb{A}^\top
+  \end{align*}
+  \item よって, $\vb{y}$はガウス分布
+  $\mathcal{N}(\vb{y} \mid \vb{A} \vb*{\mu} + \vb{b}, \vb{A} \vb{\Sigma} \vb{A}^\top)$に従う.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item モーメント母関数 (確率分布と一対一で対応) からも確認できる:
+  \item $\vb{x}$のモーメント母関数は,
+  \begin{align*}
+    \E{\exp(\vb{t}^\top \vb{x})}
+    &= \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+  \end{align*}
+  \item 続いて, $\vb{y} = \vb{A} \vb{x} + \vb{b}$のモーメント母関数は,
+  \begin{align*}
+    \E{\exp(\vb{t}^\top \left( \vb{A} \vb{x} + \vb{b} \right))}
+    &= \E{\exp(\vb{t}^\top \vb{A} \vb{x})} \exp(\vb{t}^\top \vb{b}) \\
+    &= \exp(\vb*{\mu}^\top \vb{A}^\top \vb{t}
+      + \frac{1}{2} \vb{t}^\top \vb{A} \vb{\Sigma} \vb{A}^\top \vb{t})
+      \exp(\vb{b}^\top \vb{t}) \\
+    &= \exp(\left( \vb{A} \vb*{\mu} + \vb{b} \right)^\top \vb{t}
+      + \frac{1}{2} \vb{t}^\top \vb{A} \vb{\Sigma} \vb{A}^\top \vb{t})
+  \end{align*}
+  これは, $\mathcal{N}(\vb{A} \vb*{\mu} + \vb{b}, \vb{A} \vb{\Sigma} \vb{A}^\top)$に対応する.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item $\vb{A}$が正則であれば, 次のようにも確認できる:
+  \item $\vb{x} = \vb{A}^{-1} \left( \vb{y} - \vb{b} \right)$だから, ヤコビアンは
+  \begin{align*}
+    \left| \det \pdv{\vb{x}}{\vb{y}} \right| = \left| \det \vb{A}^{-1} \right|
+      = \left| \left( \det \vb{A} \right)^{-1} \right| = \left| \det \vb{A} \right|^{-1}
+  \end{align*}
+  \item 次を満たすから, $\vb{y}$はガウス分布
+  $\mathcal{N}(\vb{y} \mid \vb{A} \vb*{\mu} + \vb{b}, \vb{A} \vb{\Sigma} \vb{A}^\top)$に従う.
+  \begin{align*}
+    1 &= \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+      \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma}) \dd{\vb{x}}
+      = \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+      \mathcal{N}(\vb{y} \mid \vb{A} \vb*{\mu} + \vb{b}, \vb{A} \vb{\Sigma} \vb{A}^\top) \dd{\vb{y}}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item この式を確かめよう:
+  \begin{align*}
+    1 &= \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+      \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma}) \dd{\vb{x}} \\
+    &= \frac{1}{\left( 2\pi \right)^\frac{M}{2} \sqrt{\det \vb{\Sigma}}}
+      \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+      \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right)) \dd{\vb{x}} \\
+    &= \frac{1}{\left( 2\pi \right)^\frac{M}{2} \sqrt{\det \vb{\Sigma}}}
+      \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+      \exp \bigg( -\frac{1}{2} \left( \vb{A}^{-1} \left( \vb{y} - \vb{b} \right) - \vb*{\mu} \right)^\top \\
+    & \quad \vb{\Sigma}^{-1} \left( \vb{A}^{-1} \left( \vb{y} - \vb{b} \right) - \vb*{\mu} \right) \bigg)
+      \left| \det \vb{A} \right|^{-1} \dd{\vb{y}}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item $\exp(\cdot)$の中身は ($-\frac{1}{2}$は除く), $\vb{\Sigma}^{-1}$の対称性と,
+  $\left( \vb{A}^{-1} \right)^\top = \left( \vb{A}^\top \right)^{-1}$を使えば,
+  \begin{align*}
+    & \left( \vb{A}^{-1} \left( \vb{y} - \vb{b} \right) - \vb*{\mu} \right)^\top
+      \vb{\Sigma}^{-1} \left( \vb{A}^{-1} \left( \vb{y} - \vb{b} \right) - \vb*{\mu} \right) \\
+    &= \left( \vb{A}^{-1} \left( \vb{y} - \left( \vb{A} \vb*{\mu} + \vb{b} \right) \right) \right)^\top
+      \vb{\Sigma}^{-1} \vb{A}^{-1} \left( \vb{y} - \left( \vb{A} \vb*{\mu} + \vb{b} \right) \right) \\
+    &= \left( \vb{y} - \left( \vb{A} \vb*{\mu} + \vb{b} \right) \right)^\top
+      \left( \vb{A}^{-1} \right)^\top \vb{\Sigma}^{-1} \vb{A}^{-1}
+      \left( \vb{y} - \left( \vb{A} \vb*{\mu} + \vb{b} \right) \right) \\
+    &= \left( \vb{y} - \left( \vb{A} \vb*{\mu} + \vb{b} \right) \right)^\top
+      \left( \vb{A} \vb{\Sigma} \vb{A}^\top \right)^{-1}
+      \left( \vb{y} - \left( \vb{A} \vb*{\mu} + \vb{b} \right) \right)
+  \end{align*}
+  \item $\left| \det \vb{A} \right| = \sqrt{\left( \det \vb{A} \right)^2}
+    = \sqrt{\det \vb{A} \det \vb{A}^\top}$だから,
+  \begin{align*}
+    \frac{1}{\sqrt{\det \vb{\Sigma}} \left| \det \vb{A} \right|}
+    = \frac{1}{\sqrt{\det \vb{A} \det \vb{\Sigma} \det \vb{A}^\top}}
+    = \frac{1}{\sqrt{\det(\vb{A} \vb{\Sigma} \vb{A}^\top)}}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item 以上の結果より, $\vb{y}$はガウス分布
+  $\mathcal{N}(\vb{y} \mid \vb{A} \vb*{\mu} + \vb{b}, \vb{A} \vb{\Sigma} \vb{A}^\top)$に従う.
+  \begin{align*}
+    1 &= \frac{1}{\left( 2\pi \right)^\frac{M}{2} \sqrt{\det \vb{\Sigma}}}
+      \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+      \exp \bigg( -\frac{1}{2} \left( \vb{A}^{-1} \left( \vb{y} - \vb{b} \right) - \vb*{\mu} \right)^\top \\
+    & \quad \vb{\Sigma}^{-1} \left( \vb{A}^{-1} \left( \vb{y} - \vb{b} \right) - \vb*{\mu} \right) \bigg)
+      \left| \det \vb{A} \right|^{-1} \dd{\vb{y}} \\
+    &= \frac{1}{\left( 2\pi \right)^\frac{M}{2} \sqrt{\det(\vb{A} \vb{\Sigma} \vb{A}^\top)}}
+      \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+      \exp \bigg( -\frac{1}{2} \left( \vb{y} - \left( \vb{A} \vb*{\mu} + \vb{b} \right) \right)^\top \\
+    & \quad \left( \vb{A} \vb{\Sigma} \vb{A}^\top \right)^{-1}
+      \left( \vb{y} - \left( \vb{A} \vb*{\mu} + \vb{b} \right) \right) \bigg) \dd{\vb{y}} \\
+    &= \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+      \mathcal{N}(\vb{y} \mid \vb{A} \vb*{\mu} + \vb{b}, \vb{A} \vb{\Sigma} \vb{A}^\top) \dd{\vb{y}}
+    = \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+      \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma}) \dd{\vb{x}}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{block}{ガウス分布の線形変換}
+  $\vb{x}$がガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$に従うとする. \\
+  $\vb{y} = \vb{A} \vb{x} + \vb{b}$の変数変換を施すと, $\vb{y}$はガウス分布に従う:
+  \begin{align*}
+    \mathcal{N}(\vb{y} \mid \vb{A} \vb*{\mu} + \vb{b}, \vb{A} \vb{\Sigma} \vb{A}^\top)
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item $\vb{x}$がガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$に従うとする.
+  \item このとき, $\vb{x}$の各成分$x_i$は, ガウス分布$\mathcal{N}(x_i \mid \mu_i, \sigma_i^2)$に従う.
+  \item 先程の線形変換の例において, 次のように定める:
+  \begin{align*}
+    \vb{A} &= \mqty(0 & \cdots & 0 & 1 & 0 & \cdots & 0), \quad \vb{b} = \vb{0}
+  \end{align*}
+  \item $\vb{A}$は, 第$i$要素のみが1, それ以外が0の行ベクトルである.
+  \item $x_i = \vb{A} \vb{x} + \vb{b}$の平均と分散は, 次のように求まる:
+  \begin{align*}
+    \vb{A} \vb*{\mu} + \vb{b} &= \mu_i \\
+    \vb{A} \vb{\Sigma} \vb{A}^\top &= \left( \vb{\Sigma} \right)_{ii}
+      = \Cov{x_i}{x_i} = \Var{x_i} = \sigma_i^2
+  \end{align*}
+  \item 先程の, 周辺分布の議論からも確認できる ($x_i$以外の全ての変数を, 周辺化によって取り除く).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item 続いて, $p(\vb{x})$, $p(\vb{y} \mid \vb{x})$が次のように定まっているとする:
+  \begin{align*}
+    p(\vb{x}) &= \mathcal{N}(\vb*{\mu}_x, \vb{\Sigma}_{xx}) \\
+    p(\vb{y} \mid \vb{x}) &= \mathcal{N}(\vb{A} \vb{x} + \vb{b}, \vb{R})
+  \end{align*}
+  \item 例えば, 状態$\vb{x}$を, 観測データ$\vb{y}$から推定したいとする.
+  \item $p(\vb{x})$は$\vb{x}$の事前分布である.
+  \item $\vb{n} \sim \mathcal{N}(\vb{0}, \vb{R})$を, 観測データに加わる, ガウスノイズとする.
+  \item $\vb{y} = \vb{A} \vb{x} + \vb{b} + \vb{n}$のように, センサをモデル化したとする.
+  \item このとき, $p(\vb{y} \mid \vb{x}) = \mathcal{N}(\vb{A} \vb{x} + \vb{b}, \vb{R})$になる
+  (注意: $\vb{x}$は定数扱い).
+  \item $p(\vb{y} \mid \vb{x})$は, 状態$\vb{x}$の下での観測データ$\vb{y}$の尤もらしさ (\textcolor{red}{尤度}).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item $p(\vb{x})$, $p(\vb{y} \mid \vb{x})$が次のように定まっているとする:
+  \begin{align*}
+    p(\vb{x}) &= \mathcal{N}(\vb*{\mu}_x, \vb{\Sigma}_{xx}) \\
+    p(\vb{y} \mid \vb{x}) &= \mathcal{N}(\vb{A} \vb{x} + \vb{b}, \vb{R})
+  \end{align*}
+  \item 状態$\vb{x}$を, 観測データ$\vb{y}$から推定したい. $p(\vb{x})$は$\vb{x}$の事前分布.
+  \item $p(\vb{y} \mid \vb{x})$は, 状態$\vb{x}$の下での観測データ$\vb{y}$の尤もらしさ (尤度).
+  \item \textcolor{red}{ベイズの定理}より, 観測データ$\vb{y}$のもとでの状態$\vb{x}$の確率分布,
+  $p(\vb{x} \mid \vb{y})$が得られる:
+  \begin{align*}
+    p(\vb{x} \mid \vb{y}) &= \frac{p(\vb{y} \mid \vb{x}) p(\vb{x})}{p(\vb{y})}
+      = \frac{p(\vb{y} \mid \vb{x}) p(\vb{x})}{
+      \displaystyle \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+      p(\vb{y} \mid \vb{x}) p(\vb{x}) \dd{\vb{x}}}
+  \end{align*}
+  \item $p(\vb{x} \mid \vb{y})$と, $p(\vb{y})$の一般形を求めてみよう.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item $p(\vb{x})$, $p(\vb{y} \mid \vb{x})$が次のように定まっているとする:
+  \begin{align*}
+    p(\vb{x}) &= \mathcal{N}(\vb*{\mu}_x, \vb{\Sigma}_{xx}) \\
+    p(\vb{y} \mid \vb{x}) &= \mathcal{N}(\vb{A} \vb{x} + \vb{b}, \vb{R})
+  \end{align*}
+  \item 最初に, 同時分布$p(\vb{x}, \vb{y})$を求めよう:
+  \begin{align*}
+    p(\vb{x}, \vb{y}) = p(\vb{y} \mid \vb{x}) p(\vb{x})
+  \end{align*}
+  \item $\exp(\cdot)$の中身は ($-\frac{1}{2}$を除く),
+  \begin{align*}
+    \left( \vb{y} - \left( \vb{A} \vb{x} + \vb{b} \right) \right)^\top \vb{R}^{-1}
+      \left( \vb{y} - \left( \vb{A} \vb{x} + \vb{b} \right) \right)
+      + \left( \vb{x} - \vb*{\mu}_x \right)^\top \vb{\Sigma}_{xx}^{-1}
+      \left( \vb{x} - \vb*{\mu}_x \right)
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item $\exp(\cdot)$の中身を変形して, 2次の項, 1次の項, 定数項に分けると,
+  {\small \begin{align*}
+    & \left( \vb{y} - \left( \vb{A} \vb{x} + \vb{b} \right) \right)^\top \vb{R}^{-1}
+      \left( \vb{y} - \left( \vb{A} \vb{x} + \vb{b} \right) \right)
+      + \left( \vb{x} - \vb*{\mu}_x \right)^\top \vb{\Sigma}_{xx}^{-1}
+      \left( \vb{x} - \vb*{\mu}_x \right) \\
+    &= \vb{y}^\top \vb{R}^{-1} \vb{y}
+      - \vb{y}^\top \vb{R}^{-1} \vb{A} \vb{x}
+      - \vb{x}^\top \vb{A}^\top \vb{R}^{-1} \vb{y}
+      + \vb{x}^\top \left( \vb{A}^\top \vb{R}^{-1} \vb{A} + \vb{\Sigma}_{xx}^{-1} \right) \vb{x} \\
+    & \quad - \left( \vb{y} - \vb{A} \vb{x} \right)^\top \vb{R}^{-1} \vb{b}
+      - \vb{b}^\top \vb{R}^{-1} \left( \vb{y} - \vb{A} \vb{x} \right)
+      - \vb*{\mu}_x^\top \vb{\Sigma}_{xx}^{-1} \vb{x}
+      - \vb{x}^\top \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \\
+    & \quad + \vb{b}^\top \vb{R}^{-1} \vb{b} + \vb*{\mu}_x^\top \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \\
+    &= \mqty(\vb{x} \\ \vb{y})^\top
+      \mqty(\vb{A}^\top \vb{R}^{-1} \vb{A} + \vb{\Sigma}_{xx}^{-1} & -\vb{A}^\top \vb{R}^{-1} \\
+      -\vb{R}^{-1} \vb{A} & \vb{R}^{-1}) \mqty(\vb{x} \\ \vb{y}) \\
+    & \quad - \mqty(\vb{x} \\ \vb{y})^\top
+      \mqty(-\vb{A}^\top \vb{R}^{-1} \vb{b} + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \\ \vb{R}^{-1} \vb{b}) \\
+    & \quad - \mqty(-\vb{b}^\top \vb{R}^{-1} \vb{A} + \vb*{\mu}_x^\top \vb{\Sigma}_{xx}^{-1} & \vb{b}^\top \vb{R}^{-1})
+      \mqty(\vb{x} \\ \vb{y}) + C
+  \end{align*}}
+  \item $\vb{x}, \vb{y}$によらない項をまとめて, $C$とおいた.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item 共分散$\vb{R}, \vb{\Sigma}_{xx}$は対称行列だから, その逆行列も対称. よって,
+  {\small \begin{align*}
+    & \mqty(-\vb{b}^\top \vb{R}^{-1} \vb{A} + \vb*{\mu}_x^\top \vb{\Sigma}_{xx}^{-1} & \vb{b}^\top \vb{R}^{-1})
+    = \mqty(\left( -\vb{b}^\top \vb{R}^{-1} \vb{A} + \vb*{\mu}_x^\top \right)^\top \\
+      \left( \vb{b}^\top \vb{R}^{-1} \right)^\top)^\top \\
+    &= \mqty(-\vb{A}^\top \vb{R}^{-1} \vb{b} + \left( \vb{\Sigma}_{xx}^{-1} \right)^\top \vb*{\mu}_x \\
+      \left( \vb{R}^{-1} \right)^\top \vb{b})^\top
+    = \mqty(-\vb{A}^\top \vb{R}^{-1} \vb{b} + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \\ \vb{R}^{-1} \vb{b})^\top
+  \end{align*}}
+  \item 同時分布$p(\vb{x}, \vb{y})$の$\exp(\cdot)$の中身は,
+  {\small \begin{align*}
+    & \mqty(\vb{x} \\ \vb{y})^\top
+      \mqty(\vb{A}^\top \vb{R}^{-1} \vb{A} + \vb{\Sigma}_{xx}^{-1} & -\vb{A}^\top \vb{R}^{-1} \\
+      -\vb{R}^{-1} \vb{A} & \vb{R}^{-1}) \mqty(\vb{x} \\ \vb{y}) \\
+    & \quad - \mqty(\vb{x} \\ \vb{y})^\top
+      \mqty(-\vb{A}^\top \vb{R}^{-1} \vb{b} + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \\ \vb{R}^{-1} \vb{b})
+      - {\color{red} \mqty(-\vb{A}^\top \vb{R}^{-1} \vb{b} + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \\ \vb{R}^{-1} \vb{b})^\top}
+      \mqty(\vb{x} \\ \vb{y}) + C
+  \end{align*}}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item ブロック行列の逆行列の関係から,
+  {\small \begin{align*}
+    \mqty(\vb{A}_{11} & \vb{A}_{12} \\ \vb{A}_{21} & \vb{A}_{22})^{-1}
+    &= \mqty(\vb{A}_{11}^{-1} + \vb{A}_{11}^{-1} \vb{A}_{12} \vb{Y}^{-1} \vb{A}_{21} \vb{A}_{11}^{-1}
+      & -\vb{A}_{11}^{-1} \vb{A}_{12} \vb{Y}^{-1} \\
+      -\vb{Y}^{-1} \vb{A}_{21} \vb{A}_{11}^{-1} & \vb{Y}^{-1})
+  \end{align*}}
+  $\vb{Y} = \vb{A}_{22} - \vb{A}_{21} \vb{A}_{11}^{-1} \vb{A}_{12}$は, $\vb{A}_{22}$のシューア補行列.
+  \item この式を逆方向に使うと,
+  {\small \begin{align*}
+    \vb{\Sigma} &= \mqty(\vb{A}^\top \vb{R}^{-1} \vb{A} + \vb{\Sigma}_{xx}^{-1} & -\vb{A}^\top \vb{R}^{-1} \\
+      -\vb{R}^{-1} \vb{A} & \vb{R}^{-1})^{-1} \\
+    &= \mqty(\vb{\Sigma}_{xx}^{-1} + \vb{\Sigma}_{xx}^{-1} \left( \vb{\Sigma}_{xx} \vb{A}^\top \right)
+      \vb{R}^{-1} \left( \vb{A} \vb{\Sigma}_{xx} \right) \vb{\Sigma}_{xx}^{-1} &
+      -\vb{\Sigma}_{xx}^{-1} \left( \vb{\Sigma}_{xx} \vb{A}^\top \right) \vb{R}^{-1} \\
+      -\vb{R}^{-1} \left( \vb{A} \vb{\Sigma}_{xx} \right) \vb{\Sigma}_{xx}^{-1} & \vb{R}^{-1})^{-1} \\
+    &= \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xx} \vb{A}^\top \\
+      \vb{A} \vb{\Sigma}_{xx} & \vb{R} + \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top) \\
+    & \qquad
+      (\because \vb{R} = \vb{A}_{22} - \left( \vb{A} \vb{\Sigma}_{xx} \right) \vb{\Sigma}_{xx}^{-1}
+      \left( \vb{\Sigma}_{xx} \vb{A}^\top \right))
+  \end{align*}}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item 同時分布$p(\vb{x}, \vb{y})$の$\exp(\cdot)$の中身に戻ると,
+  {\small \begin{align*}
+    & \mqty(\vb{x} \\ \vb{y})^\top
+      \mqty(\vb{A}^\top \vb{R}^{-1} \vb{A} + \vb{\Sigma}_{xx}^{-1} & -\vb{A}^\top \vb{R}^{-1} \\
+      -\vb{R}^{-1} \vb{A} & \vb{R}^{-1}) \mqty(\vb{x} \\ \vb{y}) \\
+    & \quad - \mqty(\vb{x} \\ \vb{y})^\top
+      \mqty(-\vb{A}^\top \vb{R}^{-1} \vb{b} + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \\ \vb{R}^{-1} \vb{b})
+      - \mqty(-\vb{A}^\top \vb{R}^{-1} \vb{b} + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \\ \vb{R}^{-1} \vb{b})^\top
+      \mqty(\vb{x} \\ \vb{y}) + C \\
+    &= \mqty(\vb{x} \\ \vb{y})^\top {\color{red} \vb{\Sigma}^{-1}} \mqty(\vb{x} \\ \vb{y})
+      - \mqty(\vb{x} \\ \vb{y})^\top {\color{red} \vb{\Sigma}^{-1} \vb{\Sigma}}
+      \mqty(-\vb{A}^\top \vb{R}^{-1} \vb{b} + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \\ \vb{R}^{-1} \vb{b}) \\
+    & \quad - \mqty(-\vb{A}^\top \vb{R}^{-1} \vb{b} + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \\ \vb{R}^{-1} \vb{b})^\top
+      {\color{red} \vb{\Sigma} \vb{\Sigma}^{-1}} \mqty(\vb{x} \\ \vb{y}) + C
+  \end{align*}}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item 共分散$\vb{R}, \vb{\Sigma}_{xx}$は対称行列だから, $\vb{\Sigma}$も対称になる ($\vb{\Sigma}^{-1}$も対称).
+  {\small \begin{align*}
+    \vb{\Sigma}^\top &= \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xx} \vb{A}^\top \\
+      \vb{A} \vb{\Sigma}_{xx} & \vb{R} + \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top)^\top
+    = \mqty(\vb{\Sigma}_{xx}^\top & \left( \vb{A} \vb{\Sigma}_{xx} \right)^\top \\
+      \left( \vb{\Sigma}_{xx} \vb{A}^\top \right)^\top &
+      \left( \vb{R} + \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top \right)^\top) \\
+    &= \mqty(\vb{\Sigma}_{xx}^\top & \vb{\Sigma}_{xx}^\top \vb{A}^\top \\
+      \vb{A}^\top \vb{\Sigma}_{xx}^\top &
+      \vb{R}^\top + \vb{A} \vb{\Sigma}_{xx}^\top \vb{A}^\top)
+    = \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xx} \vb{A}^\top \\
+      \vb{A}^\top \vb{\Sigma}_{xx} &
+      \vb{R} + \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top) = \vb{\Sigma}
+  \end{align*}}
+  \item $\vb{\Sigma}$は対称だから, $\vb{X}^\top {\color{red} \vb{\Sigma}}
+    = \vb{X}^\top {\color{red} \vb{\Sigma}^\top} = \left( \vb{\Sigma} \vb{X} \right)^\top$.
+  \item 同時分布$p(\vb{x}, \vb{y})$の$\exp(\cdot)$の中身に戻ると,
+  {\small \begin{align*}
+    & \mqty(\vb{x} \\ \vb{y})^\top \vb{\Sigma}^{-1} \mqty(\vb{x} \\ \vb{y})
+      - \mqty(\vb{x} \\ \vb{y})^\top \vb{\Sigma}^{-1} \vb{\Sigma}
+      \mqty(-\vb{A}^\top \vb{R}^{-1} \vb{b} + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \\ \vb{R}^{-1} \vb{b}) \\
+    & \quad - {\color{blue} \left( \vb{\Sigma}
+      \mqty(-\vb{A}^\top \vb{R}^{-1} \vb{b} + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \\ \vb{R}^{-1} \vb{b}) \right)^\top}
+      \vb{\Sigma}^{-1} \mqty(\vb{x} \\ \vb{y}) + C
+  \end{align*}}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item また,
+  {\small \begin{align*}
+    \vb*{\mu} &= \vb{\Sigma}
+      \mqty(-\vb{A}^\top \vb{R}^{-1} \vb{b} + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \\ \vb{R}^{-1} \vb{b}) \\
+    &= \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xx} \vb{A}^\top \\
+      \vb{A} \vb{\Sigma}_{xx} & \vb{R} + \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top)
+      \mqty(-\vb{A}^\top \vb{R}^{-1} \vb{b} + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \\ \vb{R}^{-1} \vb{b}) \\
+    &= \mqty(-\vb{\Sigma}_{xx} \vb{A}^\top \vb{R}^{-1} \vb{b} + \vb*{\mu}_x
+      + \vb{\Sigma}_{xx} \vb{A}^\top \vb{R}^{-1} \vb{b} \\
+      -\vb{A} \vb{\Sigma}_{xx} \vb{A}^\top \vb{R}^{-1} \vb{b}
+      + \vb{A} \vb*{\mu}_x + \vb{b} + \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top \vb{R}^{-1} \vb{b})
+    = \mqty(\vb*{\mu}_x \\ \vb{A} \vb*{\mu}_x + \vb{b})
+  \end{align*}}
+  \item 同時分布$p(\vb{x}, \vb{y})$の$\exp(\cdot)$の中身を平方完成させると,
+  {\small \begin{align*}
+    & \mqty(\vb{x} \\ \vb{y})^\top \vb{\Sigma}^{-1} \mqty(\vb{x} \\ \vb{y})
+      - \mqty(\vb{x} \\ \vb{y})^\top \vb{\Sigma}^{-1} {\color{red} \vb*{\mu}}
+      - {\color{red} \vb*{\mu}^\top}
+      \vb{\Sigma}^{-1} \mqty(\vb{x} \\ \vb{y}) + C \\
+    &= \left( \mqty(\vb{x} \\ \vb{y}) - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \mqty(\vb{x} \\ \vb{y}) - \vb*{\mu} \right) + C'
+  \end{align*}}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item $p(\vb{x})$, $p(\vb{y} \mid \vb{x})$が次のように定まっているとする:
+  \begin{align*}
+    p(\vb{x}) &= \mathcal{N}(\vb*{\mu}_x, \vb{\Sigma}_{xx}) \\
+    p(\vb{y} \mid \vb{x}) &= \mathcal{N}(\vb{A} \vb{x} + \vb{b}, \vb{R})
+  \end{align*}
+  \item $p(\vb{x}, \vb{y}) = p(\vb{y} \mid \vb{x}) p(\vb{x})$は,
+  平均$\vb*{\mu}$, 共分散$\vb{\Sigma}$のガウス分布$\mathcal{N}(\vb*{\mu}, \vb{\Sigma})$:
+  \begin{gather*}
+    \vb*{\mu} = \mqty(\vb*{\mu}_x \\ \vb{A} \vb*{\mu}_x + \vb{b}), \quad
+    \vb{\Sigma} = \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xx} \vb{A}^\top \\
+      \vb{A} \vb{\Sigma}_{xx} & \vb{R} + \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top) \\
+    \vb{\Sigma}^{-1} = \mqty(\vb{A}^\top \vb{R}^{-1} \vb{A} + \vb{\Sigma}_{xx}^{-1} & -\vb{A}^\top \vb{R}^{-1} \\
+      -\vb{R}^{-1} \vb{A} & \vb{R}^{-1})
+  \end{gather*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item ここで, 条件付きガウス分布と周辺ガウス分布の関係を用いる.
+  \item 同時分布$p(\vb{x}, \vb{y})$は, 2つのガウス分布$p(\vb{x} \mid \vb{y})$, $p(\vb{y})$に分解できる:
+  \begin{align*}
+    p(\vb{x}, \vb{y}) &= \mathcal{N} \left( \mqty(\vb{x} \\ \vb{y}) \middlerel|
+      \mqty(\vb*{\mu}_x \\ \vb{A} \vb*{\mu}_x + \vb{b}),
+      \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xx} \vb{A}^\top \\
+      \vb{A} \vb{\Sigma}_{xx} & \vb{R} + \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top) \right) \\
+    p(\vb{x}, \vb{y}) &= p(\vb{x} \mid \vb{y}) p(\vb{y}) \\
+    p(\vb{x} \mid \vb{y}) &= \mathcal{N} \left( \vb{x} \middlerel|
+      \vb{\Sigma}_{x \mid y}
+      \left( \vb{A}^\top \vb{R}^{-1} \left( \vb{y} - \vb{b} \right) + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \right),
+      \vb{\Sigma}_{x \mid y} \right) \\
+    p(\vb{y}) &= \mathcal{N} \left(\vb{y} \middlerel|
+      \vb{A} \vb*{\mu}_x + \vb{b}, \vb{R} + \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top \right)
+  \end{align*}
+  \item ただし,
+  \begin{align*}
+    \vb{\Sigma}_{x \mid y} = \left( \vb{\Sigma}_{xx}^{-1} + \vb{A}^\top \vb{R}^{-1} \vb{A} \right)^{-1}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{itemize}
+  \item 条件付きガウス分布$p(\vb{x} \mid \vb{y})$の共分散と平均は,
+  {\small \begin{align*}
+    \vb{\Sigma}_{x \mid y} &= \vb{\Sigma}_{xx} - \vb{\Sigma}_{xx} \vb{A}^\top
+      \left( \vb{R} + \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top \right)^{-1}
+      \vb{A} \vb{\Sigma}_{xx}
+    = \left( \vb{\Sigma}_{xx}^{-1} + \vb{A}^\top \vb{R}^{-1} \vb{A} \right)^{-1} \\
+    \vb*{\mu}_{x \mid y} &= \vb*{\mu}_x + \vb{\Sigma}_{xx} \vb{A}^\top
+      \left( \vb{R} + \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top \right)^{-1}
+      \left( \vb{y} - \vb{A} \vb*{\mu}_x - \vb{b} \right) \\
+    &= \vb*{\mu}_x + \left( \vb{\Sigma}_{xx}^{-1} + \vb{A}^\top \vb{R}^{-1} \vb{A} \right)^{-1}
+      \vb{A}^\top \vb{R}^{-1} \left( \vb{y} - \vb{A} \vb*{\mu}_x - \vb{b} \right) \\
+    % &= \left( \vb{\Sigma}_{xx}^{-1} + \vb{A}^\top \vb{R}^{-1} \vb{A} \right)^{-1}
+    %   \big( \vb{A}^\top \vb{R}^{-1} \left( \vb{y} - \vb{b} \right) \\
+    % & \quad + \left( \vb{\Sigma}_{xx}^{-1} + \vb{A}^\top \vb{R}^{-1} \vb{A} \right) \vb*{\mu}_x
+    % - \vb{A}^\top \vb{R}^{-1} \vb{A} \vb*{\mu}_x \big) \\
+    &= \left( \vb{\Sigma}_{xx}^{-1} + \vb{A}^\top \vb{R}^{-1} \vb{A} \right)^{-1}
+      \left( \vb{A}^\top \vb{R}^{-1} \left( \vb{y} - \vb{b} \right) + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \right) \\
+    &= \vb{\Sigma}_{x \mid y}
+      \left( \vb{A}^\top \vb{R}^{-1} \left( \vb{y} - \vb{b} \right) + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \right)
+  \end{align*}}
+  \item Woodburyの公式を用いた:
+  {\small \begin{align*}
+    \left( \vb{D} + \vb{C} \vb{A} \vb{B} \right)^{-1}
+      &= \vb{D}^{-1} - \vb{D}^{-1} \vb{C}
+        \left( \vb{A}^{-1} + \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1} \vb{B} \vb{D}^{-1} \\
+    \vb{A} \vb{B} \left( \vb{D} + \vb{C} \vb{A} \vb{B} \right)^{-1}
+      &= \left( \vb{A}^{-1} + \vb{B} \vb{D}^{-1} \vb{C} \right)^{-1} \vb{B} \vb{D}^{-1} \\
+  \end{align*}}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の線形変換}
+\begin{block}{ガウス分布の線形変換}
+  $p(\vb{x})$, $p(\vb{y} \mid \vb{x})$が次のように定まっているとする:
+  \begin{align*}
+    p(\vb{x}) = \mathcal{N}(\vb*{\mu}_x, \vb{\Sigma}_{xx}), \quad
+    p(\vb{y} \mid \vb{x}) = \mathcal{N}(\vb{A} \vb{x} + \vb{b}, \vb{R})
+  \end{align*}
+  このとき, 同時分布$p(\vb{x}, \vb{y})$, 条件付き分布$p(\vb{x} \mid \vb{y})$, 周辺分布$p(\vb{y})$は:
+  \begin{align*}
+    p(\vb{x}, \vb{y}) &= \mathcal{N} \left( \mqty(\vb{x} \\ \vb{y}) \middlerel|
+      \mqty(\vb*{\mu}_x \\ \vb{A} \vb*{\mu}_x + \vb{b}),
+      \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xx} \vb{A}^\top \\
+      \vb{A} \vb{\Sigma}_{xx} & \vb{R} + \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top) \right) \\
+    p(\vb{x} \mid \vb{y}) &= \mathcal{N} \left( \vb{x} \middlerel|
+      \vb{\Sigma}_{x \mid y}
+      \left( \vb{A}^\top \vb{R}^{-1} \left( \vb{y} - \vb{b} \right) + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \right),
+      \vb{\Sigma}_{x \mid y} \right) \\
+    p(\vb{y}) &= \mathcal{N} \left(\vb{y} \middlerel|
+      \vb{A} \vb*{\mu}_x + \vb{b}, \vb{R} + \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top \right)
+  \end{align*}
+  ただし, $\vb{\Sigma}_{x \mid y} = \left( \vb{\Sigma}_{xx}^{-1} + \vb{A}^\top \vb{R}^{-1} \vb{A} \right)^{-1}$.
+\end{block}
+\end{frame}
+
+\begin{frame}{ガウス分布の非線形変換 (線形化)}
+\begin{itemize}
+  \item 続いて, $p(\vb{x})$, $p(\vb{y} \mid \vb{x})$が次のように定まっているとする:
+  \begin{align*}
+    p(\vb{x}) &= \mathcal{N}(\vb*{\mu}_x, \vb{\Sigma}_{xx}) \\
+    p(\vb{y} \mid \vb{x}) &= \mathcal{N}(\vb{g}(\vb{x}), \vb{R})
+  \end{align*}
+  \item $\vb{g}(\vb{x})$は\textcolor{red}{非線形関数}とする.
+  \item 例えば, 状態$\vb{x}$を, 観測データ$\vb{y}$から推定したいとする.
+  \item $p(\vb{x})$は$\vb{x}$の事前分布である.
+  \item $\vb{n} \sim \mathcal{N}(\vb{0}, \vb{R})$を, 観測データに加わる, ガウスノイズとする.
+  \item $\vb{y} = \vb{g}(\vb{x}) + \vb{n}$のように, センサをモデル化したとする.
+  \item このとき, $p(\vb{y} \mid \vb{x}) = \mathcal{N}(\vb{g}(\vb{x}), \vb{R})$になる
+  (注意: $\vb{x}$は定数扱い).
+  \item $p(\vb{y} \mid \vb{x})$は, 状態$\vb{x}$の下での観測データ$\vb{y}$の尤もらしさ (\textcolor{red}{尤度}).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の非線形変換 (線形化)}
+\begin{itemize}
+  \item $p(\vb{x})$, $p(\vb{y} \mid \vb{x})$が次のように定まっているとする:
+  \begin{align*}
+    p(\vb{x}) &= \mathcal{N}(\vb*{\mu}_x, \vb{\Sigma}_{xx}) \\
+    p(\vb{y} \mid \vb{x}) &= \mathcal{N}(\vb{g}(\vb{x}), \vb{R})
+  \end{align*}
+  \item 状態$\vb{x}$を, 観測データ$\vb{y}$から推定したい. $p(\vb{x})$は$\vb{x}$の事前分布.
+  \item $p(\vb{y} \mid \vb{x})$は, 状態$\vb{x}$の下での観測データ$\vb{y}$の尤もらしさ (尤度).
+  \item \textcolor{red}{ベイズの定理}より, 観測データ$\vb{y}$のもとでの状態$\vb{x}$の確率分布,
+  $p(\vb{x} \mid \vb{y})$が得られる:
+  \begin{align*}
+    p(\vb{x} \mid \vb{y}) &= \frac{p(\vb{y} \mid \vb{x}) p(\vb{x})}{p(\vb{y})}
+      = \frac{p(\vb{y} \mid \vb{x}) p(\vb{x})}{
+      \displaystyle \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+      p(\vb{y} \mid \vb{x}) p(\vb{x}) \dd{\vb{x}}}
+  \end{align*}
+  \item $p(\vb{x} \mid \vb{y})$と, $p(\vb{y})$がどうなるか調べてみよう.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の非線形変換 (線形化)}
+\begin{itemize}
+  \item $p(\vb{x})$, $p(\vb{y} \mid \vb{x})$が次のように定まっているとする:
+  \begin{align*}
+    p(\vb{x}) &= \mathcal{N}(\vb*{\mu}_x, \vb{\Sigma}_{xx}) \\
+    p(\vb{y} \mid \vb{x}) &= \mathcal{N}(\vb{g}(\vb{x}), \vb{R})
+  \end{align*}
+  \item 一般の$\vb{g}(\vb{x})$に対して, $p(\vb{y} \mid \vb{x})$, $p(\vb{y})$が解析的に求まるとは限らない.
+  \item そこで, $\vb{g}(\vb{x})$を$\vb*{\mu}_x$のまわりで\textcolor{red}{線形化}する:
+  \begin{align*}
+    \vb{g}(\vb{x}) &\approx \vb*{\mu}_y + \vb{G} \left( \vb{x} - \vb*{\mu}_x \right) \\
+    \vb*{\mu}_y &= \vb{g}(\vb*{\mu}_x) \\
+    \vb{G} &= \left. \pdv{\vb{g}(\vb{x})}{\vb{x}} \right|_{\vb{x} = \vb*{\mu}_x}
+  \end{align*}
+  \item $p(\vb{y} \mid \vb{x}) \approx \mathcal{N}(\vb*{\mu}_y + \vb{G} \left( \vb{x} - \vb*{\mu}_x \right), \vb{R})$となって,
+  先ほどの例と同様になる.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の非線形変換 (線形化)}
+\begin{itemize}
+  \item 線形化によって, $p(\vb{y} \mid \vb{x})$が次のようになる:
+  \begin{align*}
+    p(\vb{x}) = \mathcal{N}(\vb*{\mu}_x, \vb{\Sigma}_{xx}), \quad
+    p(\vb{y} \mid \vb{x}) \approx \mathcal{N}(\vb*{\mu}_y + \vb{G} \left( \vb{x} - \vb*{\mu}_x \right), \vb{R})
+  \end{align*}
+  \item このとき, 同時分布$p(\vb{x}, \vb{y})$, 条件付き分布$p(\vb{x} \mid \vb{y})$, 周辺分布$p(\vb{y})$は:
+  \begin{align*}
+    p(\vb{x}, \vb{y}) &= \mathcal{N} \left( \mqty(\vb{x} \\ \vb{y}) \middlerel|
+      \mqty(\vb*{\mu}_x \\ \vb*{\mu}_y),
+      \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xx} \vb{G}^\top \\
+      \vb{G} \vb{\Sigma}_{xx} & \vb{R} + \vb{G} \vb{\Sigma}_{xx} \vb{G}^\top) \right) \\
+    p(\vb{x} \mid \vb{y}) &= \mathcal{N} \left( \vb{x} \middlerel|
+      \vb{\Sigma}_{x \mid y}
+      \left( \vb{G}^\top \vb{R}^{-1} \left( \vb{y} - \vb*{\mu}_y - \vb{G} \vb*{\mu}_x \right)
+      + \vb{\Sigma}_{xx}^{-1} \vb*{\mu}_x \right),
+      \vb{\Sigma}_{x \mid y} \right) \\
+    p(\vb{y}) &= \mathcal{N} \left(\vb{y} \middlerel|
+      \vb*{\mu}_y, \vb{R} + \vb{G} \vb{\Sigma}_{xx} \vb{G}^\top \right)
+  \end{align*}
+  \item ただし, $\vb{\Sigma}_{x \mid y} = \left( \vb{\Sigma}_{xx}^{-1} + \vb{G}^\top \vb{R}^{-1} \vb{G} \right)^{-1}$,
+  $\vb*{\mu}_y = \vb{g}(\vb*{\mu}_x)$.
+\end{itemize}
+\end{frame}
+
+\section{ガウス分布の和と積}
+
+\begin{frame}{ガウス分布の和}
+\begin{itemize}
+  \item $\vb{x}$, $\vb{y}$は互いに\textcolor{red}{独立}で,
+  ガウス分布$\mathcal{N}(\vb*{\mu}_x, \vb{\Sigma}_{xx})$,
+  $\mathcal{N}(\vb*{\mu}_y, \vb{\Sigma}_{yy})$に従うとする.
+  \item 和$\vb{z} = \vb{x} + \vb{y}$は, ガウス分布
+  $\mathcal{N}(\vb*{\mu}_x + \vb*{\mu}_y, \vb{\Sigma}_{xx} + \vb{\Sigma}_{yy})$に従う.
+  \item この性質を\textcolor{red}{再生性}という.
+  \item 和$\vb{z} = \vb{x} + \vb{y}$の平均と共分散を求めよう.
+  \begin{align*}
+    \E{\vb{z}} &= \E{\vb{x} + \vb{y}} = \E{\vb{x}} + \E{\vb{y}} = \vb*{\mu}_x + \vb*{\mu}_y \\
+    \Var{\vb{z}} &= \Var{\vb{x} + \vb{y}} \\
+      &= \Var{\vb{x}} + \Var{\vb{y}} + \Cov{\vb{x}}{\vb{y}} + \Cov{\vb{y}}{\vb{x}} \\
+      &= \Var{\vb{x}} + \Var{\vb{y}} = \vb{\Sigma}_{xx} + \vb{\Sigma}_{yy}
+  \end{align*}
+  \item $\vb{x}$, $\vb{y}$は独立 (無相関) なので,
+  $\Cov{\vb{x}}{\vb{y}} = \vb{0}$, $\Cov{\vb{y}}{\vb{x}} = \vb{0}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の和}
+\begin{itemize}
+  \item $\vb{x}$, $\vb{y}$は互いに\textcolor{red}{独立}で,
+  ガウス分布$\mathcal{N}(\vb*{\mu}_x, \vb{\Sigma}_{xx})$,
+  $\mathcal{N}(\vb*{\mu}_y, \vb{\Sigma}_{yy})$に従うとする.
+  \item 和$\vb{z} = \vb{A} \vb{x} + \vb{B} \vb{y}$は, ガウス分布
+  $\mathcal{N}(\vb{A} \vb*{\mu}_x + \vb{B} \vb*{\mu}_y,
+    \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top + \vb{B} \vb{\Sigma}_{yy} \vb{B}^\top)$に従う.
+  \item 練習問題.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の和}
+\begin{itemize}
+  \item $K$個の独立な確率変数$\vb{x}_k$があり, ガウス分布$\mathcal{N}(\vb*{\mu}_k, \vb{\Sigma}_k)$に従うとする.
+  \item このとき, 重み付き和$\vb{x} = \sum_k \vb{W}_k \vb{x}_k$は, 以下のガウス分布に従う:
+  \begin{align*}
+    \vb{x} \sim \mathcal{N} \left( \sum_k \vb{W}_k \vb*{\mu}_k, \sum_k \vb{W}_k \vb{\Sigma}_k \vb{W}_k^\top \right)
+  \end{align*}
+  \item 重み付き和の平均を求めよう:
+  \begin{align*}
+    \E{\vb{x}} &= \E{\sum_k \vb{W}_k \vb{x}_k} = \sum_k \vb{W}_k \E{\vb{x}_k}
+      = \sum_k \vb{W}_k \vb*{\mu}_k
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の和}
+\begin{itemize}
+  \item 重み付き和の共分散は,
+  \begin{align*}
+    \Var{\vb{x}} &= \E{\left( \vb{x} - \E{\vb{x}} \right) \left( \vb{x} - \E{\vb{x}} \right)^\top} \\
+      &= \E{\left( \sum_k \vb{W}_k \left( \vb{x}_k - \vb*{\mu}_k \right) \right)
+        \left( \sum_l \vb{W}_l \left( \vb{x}_l - \vb*{\mu}_l \right) \right)^\top} \\
+      &= \sum_k \sum_l \vb{W}_k \E{\left( \vb{x}_k - \vb*{\mu}_k \right)
+        \left( \vb{x}_l - \vb*{\mu}_l \right)} \vb{W}_l^\top \\
+      &= \sum_k \sum_l \vb{W}_k \Cov{\vb{x}_k}{\vb{x}_l} \vb{W}_l^\top
+      = \sum_k \vb{W}_k \Cov{\vb{x}_k}{\vb{x}_k} \vb{W}_k^\top \\
+      &= \sum_k \vb{W}_k \Var{\vb{x}_k} \vb{W}_k^\top
+      = \sum_k \vb{W}_k \vb{\Sigma}_k \vb{W}_k^\top
+  \end{align*}
+  \item $\vb{x}_k$は互いに独立なので, $i \neq j$のとき$\Cov{\vb{x}_i}{\vb{x}_j} = \vb{0}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の和}
+\begin{itemize}
+  \item $K$個の独立な確率変数$\vb{x}_k$があり, ガウス分布$\mathcal{N}(\vb*{\mu}_k, \vb{\Sigma}_k)$に従うとする.
+  \item このとき, 重み付き和$\vb{x} = \sum_k w_k \vb{x}_k$は, 以下のガウス分布に従う:
+  \begin{align*}
+    \vb{x} \sim \mathcal{N} \left( \sum_k w_k \vb*{\mu}_k, \sum_k w_k^2 \vb{\Sigma}_k \right)
+  \end{align*}
+  \item 練習問題.
+  % \item 先程の例において, $\vb{W}_k = w_k \vb{I}$とおけばよい.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の積}
+\begin{itemize}
+  \item $\vb{x}$に関する2つのガウス分布$\mathcal{N}(\vb*{\mu}_1, \vb{\Sigma}_1)$,
+  $\mathcal{N}(\vb*{\mu}_2, \vb{\Sigma}_2)$を考える.
+  \item 2つのガウス分布の積を, 積分が1になるように正規化すれば, 新たなガウス分布となる.
+  \item 積の指数部分$\exp(\cdot)$に着目すると ($-\frac{1}{2}$は除く),
+  \begin{align*}
+    & \left( \vb{x} - \vb*{\mu}_1 \right)^\top
+      \vb{\Sigma}_1^{-1} \left( \vb{x} - \vb*{\mu}_1 \right)
+      + \left( \vb{x} - \vb*{\mu}_2 \right)^\top
+      \vb{\Sigma}_2^{-1} \left( \vb{x} - \vb*{\mu}_2 \right) \\
+    &= \vb{x}^\top \left( \vb{\Sigma}_1^{-1} + \vb{\Sigma}_2^{-1} \right) \vb{x}
+      - \vb{x}^\top \left( \vb{\Sigma}_1^{-1} \vb*{\mu}_1 + \vb{\Sigma}_2^{-1} \vb*{\mu}_2 \right) \\
+    & \quad - {\color{red} \left( \vb*{\mu}_1^\top \vb{\Sigma}_1^{-1} + \vb*{\mu}_2^\top \vb{\Sigma}_2^{-1} \right)} \vb{x}
+      + \vb*{\mu}_1^\top \vb{\Sigma}_1^{-1} \vb*{\mu}_1
+      + \vb*{\mu}_2^\top \vb{\Sigma}_2^{-1} \vb*{\mu}_2 \\
+    &= \vb{x}^\top \left( \vb{\Sigma}_1^{-1} + \vb{\Sigma}_2^{-1} \right) \vb{x}
+      - \vb{x}^\top \left( \vb{\Sigma}_1^{-1} \vb*{\mu}_1 + \vb{\Sigma}_2^{-1} \vb*{\mu}_2 \right) \\
+    & \quad - {\color{red} \left( \vb{\Sigma}_1^{-1} \vb*{\mu}_1 + \vb{\Sigma}_2^{-1} \vb*{\mu}_2 \right)^\top} \vb{x}
+      + \vb*{\mu}_1^\top \vb{\Sigma}_1^{-1} \vb*{\mu}_1
+      + \vb*{\mu}_2^\top \vb{\Sigma}_2^{-1} \vb*{\mu}_2
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の積}
+\begin{itemize}
+  \item $\vb{\Sigma}^{-1} = \vb{\Sigma}_1^{-1} + \vb{\Sigma}_2^{-1}$ (対称),
+  $\vb{\Sigma}^{-1} \vb*{\mu} = \vb{\Sigma}_1^{-1} \vb*{\mu}_1 + \vb{\Sigma}_2^{-1} \vb*{\mu}_2$とおいて,
+  \begin{align*}
+    & \vb{x}^\top \left( \vb{\Sigma}_1^{-1} + \vb{\Sigma}_2^{-1} \right) \vb{x}
+      - \vb{x}^\top \left( \vb{\Sigma}_1^{-1} \vb*{\mu}_1 + \vb{\Sigma}_2^{-1} \vb*{\mu}_2 \right) \\
+    & \quad - \left( \vb{\Sigma}_1^{-1} \vb*{\mu}_1 + \vb{\Sigma}_2^{-1} \vb*{\mu}_2 \right)^\top \vb{x}
+      + \vb*{\mu}_1^\top \vb{\Sigma}_1^{-1} \vb*{\mu}_1
+      + \vb*{\mu}_2^\top \vb{\Sigma}_2^{-1} \vb*{\mu}_2 \\
+    &= \vb{x}^\top \vb{\Sigma}^{-1} \vb{x}
+      - \vb{x}^\top \vb{\Sigma}^{-1} \vb*{\mu}
+      - \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb{x}
+      + \vb*{\mu}_1^\top \vb{\Sigma}_1^{-1} \vb*{\mu}_1
+      + \vb*{\mu}_2^\top \vb{\Sigma}_2^{-1} \vb*{\mu}_2 \\
+    &= \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1} \left( \vb{x} - \vb*{\mu} \right)
+      - \vb*{\mu}^\top \vb*{\mu}
+      + \vb*{\mu}_1^\top \vb{\Sigma}_1^{-1} \vb*{\mu}_1
+      + \vb*{\mu}_2^\top \vb{\Sigma}_2^{-1} \vb*{\mu}_2 \\
+    &= \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1} \left( \vb{x} - \vb*{\mu} \right)
+      + \mathrm{Const.}
+  \end{align*}
+  \item $\vb{x}$によらない定数項をまとめて, $\mathrm{Const.}$とした.
+  \item よって, 2つのガウス分布$\mathcal{N}(\vb*{\mu}_1, \vb{\Sigma}_1)$,
+  $\mathcal{N}(\vb*{\mu}_2, \vb{\Sigma}_2)$の積は,
+  \begin{align*}
+    \mathcal{N}(\vb*{\mu}_1, \vb{\Sigma}_1) \mathcal{N}(\vb*{\mu}_2, \vb{\Sigma}_2)
+    \propto \exp(\left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1} \left( \vb{x} - \vb*{\mu} \right))
+    \propto \mathcal{N}(\vb*{\mu}, \vb{\Sigma})
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の積}
+\begin{block}{正規化されたガウス分布の積}
+  $\vb{x}$に関する2つのガウス分布$\mathcal{N}(\vb*{\mu}_1, \vb{\Sigma}_1)$,
+  $\mathcal{N}(\vb*{\mu}_2, \vb{\Sigma}_2)$を考える.
+  2つのガウス分布の積を正規化すれば, 新たなガウス分布となる.
+  \begin{align*}
+    \mathcal{N}(\vb*{\mu}_1, \vb{\Sigma}_1) \mathcal{N}(\vb*{\mu}_2, \vb{\Sigma}_2)
+    \propto \mathcal{N}(\vb*{\mu}, \vb{\Sigma})
+  \end{align*}
+  定数項を取り除いて, 指数部分だけを抜き出すと,
+  {\small \begin{align*}
+    & \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu}_1 \right)^\top \vb{\Sigma}_1^{-1}
+      \left( \vb{x} - \vb*{\mu}_1 \right))
+    \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu}_2 \right)^\top \vb{\Sigma}_2^{-1}
+      \left( \vb{x} - \vb*{\mu}_2 \right)) \\
+    & \qquad \propto \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right))
+  \end{align*}}
+  ただし, 新たな平均$\vb*{\mu}$と共分散$\vb{\Sigma}$は,
+  \begin{gather*}
+    \vb{\Sigma}^{-1} = \vb{\Sigma}_1^{-1} + \vb{\Sigma}_2^{-1}, \quad
+    \vb{\Sigma}^{-1} \vb*{\mu} = \vb{\Sigma}_1^{-1} \vb*{\mu}_1 + \vb{\Sigma}_2^{-1} \vb*{\mu}_2
+  \end{gather*}
+\end{block}
+\end{frame}
+
+\begin{frame}{ガウス分布の積}
+\begin{itemize}
+  \item $\vb{x}$に関する$K$個のガウス分布$\mathcal{N}(\vb*{\mu}_1, \vb{\Sigma}_1), \ldots,
+    \mathcal{N}(\vb*{\mu}_K, \vb{\Sigma}_K)$を考える.
+  \item $K$個のガウス分布の積を, 積分が1になるように正規化すれば, 新たなガウス分布となる.
+  \item 積の指数部分$\exp(\cdot)$に着目すると ($-\frac{1}{2}$は除く),
+  \begin{align*}
+    & \sum_k \left( \vb{x} - \vb*{\mu}_k \right)^\top \vb{\Sigma}_k^{-1} \left( \vb{x} - \vb*{\mu}_k \right) \\
+    &= \vb{x}^\top \left( \sum_k \vb{\Sigma}_k^{-1} \right) \vb{x}
+      - \vb{x}^\top \left( \sum_k \vb{\Sigma}_k^{-1} \vb*{\mu}_k \right) \\
+    & \quad - \left( \sum_k \vb*{\mu}_k^\top \vb{\Sigma}_k^{-1} \right) \vb{x}
+      + \sum_k \vb*{\mu}_k^\top \vb{\Sigma}_k^{-1} \vb*{\mu}_k
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の積}
+\begin{itemize}
+  \item $\vb{\Sigma}^{-1} = \sum_k \vb{\Sigma}_k^{-1}$,
+  $\vb{\Sigma}^{-1} \vb*{\mu} = \sum_k \vb{\Sigma}_k^{-1} \vb*{\mu}_k$とおけば,
+  \begin{align*}
+    & \vb{x}^\top \vb{\Sigma}^{-1} \vb{x}
+      - \vb{x}^\top \vb{\Sigma}^{-1} \vb*{\mu}
+      - \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb{x}
+      + \sum_k \vb*{\mu}_k^\top \vb{\Sigma}_k^{-1} \vb*{\mu}_k \\
+    &= \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1} \left( \vb{x} - \vb*{\mu} \right)
+      - \vb*{\mu}^\top \vb*{\mu}
+      + \sum_k \vb*{\mu}_k^\top \vb{\Sigma}_k^{-1} \vb*{\mu}_k \\
+    &= \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1} \left( \vb{x} - \vb*{\mu} \right)
+      + \mathrm{Const.}
+  \end{align*}
+  \item $\vb{x}$によらない定数項をまとめて, $\mathrm{Const.}$とした.
+  \item よって, $K$個のガウス分布の積は,
+  \begin{align*}
+    \prod_i \mathcal{N}(\vb*{\mu}_k, \vb{\Sigma}_k)
+    \propto \exp(\left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1} \left( \vb{x} - \vb*{\mu} \right))
+    \propto \mathcal{N}(\vb*{\mu}, \vb{\Sigma})
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の積}
+\begin{block}{正規化されたガウス分布の積}
+  $\vb{x}$に関する$K$個のガウス分布$\mathcal{N}(\vb*{\mu}_1, \vb{\Sigma}_1), \ldots,
+    \mathcal{N}(\vb*{\mu}_K, \vb{\Sigma}_K)$を考える.
+  $K$個のガウス分布の積を正規化すれば, 新たなガウス分布となる.
+  \begin{align*}
+    \prod_k \mathcal{N}(\vb*{\mu}_k, \vb{\Sigma}_k) \propto \mathcal{N}(\vb*{\mu}, \vb{\Sigma})
+  \end{align*}
+  定数項を取り除いて, 指数部分だけを抜き出すと,
+  {\small \begin{align*}
+    \prod_k \exp(-\frac{1}{2} \left( \vb{x}_k - \vb*{\mu}_k \right)^\top \vb{\Sigma}_k^{-1}
+      \left( \vb{x}_k - \vb*{\mu}_k \right))
+    \propto \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right) \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right))
+  \end{align*}}
+  ただし, 新たな平均$\vb*{\mu}$と共分散$\vb{\Sigma}$は,
+  \begin{align*}
+    \vb{\Sigma}^{-1} = \sum_k \vb{\Sigma}_k^{-1}, \quad
+    \vb{\Sigma}^{-1} \vb*{\mu} = \sum_k \vb{\Sigma}_k^{-1} \vb*{\mu}_k
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{ガウス分布の積}
+\begin{itemize}
+  \item 同様に, 次が成り立つ (練習問題):
+  \begin{align*}
+    & \prod_k \exp(-\frac{1}{2} \left( \vb{G}_k \vb{x} - \vb*{\mu}_k \right)^\top
+      \vb{\Sigma}_k^{-1} \left( \vb{G}_k \vb{x} - \vb*{\mu}_k \right)) \\
+    & \qquad \propto \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right) \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right))
+  \end{align*}
+  \item ただし,
+  \begin{align*}
+    \vb{\Sigma}^{-1} &= \sum_k \vb{G}_k^\top \vb{\Sigma}_k^{-1} \vb{G}_k \\
+    \vb{\Sigma}^{-1} \vb*{\mu} &= \sum_k \vb{G}_k^\top \vb{\Sigma}_k^{-1} \vb*{\mu}_k
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\section{ガウス分布の最頻値 (モード)}
+
+\begin{frame}{ガウス分布の最頻値 (モード)}
+\begin{itemize}
+  \item $\vb{x}$についてのガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$を考える.
+  \item ガウス分布の最頻値が, 平均$\vb*{\mu}$と一致することを確かめよう.
+  \item 最頻値: 確率密度が最大になるような$\vb{x}$
+  \item 極値を調べるために, $\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$を$\vb{x}$で微分して$\vb{0}$とおく:
+  {\small \begin{align*}
+    \pdv{\vb{x}} \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma}) &= \vb{0} \\
+    \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+      \pdv{\vb{x}} \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right)) &= \vb{0} \\
+    -\frac{1}{2} \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right))
+    \pdv{\vb{x}} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right) &= \vb{0} \\
+    -\exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right)) \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1} &= \vb{0}
+  \end{align*}}
+  \item よって, 極値は$\vb{x} = \vb*{\mu}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の最頻値 (モード)}
+\begin{itemize}
+  \item ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$のヘッセ行列を調べよう.
+  {\small \begin{align*}
+    & \frac{\partial^2}{\partial \vb{x}^\top \partial \vb{x}} \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma}) \\
+    &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+      \frac{\partial^2}{\partial \vb{x}^\top \partial \vb{x}}
+      \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right)) \\
+    &= -\frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+      \pdv{\vb{x}^\top} \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right))
+      \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1} \\
+    &= -\frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+      \bigg\{ \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right)) \vb{\Sigma}^{-1} \\
+    & \quad - \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right))^2
+      \vb{\Sigma}^{-1} \left( \vb{x} - \vb*{\mu} \right)
+      \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1} \bigg\}
+  \end{align*}}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の最頻値 (モード)}
+\begin{itemize}
+  \item ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$のヘッセ行列は,
+  {\small \begin{align*}
+    & -\frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+      \bigg\{ \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right)) \vb{\Sigma}^{-1} \\
+    & \quad - \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right))^2
+      \vb{\Sigma}^{-1} \left( \vb{x} - \vb*{\mu} \right)
+      \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1} \bigg\}
+  \end{align*}}
+  \item ヘッセ行列を$\vb{x} = \vb*{\mu}$で評価し, その負定値性を確認しよう.
+  \item $\vb{x} = \vb*{\mu}$を代入すると,
+  $-\frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}} \vb{\Sigma}^{-1}$.
+  \item $\vb{\Sigma}^{-1}$は正定値だから, 任意の$\vb{y} \neq \vb{0}$について, $\vb{y} \vb{\Sigma}^{-1} \vb{y} > 0$.
+  \item 上式のヘッセ行列は負定値 ($< 0$) となるから, $\vb{x} = \vb*{\mu}$は極大点である.
+  \item よって, $\vb{x} = \vb*{\mu}$はガウス分布の\textcolor{red}{最頻値}となって, 平均に一致する.
+\end{itemize}
+\end{frame}
+
+\section{ガウス分布の無相関性と独立性}
+
+\begin{frame}{ガウス分布の無相関性と独立性}
+\begin{itemize}
+  \item $\text{(独立)} \Longrightarrow \text{(無相関)}$は成り立つが, その逆は一般に成り立たない.
+  \item ガウス分布では, $\text{(独立)} \Longleftrightarrow \text{(無相関)}$であることを確認しよう.
+  \item $\vb{x}, \vb{y}$の同時分布が, ガウス分布で表されるとする:
+  \begin{align*}
+    p(\vb{x}, \vb{y}) = \mathcal{N} \left( \mqty(\vb{x} \\ \vb{y}) \middlerel|
+      \mqty(\vb*{\mu}_x \\ \vb*{\mu}_y),
+      \mqty(\vb{\Sigma}_{xx} & \vb{\Sigma}_{xy} \\
+        \vb{\Sigma}_{yx} & \vb{\Sigma}_{yy}) \right)
+  \end{align*}
+  \item このとき, 条件付き分布と周辺分布もガウス分布となる:
+  \begin{align*}
+    p(\vb{x}, \vb{y}) &= p(\vb{y} \mid \vb{x}) p(\vb{x}) \\
+    p(\vb{y} \mid \vb{x}) &= \mathcal{N}(\vb{y} \mid \vb*{\mu}_y
+      + \vb{\Sigma}_{yx} \vb{\Sigma}_{xx}^{-1} \left( \vb{x} - \vb*{\mu}_x \right),
+      \vb{\Sigma}_{yy} - \vb{\Sigma}_{yx} \vb{\Sigma}_{xx}^{-1} \vb{\Sigma}_{xy}) \\
+    p(\vb{x}) &= \mathcal{N}(\vb{x} \mid \vb*{\mu}_x, \vb{\Sigma}_{xx}) \\
+    p(\vb{y}) &= \mathcal{N}(\vb{y} \mid \vb*{\mu}_y, \vb{\Sigma}_{yy})
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の無相関性と独立性}
+\begin{itemize}
+  \item $\vb{x}, \vb{y}$が無相関であるとき, $\E{\vb{x} \vb{y}^\top} = \E{\vb{x}} \E{\vb{y}}^\top$だから,
+  \begin{align*}
+    \vb{\Sigma}_{xy} &= \Cov{\vb{x}}{\vb{y}}
+      = \E{\vb{x}} \E{\vb{y}}^\top - \E{\vb{x}} \E{\vb{y}}^\top = \vb{0} \\
+    \vb{\Sigma}_{yx} &= \Cov{\vb{y}}{\vb{x}} = \left( \Cov{\vb{x}}{\vb{y}} \right)^\top = \vb{0}
+  \end{align*}
+  \item よって, 以下より$p(\vb{x}, \vb{y}) = p(\vb{y} \mid \vb{x}) p(\vb{x}) = p(\vb{x}) p(\vb{y})$が成り立つから,
+  $\vb{x}, \vb{y}$は独立.
+  \begin{align*}
+    p(\vb{y} \mid \vb{x}) &= \mathcal{N}(\vb{y} \mid \vb*{\mu}_y
+      + \vb{\Sigma}_{yx} \vb{\Sigma}_{xx}^{-1} \left( \vb{x} - \vb*{\mu}_x \right),
+      \vb{\Sigma}_{yy} - \vb{\Sigma}_{yx} \vb{\Sigma}_{xx}^{-1} \vb{\Sigma}_{xy}) \\
+    &= \mathcal{N}(\vb{y} \mid \vb*{\mu}_y, \vb{\Sigma}_{yy}) = p(\vb{y})
+  \end{align*}
+  \item 上記の議論を逆に進めることで, $\text{(独立)} \Longrightarrow \text{(無相関)}$も示せる.
+  \item よって, ガウス分布では, 独立性と無相関性が同値となる.
+\end{itemize}
+\end{frame}
+
+\section{ガウス分布の無相関化と標準化}
+
+\begin{frame}{ガウス分布の無相関化と標準化}
+\begin{itemize}
+  \item ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$の共分散$\vb{\Sigma}$を, 直交行列$\vb{U}$で対角化する
+  ($\vb{\Sigma} = \vb{U} \vb{\Lambda} \vb{U}^\top$).
+  $\vb{\Lambda}$は, $\vb{\Sigma}$の固有値を斜めに並べた, 対角行列.
+  \item $\vb{y} = \vb{U}^\top \left( \vb{x} - \vb*{\mu} \right)$の変数変換を施すと,
+  平均と共分散は
+  \begin{align*}
+    \E{\vb{y}} = \vb{U}^\top \left( \vb*{\mu} - \vb*{\mu} \right) = \vb{0}, \quad
+    \Var{\vb{y}} = \vb{U}^\top \vb{\Sigma} \vb{U} = \vb{\Lambda}
+  \end{align*}
+  \item よって, $\vb{y}$はガウス分布$\mathcal{N}(\vb{y} \mid \vb{0}, \vb{\Lambda})$に従う.
+  \item 共分散は対角行列だから, $\vb{y}$の各成分は互いに\textcolor{red}{無相関}で, 独立.
+  \item ガウス分布なので, 無相関性と独立性は同値.
+  \item このような手続きを, \textcolor{red}{無相関化}という.
+  \item $\vb{y}$の各成分$y_i$は, 平均0, 分散$\sqrt{\lambda_i}$のガウス分布に従う
+  ($\lambda_i$は, $\vb{\Sigma}$の対応する固有値).
+  各成分の分散には, 固有値によるばらつきが生じる.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の無相関化と標準化}
+\begin{itemize}
+  \item ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$の共分散$\vb{\Sigma}$を, 直交行列$\vb{U}$で対角化する
+  ($\vb{\Sigma} = \vb{U} \vb{\Lambda} \vb{U}^\top$).
+  \item $\vb{\Lambda}$は, $\vb{\Sigma}$の固有値を斜めに並べた, 対角行列 ($\vb{\Lambda}^{\frac{1}{2}}, \vb{\Lambda}^{-\frac{1}{2}}$も対角行列).
+  \item $\vb{y} = \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top \left( \vb{x} - \vb*{\mu} \right)$の変数変換を施すと,
+  平均と共分散は
+  \begin{align*}
+    \E{\vb{y}} &= \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top \left( \vb*{\mu} - \vb*{\mu} \right) = \vb{0} \\
+    \Var{\vb{y}} &= \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top \vb{\Sigma}
+      \left( \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top \right)^\top \\
+    &= \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top \vb{\Sigma} \vb{U} \vb{\Lambda}^{-\frac{1}{2}}
+      = \vb{\Lambda}^{-\frac{1}{2}} \vb{\Lambda} \vb{\Lambda}^{-\frac{1}{2}} = \vb{I}
+  \end{align*}
+  \item よって, $\vb{y}$は標準正規分布$\mathcal{N}(\vb{y} \mid \vb{0}, \vb{I})$に従う.
+  \item このような手続きを, \textcolor{red}{白色化}という.
+  \item $\vb{y}$の各成分$y_i$は, 平均0, 分散1の標準正規分布に従う.
+  無相関化の場合とは異なり, 固有値による分散のばらつきが解消されている.
+\end{itemize}
+\end{frame}
+
+\end{document}
