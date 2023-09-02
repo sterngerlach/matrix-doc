@@ -541,6 +541,8 @@
   \item $\Cov{x_i}{x_j} = \Cov{x_j}{x_i}$だから, $\vb{\Sigma}$は対称.
   \item $\Var{x_i} = \Cov{x_i}{x_i}$に注意.
   \item $\vb{\Sigma}$の対角成分は分散, それ以外の成分は共分散となる.
+  \item \textcolor{red}{重要: $\vb{x}$の各成分が互いに独立 (無相関) ならば, $\vb{\Sigma}$は対角行列となる}
+  ($i \neq j \to \Cov{x_i}{x_j} = 0$).
 \end{itemize}
 \end{frame}
 
@@ -675,6 +677,16 @@
       \frac{1}{\sqrt{\lambda_1}}, \ldots, \frac{1}{\sqrt{\lambda_D}} \right)
   \end{gather*}
   \item $\vb{U}$は直交行列 ($\vb{U}^{-1} = \vb{U}^\top, \vb{U} \vb{U}^\top = \vb{U}^\top \vb{U} = \vb{I}$).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+\begin{itemize}
+  \item $\vb{\Sigma}$は正定値行列なので, 行列式は常に正: $\det \vb{\Sigma} > 0$.
+  \begin{align*}
+    \text{$\vb{\Sigma}$が正定値} &\to \text{$\vb{\Sigma}$の固有値$\left\{ \lambda_i \right\}$は全て正} \\
+    &\to \text{行列式は, 全ての固有値の積なので正}
+  \end{align*}
 \end{itemize}
 \end{frame}
 
@@ -1324,15 +1336,14 @@ $\vb{z} = \vb{x} - \vb*{\mu}$とすると, $\vb{x} = \vb{z} + \vb*{\mu}$だか�
       + \frac{1}{3!} \left( \vb{t}^\top \vb{x} \right)^3 + \cdots} \\
     &= 1 + \E{\vb{t}^\top \vb{x}} + \frac{1}{2!} \E{\left( \vb{t}^\top \vb{x} \right)^2}
       + \frac{1}{3!} \E{\left( \vb{t}^\top \vb{x} \right)^3} + \cdots \\
-    &= 1 + \vb{t}^\top \E{\vb{x}} + \frac{1}{2!} \vb{t}^\top \E{\vb{x} \vb{x}^\top} \vb{t} + \cdots
+    &= 1 + \vb{t}^\top \E{\vb{x}} + \frac{1}{2!} \vb{t}^\top \E{\vb{x} \vb{x}^\top} \vb{t}
+      + \frac{1}{3!} \vb{t}^\top \E{\vb{x} \vb{t}^\top \vb{x} \vb{x}^\top} \vb{t} + \cdots
   \end{align*}
-  \item $\vb{t}$で1回微分すると,
+  \item $\vb{t}$で1回微分して$\vb{t} = \vb{0}$を代入すれば, $\E{\vb{x}}^\top$を得る.
   \begin{align*}
     \pdv{\vb{t}} \E{\exp(\vb{t}^\top \vb{x})}
-    &= \E{\vb{x}}^\top + \E{\left( \vb{t}^\top \vb{x} \right) \vb{x}^\top}
-      + \frac{1}{2!} \E{\left( \vb{t}^\top \vb{x} \right)^2 \vb{x}^\top} + \cdots
+    &= \E{\vb{x}}^\top + \vb{t}^\top \E{\vb{x} \vb{x}^\top} + \cdots
   \end{align*}
-  \item $\vb{t} = \vb{0}$を代入すれば, $\E{\vb{x}}^\top$を得る.
 \end{itemize}
 \end{frame}
 
@@ -1341,14 +1352,12 @@ $\vb{z} = \vb{x} - \vb*{\mu}$とすると, $\vb{x} = \vb{z} + \vb*{\mu}$だか�
   \item $\vb{t}$で1回微分すると,
   \begin{align*}
     \pdv{\vb{t}} \E{\exp(\vb{t}^\top \vb{x})}
-    &= \E{\vb{x}}^\top + \E{\left( \vb{t}^\top \vb{x} \right) \vb{x}^\top}
-      + \frac{1}{2!} \E{\left( \vb{t}^\top \vb{x} \right)^2 \vb{x}^\top} + \cdots
+    &= \E{\vb{x}}^\top + \vb{t}^\top \E{\vb{x} \vb{x}^\top} + \cdots
   \end{align*}
   \item $\vb{t}^\top$で, さらにもう1回微分すると,
   \begin{align*}
     \frac{\partial^2}{\partial \vb{t}^\top \partial \vb{t}} \E{\exp(\vb{t}^\top \vb{x})}
-    &= \E{\vb{x} \vb{x}^\top} + \E{\left( \vb{t}^\top \vb{x} \right) \vb{x} \vb{x}^\top} \\
-    & \quad + \frac{1}{2!} \E{\left( \vb{t}^\top \vb{x} \right)^2 \vb{x} \vb{x}^\top} + \cdots
+    &= \E{\vb{x} \vb{x}^\top} + \cdots
   \end{align*}
   \item $\vb{t} = \vb{0}$を代入すれば, $\E{\vb{x} \vb{x}^\top}$を得る.
 \end{itemize}
