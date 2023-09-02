@@ -212,27 +212,6 @@
 \begin{frame}{第4回: 行列とベクトルの微分2}
 \begin{enumerate}
   \setcounter{enumi}{2}
-  \item 以下の微分を, $\pdv{\vb{Y}}{x}$, $\vb{Y}^{-1}$, $\vb{A}$, $\vb{B}$, $\vb{C}$を用いて表してください.
-  \begin{align*}
-    \pdv{\left( \vb{Y}^{-1} \vb{A} + \vb{B} \right)^{-1} \vb{C} \left( \vb{Y}^{-1} \vb{A} + \vb{B} \right)^{-1}}{x}
-    \quad \text{($\vb{A}, \vb{B}, \vb{C}$は定数, $\vb{Y} = \vb{Y}(x)$)}
-  \end{align*}
-
-  \item 以下を確認してください.
-  \begin{align*}
-    \pdv{\exp(x \vb{A})}{x} = \vb{A} \exp(x \vb{A}) = \exp(x \vb{A}) \vb{A}
-  \end{align*}
-  ただし, $\exp(\vb{A})$は行列指数関数で, 次のように定義されます.
-  \begin{align*}
-    \exp(\vb{A}) \equiv \sum_{n = 0}^\infty \frac{1}{n!} \vb{A}^n
-      = \vb{I} + \vb{A} + \frac{1}{2!} \vb{A}^2 + \frac{1}{3!} \vb{A}^3 + \cdots
-  \end{align*}
-\end{enumerate}
-\end{frame}
-
-\begin{frame}{第4回: 行列とベクトルの微分2}
-\begin{enumerate}
-  \setcounter{enumi}{4}
   \item 以下を確認してください.
   \begin{align*}
     \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{X}^\top \vb{b}}{\vb{X}}
@@ -254,6 +233,27 @@
     \pdv{\tr(\vb{A} \vb{X} \vb{B} \vb{X}^\top \vb{C})}{\vb{X}}
       &= \vb{B} \vb{X}^\top \vb{C} \vb{A} + \vb{B}^\top \vb{X}^\top \vb{A}^\top \vb{C}^\top
       & \text{($\vb{A}, \vb{B}, \vb{C}$は定数)}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第4回: 行列とベクトルの微分2}
+\begin{enumerate}
+  \setcounter{enumi}{5}
+  \item 以下の微分を, $\pdv{\vb{Y}}{x}$, $\vb{Y}^{-1}$, $\vb{A}$, $\vb{B}$, $\vb{C}$を用いて表してください.
+  \begin{align*}
+    \pdv{\left( \vb{Y}^{-1} \vb{A} + \vb{B} \right)^{-1} \vb{C} \left( \vb{Y}^{-1} \vb{A} + \vb{B} \right)^{-1}}{x}
+    \quad \text{($\vb{A}, \vb{B}, \vb{C}$は定数, $\vb{Y} = \vb{Y}(x)$)}
+  \end{align*}
+
+  \item 以下を確認してください.
+  \begin{align*}
+    \pdv{\exp(x \vb{A})}{x} = \vb{A} \exp(x \vb{A}) = \exp(x \vb{A}) \vb{A}
+  \end{align*}
+  ただし, $\exp(\vb{A})$は行列指数関数で, 次のように定義されます.
+  \begin{align*}
+    \exp(\vb{A}) \equiv \sum_{n = 0}^\infty \frac{1}{n!} \vb{A}^n
+      = \vb{I} + \vb{A} + \frac{1}{2!} \vb{A}^2 + \frac{1}{3!} \vb{A}^3 + \cdots
   \end{align*}
 \end{enumerate}
 \end{frame}
@@ -475,6 +475,63 @@
 \begin{frame}{第4回: 行列とベクトルの微分2}
 \begin{enumerate}
   \setcounter{enumi}{2}
+  \item 次のように, 要素ごとに確認できる.
+  {\small \begin{align*}
+    & \left( \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{X}^\top \vb{b}}{\vb{X}} \right)_{ij}
+      = \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{X}^\top \vb{b}}{x_{ji}}
+      = \pdv{x_{ji}} \sum_k \left( \vb{X}^\top \vb{a} \right)_k \left( \vb{X}^\top \vb{b} \right)_k \\
+      &= \pdv{x_{ji}} \sum_k \left( \sum_l x_{lk} a_l \right) \left( \sum_m x_{mk} b_m \right) \\
+      &= \sum_k \sum_l a_l \sum_m b_m
+        \left( x_{mk} \pdv{x_{lk}}{x_{ji}} + x_{lk} \pdv{x_{mk}}{x_{ji}} \right) \\
+      &= \sum_k \sum_l a_l \sum_m b_m
+        \left( x_{mk} \delta_{lj} \delta_{ki} + x_{lk} \delta_{mj} \delta_{ki} \right) \\
+      &= a_j \sum_m b_m x_{mi} + b_j \sum_l a_l x_{li}
+      = a_j \left( \vb{X}^\top \vb{b} \right)_i + b_j \left( \vb{X}^\top \vb{a} \right)_i \\
+      &= \left( \vb{X}^\top \vb{b} \vb{a}^\top \right)_{ij}
+        + \left( \vb{X}^\top \vb{a} \vb{b}^\top \right)_{ij}
+      = \left( \vb{X}^\top \vb{b} \vb{a}^\top + \vb{X}^\top \vb{a} \vb{b}^\top \right)_{ij}
+  \end{align*}}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第4回: 行列とベクトルの微分2}
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item 次のように, 要素ごとに確認できる.
+  \begin{align*}
+    & \left( \pdv{\tr(\vb{X}^\top \vb{X} \vb{A})}{\vb{X}} \right)_{ij}
+      = \pdv{\tr(\vb{X}^\top \vb{X} \vb{A})}{x_{ji}}
+      = \pdv{x_{ji}} \sum_k \left( \vb{X}^\top \vb{X} \vb{A} \right)_{kk} \\
+      &= \pdv{x_{ji}} \sum_k \sum_l x_{lk} \left( \vb{X} \vb{A} \right)_{lk}
+      = \pdv{x_{ji}} \sum_k \sum_l x_{lk} \sum_m x_{lm} a_{mk} \\
+      &= \sum_k \sum_l \sum_m a_{mk} \left( x_{lm} \pdv{x_{lk}}{x_{ji}}
+        + x_{lk} \pdv{x_{lm}}{x_{ji}} \right) \\
+      &= \sum_k \sum_l \sum_m a_{mk} \left( \delta_{ki} \delta_{lj} x_{lm}
+        + \delta_{lj} \delta_{mi} x_{lk} \right) \\
+      &= \sum_m a_{mi} x_{jm} + \sum_k a_{ik} x_{jk}
+      = \left( \vb{A}^\top \vb{X}^\top \right)_{ij} + \left( \vb{A} \vb{X}^\top \right)_{ij}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第4回: 行列とベクトルの微分2}
+\begin{enumerate}
+  \setcounter{enumi}{4}
+  \item 次のように, 要素ごとに確認できる.
+  \begin{align*}
+    & \pdv{\tr(\vb{A} \vb{X} \vb{B} \vb{X}^\top \vb{C})}{\vb{X}}
+      = \pdv{\tr(\vb{X} \vb{B} \vb{X}^\top \vb{C} \vb{A})}{\vb{X}} \quad (\because \text{循環性}) \\
+      &= \vb{B} \vb{X}^\top \left( \vb{C} \vb{A} \right)
+        + \vb{B}^\top \vb{X}^\top \left( \vb{C} \vb{A} \right)^\top \quad (\because \text{文字の置き換え}) \\
+      &= \vb{B} \vb{X}^\top \vb{C} \vb{A} + \vb{B}^\top \vb{X}^\top \vb{A}^\top \vb{C}^\top \\
+      &= \left( \vb{A}^\top \vb{C}^\top \vb{X} \vb{B}^\top + \vb{C} \vb{A} \vb{X} \vb{B} \right)^\top
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第4回: 行列とベクトルの微分2}
+\begin{enumerate}
+  \setcounter{enumi}{5}
   \item 次のようになる. 合成関数の微分, 逆行列の微分を用いる.
   $\vb{Z} = \vb{Y}^{-1} \vb{A} + \vb{B}$とおいて,
   \begin{align*}
@@ -508,7 +565,7 @@
 
 \begin{frame}{第4回: 行列とベクトルの微分2}
 \begin{enumerate}
-  \setcounter{enumi}{3}
+  \setcounter{enumi}{6}
   \item 次のように示せる.
   \begin{align*}
     \pdv{\exp(x \vb{A})}{x} &= \pdv{x} \sum_{n = 0}^\infty \frac{1}{n!} \left( x \vb{A} \right)^n
@@ -518,63 +575,6 @@
       &= \left( \sum_{n = 0}^\infty \frac{1}{n!} x^n \vb{A}^n \right) \vb{A}
       = \vb{A} \left( \sum_{n = 0}^\infty \frac{1}{n!} x^n \vb{A}^n \right) \\
       &= \exp(x \vb{A}) \vb{A} = \vb{A} \exp(x \vb{A})
-  \end{align*}
-\end{enumerate}
-\end{frame}
-
-\begin{frame}{第4回: 行列とベクトルの微分2}
-\begin{enumerate}
-  \setcounter{enumi}{4}
-  \item 次のように, 要素ごとに確認できる.
-  {\small \begin{align*}
-    & \left( \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{X}^\top \vb{b}}{\vb{X}} \right)_{ij}
-      = \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{X}^\top \vb{b}}{x_{ji}}
-      = \pdv{x_{ji}} \sum_k \left( \vb{X}^\top \vb{a} \right)_k \left( \vb{X}^\top \vb{b} \right)_k \\
-      &= \pdv{x_{ji}} \sum_k \left( \sum_l x_{lk} a_l \right) \left( \sum_m x_{mk} b_m \right) \\
-      &= \sum_k \sum_l a_l \sum_m b_m
-        \left( x_{mk} \pdv{x_{lk}}{x_{ji}} + x_{lk} \pdv{x_{mk}}{x_{ji}} \right) \\
-      &= \sum_k \sum_l a_l \sum_m b_m
-        \left( x_{mk} \delta_{lj} \delta_{ki} + x_{lk} \delta_{mj} \delta_{ki} \right) \\
-      &= a_j \sum_m b_m x_{mi} + b_j \sum_l a_l x_{li}
-      = a_j \left( \vb{X}^\top \vb{b} \right)_i + b_j \left( \vb{X}^\top \vb{a} \right)_i \\
-      &= \left( \vb{X}^\top \vb{b} \vb{a}^\top \right)_{ij}
-        + \left( \vb{X}^\top \vb{a} \vb{b}^\top \right)_{ij}
-      = \left( \vb{X}^\top \vb{b} \vb{a}^\top + \vb{X}^\top \vb{a} \vb{b}^\top \right)_{ij}
-  \end{align*}}
-\end{enumerate}
-\end{frame}
-
-\begin{frame}{第4回: 行列とベクトルの微分2}
-\begin{enumerate}
-  \setcounter{enumi}{5}
-  \item 次のように, 要素ごとに確認できる.
-  \begin{align*}
-    & \left( \pdv{\tr(\vb{X}^\top \vb{X} \vb{A})}{\vb{X}} \right)_{ij}
-      = \pdv{\tr(\vb{X}^\top \vb{X} \vb{A})}{x_{ji}}
-      = \pdv{x_{ji}} \sum_k \left( \vb{X}^\top \vb{X} \vb{A} \right)_{kk} \\
-      &= \pdv{x_{ji}} \sum_k \sum_l x_{lk} \left( \vb{X} \vb{A} \right)_{lk}
-      = \pdv{x_{ji}} \sum_k \sum_l x_{lk} \sum_m x_{lm} a_{mk} \\
-      &= \sum_k \sum_l \sum_m a_{mk} \left( x_{lm} \pdv{x_{lk}}{x_{ji}}
-        + x_{lk} \pdv{x_{lm}}{x_{ji}} \right) \\
-      &= \sum_k \sum_l \sum_m a_{mk} \left( \delta_{ki} \delta_{lj} x_{lm}
-        + \delta_{lj} \delta_{mi} x_{lk} \right) \\
-      &= \sum_m a_{mi} x_{jm} + \sum_k a_{ik} x_{jk}
-      = \left( \vb{A}^\top \vb{X}^\top \right)_{ij} + \left( \vb{A} \vb{X}^\top \right)_{ij}
-  \end{align*}
-\end{enumerate}
-\end{frame}
-
-\begin{frame}{第4回: 行列とベクトルの微分2}
-\begin{enumerate}
-  \setcounter{enumi}{6}
-  \item 次のように, 要素ごとに確認できる.
-  \begin{align*}
-    & \pdv{\tr(\vb{A} \vb{X} \vb{B} \vb{X}^\top \vb{C})}{\vb{X}}
-      = \pdv{\tr(\vb{X} \vb{B} \vb{X}^\top \vb{C} \vb{A})}{\vb{X}} \quad (\because \text{循環性}) \\
-      &= \vb{B} \vb{X}^\top \left( \vb{C} \vb{A} \right)
-        + \vb{B}^\top \vb{X}^\top \left( \vb{C} \vb{A} \right)^\top \quad (\because \text{文字の置き換え}) \\
-      &= \vb{B} \vb{X}^\top \vb{C} \vb{A} + \vb{B}^\top \vb{X}^\top \vb{A}^\top \vb{C}^\top \\
-      &= \left( \vb{A}^\top \vb{C}^\top \vb{X} \vb{B}^\top + \vb{C} \vb{A} \vb{X} \vb{B} \right)^\top
   \end{align*}
 \end{enumerate}
 \end{frame}
