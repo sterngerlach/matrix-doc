@@ -285,12 +285,6 @@
 \begin{frame}{第5回: 行列とベクトルの微分3}
 \begin{enumerate}
   \setcounter{enumi}{3}
-  \item $\vb{Z} = g(\vb{W}_2 \vb{Y})$, $\vb{Y} = f(\vb{W}_1 \vb{X})$としたとき,
-  $\pdv{L}{\vb{Z}}$を使って逆伝播を行ってください.
-  $f, g$は, 入力の要素ごとに適用される関数 (Element-wise function) とします.
-  即ち, $z_{ij} = g(\left( \vb{W}_2 \vb{Y} \right)_{ij})$,
-  $y_{ij} = f(\left( \vb{W}_1 \vb{X} \right)_{ij})$です.
-
   \item 2次元の回転行列$\vb{R}(\theta)$について, $\pdv{\det(\vb{R}(\theta))}{\theta}$を計算し,
   ヤコビの公式を確認してください.
   \begin{align*}
@@ -299,6 +293,49 @@
   \end{align*}
   ただし, 2次正方行列$\vb{A} = \mqty(a_{11} & a_{12} \\ a_{21} & a_{22})$に対する行列式は,
   $\det(\vb{A}) = a_{11} a_{22} - a_{12} a_{21}$です.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第5回: 行列とベクトルの微分3}
+\begin{enumerate}
+  \setcounter{enumi}{4}
+  \item 疑似逆行列に関する, 次の微分を確認してください.
+  行列$\vb{U}$は, $x$の関数であるとします.
+  \begin{align*}
+    \pdv{\vb{U}^\dagger}{x} &\equiv
+      \pdv{\left( \vb{U}^\top \vb{U} \right)^{-1} \vb{U}^\top}{x} \\
+    &= -\left( \vb{U}^\top \vb{U} \right)^{-1} \pdv{\vb{U}^\top}{x} \vb{U} \vb{U}^\dagger
+      - \vb{U}^\dagger \pdv{\vb{U}}{x} \vb{U}^\dagger
+      + \left( \vb{U}^\top \vb{U} \right)^{-1} \pdv{\vb{U}^\top}{x}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第5回: 行列とベクトルの微分3}
+\begin{enumerate}
+  \setcounter{enumi}{5}
+  \item ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$の,
+  平均$\vb*{\mu}$, 共分散の逆行列$\vb{\Sigma}^{-1}$, 共分散$\vb{\Sigma}$に関する,
+  次の微分を確認してください (自然対数$\ln$に注意).
+  \begin{align*}
+    \pdv{\vb*{\mu}} \ln \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})
+    &= -\left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1} \\
+    \pdv{\vb{\Sigma}^{-1}} \ln \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})
+    &= \frac{1}{2} \left( \vb{\Sigma}
+      - \left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top \right) \\
+    \pdv{\vb{\Sigma}} \ln \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})
+    &= -\frac{1}{2} \vb{\Sigma}^{-1} \left( \vb{I}
+      - \left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top
+      \vb{\Sigma}^{-1} \right)
+  \end{align*}
+  ただし, ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$は次のように定義されます.
+  \begin{align*}
+    \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})
+      \equiv \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+      \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+        \left( \vb{x} - \vb*{\mu} \right))
+  \end{align*}
+  $\vb{\Sigma}$に関する微分では, トレースの循環性を思い出しましょう.
 \end{enumerate}
 \end{frame}
 
@@ -621,21 +658,6 @@
 \begin{enumerate}
   \setcounter{enumi}{3}
   \item 次のようになる.
-  \begin{align*}
-    \pdv{L}{\vb{Y}} &= \vb{W}_2 \left( \pdv{L}{\vb{Z}} \odot \vb{G}' \right) \\
-    \pdv{L}{\vb{W}_2} &= \left( \pdv{L}{\vb{Z}} \odot \vb{G}' \right) \vb{Y} \\
-    \pdv{L}{\vb{X}} &= \vb{W}_1 \left( \pdv{L}{\vb{Y}} \odot \vb{F}' \right) \\
-    \pdv{L}{\vb{W}_1} &= \left( \pdv{L}{\vb{Y}} \odot \vb{F}' \right) \vb{X}
-  \end{align*}
-  ただし, $\left( \vb{G}' \right)_{ij} = g'(\left( \vb{W}_2 \vb{Y} \right)_{ji})$,
-  $\left( \vb{F}' \right)_{ij} = f'(\left( \vb{W}_1 \vb{X} \right)_{ji})$.
-\end{enumerate}
-\end{frame}
-
-\begin{frame}{第5回: 行列とベクトルの微分3}
-\begin{enumerate}
-  \setcounter{enumi}{4}
-  \item 次のようになる.
   {\small \begin{align*}
     \pdv{\det(\vb{R}(\theta))}{\theta}
       &= \pdv{\theta} \det \left( \mqty(\cos \theta & -\sin \theta \\ \sin \theta & \cos \theta) \right)
@@ -650,6 +672,86 @@
         \mqty(-\sin \theta & -\cos \theta \\ \cos \theta & -\sin \theta) \right) \\
       &= \tr \left( \mqty(0 & -1 \\ 1 & 0) \right) = 0
   \end{align*}}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第5回: 行列とベクトルの微分3}
+\begin{enumerate}
+  \setcounter{enumi}{4}
+  \item 次のように示せる.
+  合成関数の微分, 逆行列の微分を思い出そう.
+  \begin{align*}
+    \pdv{\vb{U}^\dagger}{x} &\equiv
+      \pdv{\left( \vb{U}^\top \vb{U} \right)^{-1} \vb{U}^\top}{x} \\
+    &= \pdv{\left( \vb{U}^\top \vb{U} \right)^{-1}}{x} \vb{U}^\top
+      + \left( \vb{U}^\top \vb{U} \right)^{-1} \pdv{\vb{U}^\top}{x} \\
+    &= -\left( \vb{U}^\top \vb{U} \right)^{-1}
+      \pdv{\vb{U}^\top \vb{U}}{x} \left( \vb{U}^\top \vb{U} \right)^{-1} \vb{U}^\top
+      + \left( \vb{U}^\top \vb{U} \right)^{-1} \pdv{\vb{U}^\top}{x} \\
+    &= -\left( \vb{U}^\top \vb{U} \right)^{-1}
+      \pdv{\vb{U}^\top}{x} \vb{U} \left( \vb{U}^\top \vb{U} \right)^{-1} \vb{U}^\top \\
+    & \quad - \left( \vb{U}^\top \vb{U} \right)^{-1} \vb{U}^\top
+      \pdv{\vb{U}}{x} \left( \vb{U}^\top \vb{U} \right)^{-1} \vb{U}^\top
+      + \left( \vb{U}^\top \vb{U} \right)^{-1} \pdv{\vb{U}^\top}{x} \\
+    &= -\left( \vb{U}^\top \vb{U} \right)^{-1} \pdv{\vb{U}^\top}{x} \vb{U} \vb{U}^\dagger
+      - \vb{U}^\dagger \pdv{\vb{U}}{x} \vb{U}^\dagger
+      + \left( \vb{U}^\top \vb{U} \right)^{-1} \pdv{\vb{U}^\top}{x}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第5回: 行列とベクトルの微分3}
+\begin{enumerate}
+  \setcounter{enumi}{5}
+  \item 最初に, ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$の対数を調べる:
+  \begin{align*}
+    \ln \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})
+    &= -\frac{D}{2} \ln(2\pi) - \frac{1}{2} \ln(\det \vb{\Sigma})
+      - \frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+        \left( \vb{x} - \vb*{\mu} \right)
+  \end{align*}
+  平均$\vb*{\mu}$についての微分は,
+  \begin{align*}
+    \pdv{\vb*{\mu}} \ln \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})
+    &= -\left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+  \end{align*}
+  \newpage
+  共分散の逆行列$\vb{\Sigma}^{-1}$についての微分は,
+  \begin{align*}
+    & \pdv{\vb{\Sigma}^{-1}} \ln \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma}) \\
+    &= -\frac{1}{2} \pdv{\vb{\Sigma}^{-1}} \ln(\det \vb{\Sigma})
+      - \frac{1}{2} \pdv{\vb{\Sigma}^{-1}}
+      \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right) \\
+    &= \frac{1}{2} \pdv{\vb{\Sigma}^{-1}} \ln(\frac{1}{\det \vb{\Sigma}})
+      - \frac{1}{2} \left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top \\
+    &= \frac{1}{2} \pdv{\vb{\Sigma}^{-1}} \ln(\det \vb{\Sigma}^{-1})
+      - \frac{1}{2} \left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top \\
+    &= \frac{1}{2} \vb{\Sigma}
+      - \frac{1}{2} \left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top \\
+    &= \frac{1}{2} \left( \vb{\Sigma}
+      - \left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top \right)
+  \end{align*}
+  \newpage
+  共分散$\vb{\Sigma}$についての微分は,
+  \begin{align*}
+    & \pdv{\vb{\Sigma}} \ln \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma}) \\
+    &= -\frac{1}{2} \pdv{\vb{\Sigma}} \ln(\det \vb{\Sigma}) - \frac{1}{2} \pdv{\vb{\Sigma}}
+      \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right) \\
+    &= -\frac{1}{2} \vb{\Sigma}^{-1} - \frac{1}{2} \pdv{\vb{\Sigma}} \tr(
+      \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right)) \\
+    &= -\frac{1}{2} \vb{\Sigma}^{-1} - \frac{1}{2} \pdv{\vb{\Sigma}} \tr(
+      \left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top
+      \vb{\Sigma}^{-1}) \\
+    &= -\frac{1}{2} \vb{\Sigma}^{-1} + \frac{1}{2} \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top
+      \vb{\Sigma}^{-1} \\
+    &= -\frac{1}{2} \vb{\Sigma}^{-1} \left( \vb{I}
+      - \left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top
+      \vb{\Sigma}^{-1} \right)
+  \end{align*}
 \end{enumerate}
 \end{frame}
 
