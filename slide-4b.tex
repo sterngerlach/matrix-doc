@@ -1,0 +1,1590 @@
+
+% slide-4b.tex
+
+\documentclass[dvipdfmx,notheorems,t]{beamer}
+
+\usepackage{docmute}
+\input{settings}
+
+\title{行列輪講: 第4回 行列とベクトルの微分2}
+\author{杉浦 圭祐}
+\institute[松谷研究室]{慶應義塾大学理工学部情報工学科 松谷研究室}
+\date{\today}
+
+% Always use the \displaystyle
+\everymath{\displaystyle}
+
+\begin{document}
+
+\linespread{1.1}
+
+\frame{\titlepage}
+
+\section{}
+
+\begin{frame}[t,allowdisplaybreaks,allowframebreaks]{目次}
+\tableofcontents
+\end{frame}
+
+\section{概要}
+
+\begin{frame}{このスライドの概要}
+\begin{itemize}
+  \item 行列とベクトルの微分について確認する
+  \begin{itemize}
+    \item 行列のスカラによる微分
+    \item スカラの行列による微分
+    \item 逆行列, トレースの入った微分
+  \end{itemize}
+  \item 以下の資料も大変参考になります:
+  \begin{itemize}
+    \item \url{math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf}
+    \item \url{comp.nus.edu.sg/cs5240/lecture/matrix-differentiation.pdf}
+    \item \url{en.wikipedia.org/wiki/Matrix_calculus}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{行列のスカラによる微分}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列のスカラによる微分 (基本)}
+  \begin{align*}
+    \pdv{\vb{A}}{x} &= \vb{0} & \text{($\vb{A}$は定数)} \\
+    \pdv{a \vb{U}}{x} &= a \pdv{\vb{U}}{x} & \text{($\vb{U} = \vb{U}(x)$, $a$は定数)} \\
+    \pdv{\left( \vb{U} + \vb{V} \right)}{x} &= \pdv{\vb{U}}{x} + \pdv{\vb{V}}{x}
+      & \text{($\vb{U} = \vb{U}(x)$, $\vb{V} = \vb{V}(x)$)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  \left( \pdv{\left( \vb{U} + \vb{V} \right)}{x} \right)_{ij} &= \pdv{u_{ij} + v_{ij}}{x}
+    = \pdv{u_{ij}}{x} + \pdv{v_{ij}}{x} \\
+    &= \left( \pdv{\vb{U}}{x} \right)_{ij} + \left( \pdv{\vb{V}}{x} \right)_{ij}
+    = \left( \pdv{\vb{U}}{x} + \pdv{\vb{V}}{x} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列のスカラによる微分 (行列積)}
+  \begin{align*}
+    \pdv{\vb{A} \vb{U}}{x} &= \vb{A} \pdv{\vb{U}}{x}
+      & \text{($\vb{U} = \vb{U}(x)$, $\vb{A}$は定数)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  \left( \pdv{\vb{A} \vb{U}}{x} \right)_{ij} &= \pdv{\left( \vb{A} \vb{U} \right)_{ij}}{x}
+    = \pdv{x} \sum_k a_{ik} u_{kj}
+    = \text{\color{red} (自分で導出してみましょう)}
+    % = \sum_k a_{ik} \pdv{u_{kj}}{x} \\
+    % &= \sum_k a_{ik} \left( \pdv{\vb{U}}{x} \right)_{kj}
+    % = \left( \vb{A} \pdv{\vb{U}}{x} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列のスカラによる微分 (行列積)}
+  \begin{align*}
+    \pdv{\vb{U} \vb{B}}{x} &= \pdv{\vb{U}}{x} \vb{B}
+      & \text{($\vb{U} = \vb{U}(x)$, $\vb{B}$は定数)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  \left( \pdv{\vb{U} \vb{B}}{x} \right)_{ij} &= \pdv{\left( \vb{U} \vb{B} \right)_{ij}}{x}
+    = \pdv{x} \sum_k u_{ik} b_{kj}
+    = \sum_k \pdv{u_{ik}}{x} b_{kj} \\
+    &= \sum_k \left( \pdv{\vb{U}}{x} \right)_{ik} b_{kj}
+    = \left( \pdv{\vb{U}}{x} \vb{B} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列のスカラによる微分 (行列積)}
+  \begin{align*}
+    \pdv{\vb{A} \vb{U} \vb{B}}{x} &= \vb{A} \pdv{\vb{U}}{x} \vb{B}
+      & \text{($\vb{U} = \vb{U}(x)$, $\vb{A}, \vb{B}$は定数)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  & \left( \pdv{\vb{A} \vb{U} \vb{B}}{x} \right)_{ij}
+    = \pdv{\left( \vb{A} \vb{U} \vb{B} \right)_{ij}}{x}
+    = \pdv{x} \sum_k a_{ik} \left( \vb{U} \vb{B} \right)_{kj} \\
+    &= \pdv{x} \sum_k a_{ik} \left( \sum_l u_{kl} b_{lj} \right)
+    = \sum_k a_{ik} \left( \sum_l \pdv{u_{kl}}{x} b_{lj} \right) \\
+    &= \sum_k a_{ik} \left( \sum_l \left( \pdv{\vb{U}}{x} \right)_{kl} b_{lj} \right)
+    = \sum_k a_{ik} \left( \pdv{\vb{U}}{x} \vb{B} \right)_{kj}
+    = \left( \vb{A} \pdv{\vb{U}}{x} \vb{B} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列のスカラによる微分 (行列積)}
+  \begin{align*}
+    \pdv{\vb{U} \vb{V}}{x} &= \vb{U} \pdv{\vb{V}}{x} + \pdv{\vb{U}}{x} \vb{V}
+      & \text{($\vb{U} = \vb{U}(x)$, $\vb{V} = \vb{V}(x)$)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  & \left( \pdv{\vb{U} \vb{V}}{x} \right)_{ij}
+    = \pdv{\left( \vb{U} \vb{V} \right)_{ij}}{x}
+    = \pdv{x} \sum_k u_{ik} v_{kj}
+    = \sum_k \pdv{x} \left( u_{ik} v_{kj} \right) \\
+    &= \text{\color{red} (自分で導出してみましょう)}
+    % &= \sum_k \left( \pdv{u_{ik}}{x} v_{kj} + u_{ik} \pdv{v_{kj}}{x} \right)
+    % = \sum_k \pdv{u_{ik}}{x} v_{kj} + \sum_k u_{ik} \pdv{v_{kj}}{x} \\
+    % &= \sum_k \left( \pdv{\vb{U}}{x} \right)_{ik} v_{kj}
+    %   + \sum_k u_{ik} \left( \pdv{\vb{V}}{x} \right)_{kj}
+    % = \left( \pdv{\vb{U}}{x} \vb{V} \right)_{ij}
+    %   + \left( \vb{U} \pdv{\vb{V}}{x} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列のスカラによる微分 (行列積)}
+  \begin{align*}
+    \pdv{\vb{U} \vb{V} \vb{W}}{x} = \vb{U} \vb{V} \pdv{\vb{W}}{x}
+      + \vb{U} \pdv{\vb{V}}{x} \vb{W} + \pdv{\vb{U}}{x} \vb{V} \vb{W} \\
+      \text{($\vb{U} = \vb{U}(x)$, $\vb{V} = \vb{V}(x)$, $\vb{W} = \vb{W}(x)$)}
+  \end{align*}
+\end{block}
+
+先ほど導出したものを使えば, 以下のように示せる.
+\begin{align*}
+  \pdv{\vb{U} \vb{V} \vb{W}}{x} &= \pdv{\vb{U} \left( \vb{V} \vb{W} \right)}{x}
+    = \vb{U} \pdv{\vb{V} \vb{W}}{x} + \pdv{\vb{U}}{x} \vb{V} \vb{W} \\
+    &= \vb{U} \left( \vb{V} \pdv{\vb{W}}{x} + \pdv{\vb{V}}{x} \vb{W} \right)
+      + \pdv{\vb{U}}{x} \vb{V} \vb{W} \\
+    &= \vb{U} \vb{V} \pdv{\vb{W}}{x}
+      + \vb{U} \pdv{\vb{V}}{x} \vb{W} + \pdv{\vb{U}}{x} \vb{V} \vb{W}
+\end{align*}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列のスカラによる微分 (アダマール積)}
+  \begin{align*}
+    \pdv{\left( \vb{U} \odot \vb{V} \right)}{x}
+      &= \vb{U} \odot \pdv{\vb{V}}{x} + \pdv{\vb{U}}{x} \odot \vb{V}
+      & \text{($\vb{U} = \vb{U}(x)$, $\vb{V} = \vb{V}(x)$)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  \left( \pdv{\left( \vb{U} \odot \vb{V} \right)}{x} \right)_{ij}
+    &= \pdv{\left( \vb{U} \odot \vb{V} \right)_{ij}}{x}
+    = \text{\color{red} (自分で導出してみましょう)}
+    % = \pdv{u_{ij} v_{ij}}{x}
+    % = u_{ij} \pdv{v_{ij}}{x} + \pdv{u_{ij}}{x} v_{ij} \\
+    % &= u_{ij} \left( \pdv{\vb{V}}{x} \right)_{ij} + \left( \pdv{\vb{U}}{x} \right)_{ij} v_{ij} \\
+    % &= \left( \vb{U} \odot \pdv{\vb{V}}{x} \right)_{ij}
+    %   + \left( \pdv{\vb{U}}{x} \odot \vb{V} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列のスカラによる微分 (逆行列)}
+  \begin{align*}
+    \pdv{\vb{U}^{-1}}{x} &= -\vb{U}^{-1} \pdv{\vb{U}}{x} \vb{U}^{-1}
+      & \text{($\vb{U} = \vb{U}(x)$)}
+  \end{align*}
+\end{block}
+
+\textcolor{red}{自分で導出してみましょう.} \\
+$\pdv{\vb{U} \vb{V}}{x} = \vb{U} \pdv{\vb{V}}{x} + \pdv{\vb{U}}{x} \vb{V}$に,
+$\vb{U}, \vb{V} = \vb{U}, \vb{U}^{-1}$を代入する. \\
+% 左辺は$\pdv{\vb{I}}{x} = \vb{0}$,
+% 右辺は$\vb{U} \pdv{\vb{U}^{-1}}{x} + \pdv{\vb{U}}{x} \vb{U}^{-1}$であるから,
+% \begin{align*}
+%   \vb{U} \pdv{\vb{U}^{-1}}{x} + \pdv{\vb{U}}{x} \vb{U}^{-1} = \vb{0}
+%   &\Longrightarrow \vb{U} \pdv{\vb{U}^{-1}}{x} = -\pdv{\vb{U}}{x} \vb{U}^{-1} \\
+%   &\Longrightarrow \pdv{\vb{U}^{-1}}{x} = -\vb{U}^{-1} \pdv{\vb{U}}{x} \vb{U}^{-1}
+% \end{align*}
+
+\textcolor{red}{重要な式の1つ}.
+スカラの場合における, $\dv{x} \frac{1}{x} = -\frac{1}{x^2}$に対応する.
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列のスカラによる微分 (逆行列の線形変換)}
+  \begin{align*}
+    \pdv{\vb{A} \vb{U}^{-1}}{x} &= -\vb{A} \vb{U}^{-1} \pdv{\vb{U}}{x} \vb{U}^{-1}
+      & \text{($\vb{U} = \vb{U}(x)$, $\vb{A}$は定数)} \\
+    \pdv{\vb{U}^{-1} \vb{A}}{x} &= -\vb{U}^{-1} \pdv{\vb{U}}{x} \vb{U}^{-1} \vb{A}
+      & \text{($\vb{U} = \vb{U}(x)$, $\vb{A}$は定数)}
+  \end{align*}
+\end{block}
+
+$\pdv{\vb{A} \vb{U}}{x} = \vb{A} \pdv{\vb{U}}{x}$,
+$\pdv{\vb{U} \vb{B}}{x} = \pdv{\vb{U}}{x} \vb{B}$と, 逆行列の微分の式から確認できる.
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列のスカラによる微分 (逆行列の2次微分)}
+  \begin{align*}    
+    \pdv{\vb{U}^{-1}}{x}{y} &= \vb{U}^{-1} \left(
+      \pdv{\vb{U}}{x} \vb{U}^{-1} \pdv{\vb{U}}{y} - \pdv{\vb{U}}{x}{y}
+      + \pdv{\vb{U}}{y} \vb{U}^{-1} \pdv{\vb{U}}{x} \right) \vb{U}^{-1} \\
+      & \text{($\vb{U} = \vb{U}(x, y)$)}
+  \end{align*}
+\end{block}
+
+\textcolor{red}{自分で導出してみましょう.} \\
+先ほどの結果 (逆行列, 行列積) を用いて, 以下のように示せる.
+% {\small \begin{align*}
+%   & \pdv{\vb{U}^{-1}}{x}{y} = \pdv{x} \pdv{\vb{U}^{-1}}{y}
+%     = -\pdv{x} \left( \vb{U}^{-1} \pdv{\vb{U}}{y} \vb{U}^{-1} \right) \\
+%     &= - \left( \pdv{\vb{U}^{-1}}{x} \pdv{\vb{U}}{y} \vb{U}^{-1}
+%       + \vb{U}^{-1} \pdv{\vb{U}}{x}{y} \vb{U}^{-1}
+%       + \vb{U}^{-1} \pdv{\vb{U}}{y} \pdv{\vb{U}^{-1}}{x} \right) \\
+%     &= \vb{U}^{-1} \pdv{\vb{U}}{x} \vb{U}^{-1} \pdv{\vb{U}}{y} \vb{U}^{-1}
+%       - \vb{U}^{-1} \pdv{\vb{U}}{x}{y} \vb{U}^{-1}
+%       + \vb{U}^{-1} \pdv{\vb{U}}{y} \vb{U}^{-1} \pdv{\vb{U}}{x} \vb{U}^{-1}
+% \end{align*}}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列のスカラによる微分 (逆行列の, 成分による微分)}
+  $\vb{X} = \mqty(x_{ij})$の逆行列の$(k, l)$成分を, $\vb{X}$の$(i, j)$成分で微分すると,
+  \begin{align*}
+    \pdv{\left( \vb{X}^{-1} \right)_{kl}}{x_{ij}}
+      = -\left( \vb{X}^{-1} \right)_{ki} \left( \vb{X}^{-1} \right)_{jl}
+  \end{align*}
+\end{block}
+
+逆行列の結果を用いて, 次のように示せる.
+\begin{align*}
+  \pdv{\left( \vb{X}^{-1} \right)_{kl}}{x_{ij}}
+    % &= -\left( \vb{X}^{-1} \pdv{\vb{X}}{x_{ij}} \vb{X}^{-1} \right)_{kl} \\
+    % &= -\sum_m \left( \vb{X}^{-1} \right)_{km}
+    %   \left( \pdv{\vb{X}}{x_{ij}} \vb{X}^{-1} \right)_{ml} \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    &= -\sum_m \left( \vb{X}^{-1} \right)_{km}
+      \left( \sum_n \left( \pdv{\vb{X}}{x_{ij}} \right)_{mn} \left( \vb{X}^{-1} \right)_{nl} \right)
+\end{align*}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+ここで, $\pdv{\vb{X}}{x_{ij}}$は, $(i, j)$成分のみが$1$, それ以外の成分が$0$である.
+$\pdv{\vb{X}}{x_{ij}}$の$(m, n)$成分は, クロネッカーのデルタを使って, $\delta_{im} \delta_{jn}$とかける
+($i, j = m, n$のときのみ$1$).
+\begin{align*}
+  \pdv{\left( \vb{X}^{-1} \right)_{kl}}{x_{ij}}
+    &= -\sum_m \left( \vb{X}^{-1} \right)_{km}
+      \left( \sum_n \left( \pdv{\vb{X}}{x_{ij}} \right)_{mn} \left( \vb{X}^{-1} \right)_{nl} \right) \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % &= -\sum_m \left( \vb{X}^{-1} \right)_{km}
+    %   \left( \sum_n \delta_{im} \delta_{jn} \left( \vb{X}^{-1} \right)_{nl} \right) \\
+    % &= -\sum_m \left( \vb{X}^{-1} \right)_{km} \delta_{im} \left( \vb{X}^{-1} \right)_{jl} \\
+    &= -\left( \vb{X}^{-1} \right)_{ki} \left( \vb{X}^{-1} \right)_{jl}
+\end{align*}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列の成分による微分}
+  \begin{align*}
+    \pdv{\vb{X}}{x_{ij}} = \vb{J}^{ij}
+  \end{align*}
+\end{block}
+
+$\vb{J}^{ij}$は, $(i, j)$成分のみが$1$で, それ以外の成分が$0$であるような行列.
+\begin{align*}
+  \vb{J}^{ij} \equiv \mqty(
+    \ddots & & & & \\
+    & 0 & 0 & 0 & \\
+    & 0 & 1 & 0 & \\
+    & 0 & 0 & 0 & \\
+    & & & & \ddots), \quad
+    \left( \vb{J}^{ij} \right)_{kl} = \delta_{ik} \delta_{jl} = \delta_{ki} \delta_{lj}
+\end{align*}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列積の, 成分による微分}
+  \begin{align*}
+    \pdv{\left( \vb{X} \vb{A} \right)_{kl}}{x_{ij}} &= \delta_{ki} a_{jl}
+      & \text{($\vb{A}$は定数)} \\
+    \pdv{\left( \vb{X}^\top \vb{A} \right)_{kl}}{x_{ij}} &= \delta_{kj} a_{il}
+      & \text{($\vb{A}$は定数)}
+  \end{align*}
+\end{block}
+
+以下のように示せる.
+ここで, $\pdv{x_{km}}{x_{ij}} = \delta_{ki} \delta_{mj}$を用いる.
+\begin{align*}
+  & \pdv{\left( \vb{X} \vb{A} \right)_{kl}}{x_{ij}}
+    = \pdv{x_{ij}} \sum_m x_{km} a_{ml}
+    = \sum_m \pdv{x_{km}}{x_{ij}} a_{ml}
+    = \sum_m \delta_{ki} \delta_{mj} a_{ml}
+    = \delta_{ki} a_{jl} \\
+  & \pdv{\left( \vb{X}^\top \vb{A} \right)_{kl}}{x_{ij}}
+    = \pdv{x_{ij}} \sum_m x_{mk} a_{ml}
+    = \sum_m \pdv{x_{mk}}{x_{ij}} a_{ml}
+    = \sum_m \delta_{mi} \delta_{kj} a_{ml}
+    = \delta_{kj} a_{il}
+\end{align*}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列積の, 成分による微分}
+  \begin{align*}
+    \pdv{\left( \vb{X} \vb{A} \right)_{kl}}{x_{ij}} &= \left( \vb{J}^{ij} \vb{A} \right)_{kl}
+      & \text{($\vb{A}$は定数)} \\
+    \pdv{\left( \vb{X}^\top \vb{A} \right)_{kl}}{x_{ij}} &= \left( \vb{J}^{ji} \vb{A} \right)_{kl}
+      & \text{($\vb{A}$は定数)}
+  \end{align*}
+\end{block}
+
+先ほどの結果を用いて, 以下のように示せる.
+\begin{align*}
+  \pdv{\left( \vb{X} \vb{A} \right)_{kl}}{x_{ij}} &= \delta_{ki} a_{jl}
+    = \sum_m \delta_{ki} \delta_{mj} a_{ml}
+    = \sum_m \left( \vb{J}^{ij} \right)_{km} a_{ml}
+    = \left( \vb{J}^{ij} \vb{A} \right)_{kl} \\
+  \pdv{\left( \vb{X}^\top \vb{A} \right)_{kl}}{x_{ij}} &= \delta_{kj} a_{il}
+    = \sum_m \delta_{kj} \delta_{mi} a_{ml}
+    = \sum_m \left( \vb{J}^{ji} \right)_{km} a_{ml}
+    = \left( \vb{J}^{ji} \vb{A} \right)_{kl}
+\end{align*}
+$\vb{J}^{ij}$は, $(i, j)$成分のみが$1$で, それ以外の成分が$0$であるような行列.
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列の累乗の, 成分による微分}
+  \begin{gather*}
+    \pdv{\left( \vb{X}^n \right)_{kl}}{x_{ij}} =
+      \sum_{r = 0}^{n - 1} \left( \vb{X}^r \vb{J}^{ij} \vb{X}^{n - r - 1} \right)_{kl} \\
+      \text{($\vb{J}^{ij}$は, $(i, j)$成分のみが$1$で, それ以外の成分が$0$である行列)}
+  \end{gather*}
+\end{block}
+
+以下のように示せる.
+ここでの項の展開は, 第1回の行列積で確認した.
+\begin{align*}
+  \pdv{\left( \vb{X}^n \right)_{kl}}{x_{ij}}
+    &= \pdv{x_{ij}} \underbrace{\sum_{u_1} \sum_{u_2} \cdots \sum_{u_{n - 1}}}_{\text{$n - 1$個}}
+      \underbrace{x_{k, u_1} x_{u_1, u_2} \cdots x_{u_{n - 2}, u_{n - 1}} x_{u_{n - 1}, l}}_{\text{$n$個の項}}
+\end{align*}
+$\vb{J}^{ij}$は, $(i, j)$成分のみが$1$であるから, 次のようにかける.
+\begin{align*}
+  \left( \vb{J}^{ij} \right)_{kl} = \delta_{ki} \delta_{lj}
+\end{align*}
+合成関数の微分と, $\pdv{x_{kl}}{x_{ij}} = \delta_{ki} \delta_{lj}$から,
+\begin{align*}
+  & \pdv{\left( \vb{X}^n \right)_{kl}}{x_{ij}}
+  = \sum_{u_1} \sum_{u_2} \cdots \sum_{u_{n - 1}} \bigg(
+    \delta_{k, i} \delta_{u_1, j} x_{u_1, u_2} \cdots x_{u_{n - 2}, u_{n - 1}} x_{u_{n - 1}, l} \\
+    & \quad \quad + x_{k, u_1} \delta_{u_1, i} \delta_{u_2, j} x_{u_2, u_3}
+      \cdots x_{u_{n - 2}, u_{n - 1}} x_{u_{n - 1}, l} \\
+    & \quad \quad + \cdots + x_{k, u_1} x_{u_1, u_2}
+      \cdots x_{u_{n - 2}, u_{n - 1}} \delta_{u_{n - 1}, i} \delta_{l, j} \bigg)
+\end{align*}
+\newpage
+
+クロネッカーのデルタと, $\delta_{ki} \delta_{lj} = \left( \vb{J}^{ij} \right)_{kl}$から,
+\begin{align*}
+  & \pdv{\left( \vb{X}^n \right)_{kl}}{x_{ij}}
+  = \sum_{u_1} \sum_{u_2} \cdots \sum_{u_{n - 1}} \bigg(
+    \left( \vb{J}^{ij} \right)_{k, u_1} x_{u_1, u_2} \cdots x_{u_{n - 2}, u_{n - 1}} x_{u_{n - 1}, l} \\
+    & \quad \quad + x_{k, u_1} \left( \vb{J}^{ij} \right)_{u_1, u_2} x_{u_2, u_3}
+      \cdots x_{u_{n - 2}, u_{n - 1}} x_{u_{n - 1}, l} \\
+    & \quad \quad + \cdots + x_{k, u_1} x_{u_1, u_2}
+      \cdots x_{u_{n - 2}, u_{n - 1}} \left( \vb{J}^{ij} \right)_{u_{n - 1}, l} \bigg)
+\end{align*}
+
+これを書き直せば,
+\begin{align*}
+  \pdv{\left( \vb{X}^n \right)_{kl}}{x_{ij}}
+  &= \left( \vb{J}^{ij} \vb{X}^{n - 1} \right)_{kl}
+    + \left( \vb{X} \vb{J}^{ij} \vb{X}^{n - 2} \right)_{kl}
+    + \cdots + \left( \vb{X}^{n - 1} \vb{J}^{ij} \right)_{kl} \\
+  &= \sum_{r = 0}^{n - 1} \left( \vb{X}^r \vb{J}^{ij} \vb{X}^{n - r - 1} \right)_{kl}
+\end{align*}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列積の, 成分による微分}
+  \begin{align*}
+    \pdv{\left( \vb{X}^\top \vb{A} \vb{X} \right)_{kl}}{x_{ij}}
+      &= \delta_{kj} \left( \vb{A} \vb{X} \right)_{il}
+        + \delta_{lj} \left( \vb{X}^\top \vb{A} \right)_{ki}
+        & \text{($\vb{A}$は定数)}
+  \end{align*}
+\end{block}
+
+以下のように示せる.
+\begin{align*}
+  & \pdv{\left( \vb{X}^\top \vb{A} \vb{X} \right)_{kl}}{x_{ij}}
+    = \pdv{x_{ij}} \sum_m x_{mk} \left( \vb{A} \vb{X} \right)_{ml}
+    = \pdv{x_{ij}} \sum_m x_{mk} \sum_n a_{mn} x_{nl} \\
+    &= \sum_m \sum_n a_{mn} \left( x_{nl} \pdv{x_{mk}}{x_{ij}}
+      + x_{mk} \pdv{x_{nl}}{x_{ij}} \right) \\
+    &= \sum_m \sum_n a_{mn} \left( \delta_{mi} \delta_{kj} x_{nl}
+      + \delta_{ni} \delta_{lj} x_{mk} \right) \\
+    &= \delta_{kj} \sum_n a_{in} x_{nl} + \delta_{lj} \sum_m a_{mi} x_{mk}
+    = \delta_{kj} \left( \vb{A} \vb{X} \right)_{il}
+      + \delta_{lj} \left( \vb{X}^\top \vb{A} \right)_{ki}
+\end{align*}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列のスカラによる微分 (合成関数)}
+  $\vb{g}(\vb{A}) = \sum_{n = 0}^\infty c_n \vb{A}^n$について ($\vb{A}, c$は定数. 例えば, 行列指数関数$\exp(\vb{A})$),
+  \begin{align*}
+    \pdv{\vb{g}(x \vb{A})}{x} = \vb{A} \vb{g}'(x \vb{A}) = \vb{g}'(x \vb{A}) \vb{A}
+  \end{align*}
+\end{block}
+
+以下のように示せる.
+\begin{align*}
+  & \pdv{\vb{g}(x \vb{A})}{x} = \pdv{x} \sum_{n = 0}^\infty c_n \left( x \vb{A} \right)^n
+    = \sum_{n = 1}^\infty c_n n x^{n - 1} \vb{A}^n \\
+    &= \left( \sum_{n = 1}^\infty c_n n \left( x \vb{A} \right)^{n - 1} \right) \vb{A}
+    = \vb{A} \left( \sum_{n = 1}^\infty c_n n \left( x \vb{A} \right)^{n - 1} \right)
+\end{align*}
+$\eval{\pdv{\vb{g}(x \vb{A})}{x}}_{x = 1} \equiv \vb{g}'(\vb{A}) = \sum_{n = 1}^\infty c_n n \vb{A}^{n - 1}$とすれば, 成り立つ.
+\end{frame}
+
+\section{スカラの行列による微分}
+
+\begin{frame}{スカラの行列による微分}
+\begin{itemize}
+  \item パターンが多く, 最も大変な部分.
+  \item 行列式, トレース, 対数などが入った微分を扱う.
+  \item 誤差逆伝播法で扱うのは, スカラの行列による微分.
+  \item 損失関数 (スカラ) の重みパラメータ (行列) による微分.
+\end{itemize}
+\end{frame}
+
+\subsection{線形変換, 二次式, 合成関数, 連鎖律}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{スカラの行列による微分 (基本)}
+  \begin{align*}
+    \pdv{a}{\vb{X}} &= \vb{0}^\top & \text{($a$は定数)} \\
+    \pdv{au}{\vb{X}} &= a \pdv{u}{\vb{X}}
+      & \text{($u = u(\vb{X})$, $a$は定数)} \\
+    \pdv{\left( u + v \right)}{\vb{X}} &= \pdv{u}{\vb{X}} + \pdv{v}{\vb{X}}
+      & \text{($u = u(\vb{X})$, $v = v(\vb{X})$)}
+  \end{align*}
+\end{block}
+
+分子レイアウトを使っているので, $\vb{X}$を$m \times n$行列とすると,
+微分$\pdv{a}{\vb{X}}$は\textcolor{red}{$n \times m$行列}になることに注意 (転置記号$\top$を付けた).
+$\pdv{a}{\vb{X}}$の$(i, j)$成分は, \textcolor{red}{$\vb{X}$の$(j, i)$成分$x_{ji}$}による微分$\pdv{a}{x_{ji}}$である.
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{スカラの行列による微分 (合成関数, 連鎖律)}
+  \begin{align*}
+    \pdv{uv}{\vb{X}} &= u \pdv{v}{\vb{X}} + v \pdv{u}{\vb{X}}
+      & \text{($u = u(\vb{X})$, $v = v(\vb{X})$)} \\
+    \pdv{g(u)}{\vb{X}} &= \pdv{g(u)}{u} \pdv{u}{\vb{X}}
+      & \text{($u = u(\vb{X})$)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに示せる.
+\begin{align*}
+  \left( \pdv{uv}{\vb{X}} \right)_{ij} &= \pdv{uv}{x_{ji}}
+    = u \pdv{v}{x_{ji}} + v \pdv{u}{x_{ji}}
+    = u \left( \pdv{v}{\vb{X}} \right)_{ij} + v \left( \pdv{u}{\vb{X}} \right)_{ij} \\
+  \left( \pdv{g(u)}{\vb{X}} \right)_{ij} &= \pdv{g(u)}{x_{ji}}
+    = \pdv{g(u)}{u} \pdv{u}{x_{ji}}
+    = \pdv{g(u)}{u} \left( \pdv{u}{\vb{X}} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{スカラの行列による微分 (合成関数, 連鎖律)}
+  \begin{align*}
+    \pdv{f(g(u))}{\vb{X}} &= \pdv{f(g)}{g} \pdv{g(u)}{u} \pdv{u}{\vb{X}}
+      & \text{($u = u(\vb{X})$)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに示せる.
+\begin{align*}
+  \left( \pdv{f(g(u))}{\vb{X}} \right)_{ij} &= \pdv{f(g(u))}{x_{ji}}
+    = \pdv{f(g)}{g} \pdv{g(u)}{u} \pdv{u}{x_{ji}} \\
+    &= \pdv{f(g)}{g} \pdv{g(u)}{u} \left( \pdv{u}{\vb{X}} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{スカラの行列による微分 (合成関数, 連鎖律)}
+  \begin{align*}
+    \pdv{g(\vb{U})}{x_{ij}} &= \tr(\pdv{g(\vb{U})}{\vb{U}} \pdv{\vb{U}}{x_{ij}})
+      & \text{($\vb{U} = \vb{U}(\vb{X})$)}
+  \end{align*}
+\end{block}
+
+以下のように示せる. $\vb{U}$の各成分を, $u_{ij}$とする.
+\begin{align*}
+  \pdv{g(\vb{U})}{x_{ij}} &= \sum_k \sum_l \pdv{g(\vb{U})}{u_{kl}} \pdv{u_{kl}}{x_{ij}}
+    = \text{\color{red} (自分で導出してみましょう)} \\
+    % = \sum_k \sum_l \left( \pdv{g(\vb{U})}{\vb{U}} \right)_{lk} \left( \pdv{\vb{U}}{x_{ij}} \right)_{kl} \\
+    % &= \sum_l \left( \pdv{g(\vb{U})}{\vb{U}} \pdv{\vb{U}}{x_{ij}} \right)_{ll}
+    &= \tr(\pdv{g(\vb{U})}{\vb{U}} \pdv{\vb{U}}{x_{ij}})
+\end{align*}
+$\pdv{a}{\vb{X}}$の$(i, j)$成分は$\pdv{a}{x_{ji}}$,
+$\pdv{\vb{A}}{x}$の$(i, j)$成分は$\pdv{a_{ij}}{x}$となることに注意.
+トレース$\tr(\vb{A})$は, 行列$\vb{A}$の対角成分の総和である.
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{スカラの行列による微分 (行列, ベクトル積)}
+  \begin{align*}
+    \pdv{\vb{a}^\top \vb{X} \vb{b}}{\vb{X}} &= \vb{b} \vb{a}^\top
+      & \text{($\vb{a}, \vb{b}$は定数)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  \left( \pdv{\vb{a}^\top \vb{X} \vb{b}}{\vb{X}} \right)_{ij} &= \pdv{\vb{a}^\top \vb{X} \vb{b}}{x_{ji}}
+    = \text{\color{red} (自分で導出してみましょう)} \\
+    % = \pdv{x_{ji}} \sum_k a_k \left( \vb{X} \vb{b} \right)_k \\
+    % &= \pdv{x_{ji}} \sum_k a_k \sum_l x_{kl} b_l
+    % = \sum_k a_k \sum_l b_l \pdv{x_{kl}}{x_{ji}} \\
+    % &= \sum_k a_k \sum_l b_l \delta_{kj} \delta_{li}
+    &= a_j b_i = \left( \vb{b} \vb{a}^\top \right)_{ij}
+\end{align*}
+$\pdv{x_{kl}}{x_{ji}}$は, $k, l = j, i$のときのみ$1$であるから, $\delta_{kj} \delta_{li}$とかける.
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{スカラの行列による微分 (行列, ベクトル積)}
+  \begin{align*}
+    \pdv{\vb{a}^\top \vb{X}^\top \vb{b}}{\vb{X}} &= \vb{a} \vb{b}^\top
+      & \text{($\vb{a}, \vb{b}$は定数)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  \left( \pdv{\vb{a}^\top \vb{X}^\top \vb{b}}{\vb{X}} \right)_{ij}
+    &= \pdv{\vb{a}^\top \vb{X}^\top \vb{b}}{x_{ji}}
+    = \text{\color{red} (自分で導出してみましょう)} \\
+    % = \pdv{x_{ji}} \sum_k a_k \left( \vb{X}^\top \vb{b} \right)_k \\
+    % &= \pdv{x_{ji}} \sum_k a_k \sum_l x_{lk} b_l
+    % = \sum_k a_k \sum_l b_l \pdv{x_{lk}}{x_{ji}} \\
+    % &= \sum_k a_k \sum_l b_l \delta_{lj} \delta_{ki}
+    &= a_i b_j = \left( \vb{a} \vb{b}^\top \right)_{ij}
+\end{align*}
+
+$\pdv{x_{lk}}{x_{ji}}$は, $l, k = j, i$のときのみ$1$であるから, $\delta_{lj} \delta_{ki}$とかける.
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{スカラの行列による微分 (行列, ベクトル積)}
+  \begin{align*}
+    \pdv{\vb{a}^\top \vb{X} \vb{a}}{\vb{X}}
+      &= \pdv{\vb{a}^\top \vb{X}^\top \vb{a}}{\vb{X}} = \vb{a} \vb{a}^\top
+      & \text{($\vb{a}$は定数)}
+  \end{align*}
+\end{block}
+
+$\vb{a}^\top \vb{X} \vb{b}$, $\vb{a}^\top \vb{X}^\top \vb{b}$の微分の式から確認できる.
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{スカラの行列による微分 (二次式)}
+  \begin{align*}
+    \pdv{\left( \vb{X} \vb{a} \right)^\top \vb{X} \vb{b}}{\vb{X}}
+      &= \pdv{\vb{a}^\top \vb{X}^\top \vb{X} \vb{b}}{\vb{X}}
+      = \left( \vb{a} \vb{b}^\top + \vb{b} \vb{a}^\top \right) \vb{X}^\top
+      & \text{($\vb{a}, \vb{b}$は定数)}
+  \end{align*}
+\end{block}
+  
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  & \left( \pdv{\left( \vb{X} \vb{a} \right)^\top \vb{X} \vb{b}}{\vb{X}} \right)_{ij}
+    = \pdv{\left( \vb{X} \vb{a} \right)^\top \vb{X} \vb{b}}{x_{ji}} \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % = \pdv{x_{ji}} \sum_k \left( \vb{X} \vb{a} \right)_k \left( \vb{X} \vb{b} \right)_k \\
+    % &= \pdv{x_{ji}} \sum_k \left( \sum_l x_{kl} a_l \right) \left( \sum_m x_{km} b_m \right) \\
+    &= \sum_k \sum_l a_l \sum_m b_m
+      \left( x_{km} \pdv{x_{kl}}{x_{ji}} + x_{kl} \pdv{x_{km}}{x_{ji}} \right)
+\end{align*}
+
+ここで, $\pdv{x_{kl}}{x_{ji}} = \delta_{kj} \delta_{li}$,
+$\pdv{x_{km}}{x_{ji}} = \delta_{kj} \delta_{mi}$を代入すれば,
+\begin{align*}
+  & \left( \pdv{\left( \vb{X} \vb{a} \right)^\top \vb{X} \vb{b}}{\vb{X}} \right)_{ij}
+    = \sum_k \sum_l a_l \sum_m b_m
+      \left( x_{km} \pdv{x_{kl}}{x_{ji}} + x_{kl} \pdv{x_{km}}{x_{ji}} \right) \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % &= \sum_k \sum_l a_l \sum_m b_m
+    %   \left( x_{km} \delta_{kj} \delta_{li} + x_{kl} \delta_{kj} \delta_{mi} \right) \\
+    % &= a_i \sum_m b_m x_{jm} + b_i \sum_l a_l x_{jl}
+    % = a_i \left( \vb{X} \vb{b} \right)_j + b_i \left( \vb{X} \vb{a} \right)_j \\
+    &= \left( \vb{a} \left( \vb{X} \vb{b} \right)^\top \right)_{ij}
+      + \left( \vb{b} \left( \vb{X} \vb{a} \right)^\top \right)_{ij}
+    = \left( \vb{a} \vb{b}^\top \vb{X}^\top + \vb{b} \vb{a}^\top \vb{X}^\top \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{スカラの行列による微分 (二次式)}
+  \begin{align*}
+    \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{X}^\top \vb{b}}{\vb{X}}
+      &= \pdv{\vb{a}^\top \vb{X} \vb{X}^\top \vb{b}}{\vb{X}}
+      = \vb{X}^\top \left( \vb{a} \vb{b}^\top + \vb{b} \vb{a}^\top \right)
+      & \text{($\vb{a}, \vb{b}$は定数)}
+  \end{align*}
+\end{block}
+
+先ほどと同様に, 要素ごとに確認できる (練習問題).
+\begin{align*}
+  & \left( \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{X}^\top \vb{b}}{\vb{X}} \right)_{ij}
+    = \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{X}^\top \vb{b}}{x_{ji}} \\
+    &= \sum_k \sum_l a_l \sum_m b_m
+      \left( x_{mk} \pdv{x_{lk}}{x_{ji}} + x_{lk} \pdv{x_{mk}}{x_{ji}} \right) \\
+    &= a_j \sum_m b_m x_{mi} + b_j \sum_l a_l x_{li}
+    = \left( \vb{X}^\top \vb{b} \vb{a}^\top + \vb{X}^\top \vb{a} \vb{b}^\top \right)_{ij}
+\end{align*}
+% \begin{align*}
+%   & \left( \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{X}^\top \vb{b}}{\vb{X}} \right)_{ij}
+%     = \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{X}^\top \vb{b}}{x_{ji}} \\
+%     &= \pdv{x_{ji}} \sum_k \left( \vb{X}^\top \vb{a} \right)_k \left( \vb{X}^\top \vb{b} \right)_k \\
+%     &= \pdv{x_{ji}} \sum_k \left( \sum_l x_{lk} a_l \right) \left( \sum_m x_{mk} b_m \right) \\
+%     &= \sum_k \sum_l a_l \sum_m b_m
+%       \left( x_{mk} \pdv{x_{lk}}{x_{ji}} + x_{lk} \pdv{x_{mk}}{x_{ji}} \right) \\
+%     &= \sum_k \sum_l a_l \sum_m b_m
+%       \left( x_{mk} \delta_{lj} \delta_{ki} + x_{lk} \delta_{mj} \delta_{ki} \right) \\
+%     &= a_j \sum_m b_m x_{mi} + b_j \sum_l a_l x_{li}
+%     = a_j \left( \vb{X}^\top \vb{b} \right)_i + b_j \left( \vb{X}^\top \vb{a} \right)_i \\
+%     &= \left( \vb{X}^\top \vb{b} \vb{a}^\top \right)_{ij}
+%       + \left( \vb{X}^\top \vb{a} \vb{b}^\top \right)_{ij}
+%     = \left( \vb{X}^\top \vb{b} \vb{a}^\top + \vb{X}^\top \vb{a} \vb{b}^\top \right)_{ij}
+% \end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{スカラの行列による微分 (二次式)}
+  \begin{align*}
+    \pdv{\left( \vb{X} \vb{a} \right)^\top \vb{C} \left( \vb{X} \vb{b} \right)}{\vb{X}}
+      = \pdv{\vb{a}^\top \vb{X}^\top \vb{C} \vb{X} \vb{b}}{\vb{X}}
+      = \vb{a} \vb{b}^\top \vb{X}^\top \vb{C}^\top + \vb{b} \vb{a}^\top \vb{X}^\top \vb{C} \\
+      \text{($\vb{a}, \vb{b}, \vb{C}$は定数)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  & \left( \pdv{\left( \vb{X} \vb{a} \right)^\top \vb{C} \left( \vb{X} \vb{b} \right)}{\vb{X}} \right)_{ij}
+    = \pdv{\left( \vb{X} \vb{a} \right)^\top \vb{C} \left( \vb{X} \vb{b} \right)}{x_{ji}} \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % = \pdv{x_{ji}} \sum_k \left( \vb{X} \vb{a} \right)_k \left( \vb{C} \vb{X} \vb{b} \right)_k \\
+    % &= \pdv{x_{ji}} \sum_k \left( \sum_l x_{kl} a_l \right)
+    %   \left( \sum_m c_{km} \left( \vb{X} \vb{b} \right)_m \right) \\
+    &= \pdv{x_{ji}} \sum_k \sum_l x_{kl} a_l \sum_m c_{km} \sum_n x_{mn} b_n
+\end{align*}
+
+式変形を続けると, 次のようになる.
+\begin{align*}
+  & \left( \pdv{\left( \vb{X} \vb{a} \right)^\top \vb{C} \left( \vb{X} \vb{b} \right)}{\vb{X}} \right)_{ij}
+    = \pdv{x_{ji}} \sum_k \sum_l x_{kl} a_l \sum_m c_{km} \sum_n x_{mn} b_n \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % &= \sum_k \sum_l a_l \sum_m c_{km} \sum_n b_n
+    %   \left( x_{mn} \pdv{x_{kl}}{x_{ji}} + x_{kl} \pdv{x_{mn}}{x_{ji}} \right) \\
+    % &= \sum_k \sum_l a_l \sum_m c_{km} \sum_n b_n
+    %   \left( \delta_{kj} \delta_{li} x_{mn} + \delta_{mj} \delta_{ni} x_{kl} \right) \\
+    % &= a_i \sum_m c_{jm} \sum_n b_n x_{mn} + b_i \sum_k c_{kj} \sum_l a_l x_{kl} \\
+    % &= a_i \sum_m c_{jm} \left( \vb{X} \vb{b} \right)_m
+    %   + b_i \sum_k c_{kj} \left( \vb{X} \vb{a} \right)_k \\
+    &= a_i \left( \vb{C} \vb{X} \vb{b} \right)_j + b_i \left( \vb{C}^\top \vb{X} \vb{a} \right)_j
+    = \left( \vb{a} \left( \vb{C} \vb{X} \vb{b} \right)^\top \right)_{ij}
+      + \left( \vb{b} \left( \vb{C}^\top \vb{X} \vb{a} \right)^\top \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{スカラの行列による微分 (二次式)}
+  \begin{align*}
+    \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{C} \left( \vb{X}^\top \vb{b} \right)}{\vb{X}}
+      = \pdv{\vb{a}^\top \vb{X} \vb{C} \vb{X}^\top \vb{b}}{\vb{X}}
+      = \vb{C}^\top \vb{X}^\top \vb{a} \vb{b}^\top + \vb{C} \vb{X}^\top \vb{b} \vb{a}^\top \\
+      \text{($\vb{a}, \vb{b}, \vb{C}$は定数)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  & \left( \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{C}
+    \left( \vb{X}^\top \vb{b} \right)}{\vb{X}} \right)_{ij}
+  = \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{C}
+    \left( \vb{X}^\top \vb{b} \right)}{x_{ji}} \\
+  &= \pdv{x_{ji}} \sum_k \left( \vb{X}^\top \vb{a} \right)_k \left( \vb{C} \vb{X}^\top \vb{b} \right)_k \\
+  &= \pdv{x_{ji}} \sum_k \sum_l x_{lk} a_l \sum_m c_{km} \sum_n x_{nm} b_n
+\end{align*}
+
+式変形を続けると, 次のようになる.
+\begin{align*}
+  & \left( \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{C}
+    \left( \vb{X}^\top \vb{b} \right)}{\vb{X}} \right)_{ij}
+  = \pdv{x_{ji}} \sum_k \sum_l x_{lk} a_l \sum_m c_{km} \sum_n x_{nm} b_n \\
+  &= \sum_k \sum_l a_l \sum_m c_{km} \sum_n b_n
+    \left( x_{nm} \pdv{x_{lk}}{x_{ji}} + x_{lk} \pdv{x_{nm}}{x_{ji}} \right) \\
+  &= \sum_k \sum_l a_l \sum_m c_{km} \sum_n b_n
+    \left( \delta_{lj} \delta_{ki} x_{nm} + \delta_{nj} \delta_{mi} x_{lk} \right) \\
+  &= a_j \sum_m c_{im} \sum_n b_n x_{nm} + b_j \sum_k c_{ki} \sum_l a_l x_{lk} \\
+  &= a_j \sum_m c_{im} \left( \vb{X}^\top \vb{b} \right)_m
+    + b_j \sum_k c_{ki} \left( \vb{X}^\top \vb{a} \right)_k \\
+  &= a_j \left( \vb{C} \vb{X}^\top \vb{b} \right)_i
+    + b_j \left( \vb{C}^\top \vb{X}^\top \vb{a} \right)_i
+  = \left( \vb{C} \vb{X}^\top \vb{b} \vb{a}^\top + \vb{C}^\top \vb{X}^\top \vb{a} \vb{b}^\top \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{スカラの行列による微分 (二次式)}
+  \begin{align*}
+    \pdv{\left( \vb{X} \vb{a} + \vb{b} \right)^\top \vb{C} \left( \vb{X} \vb{d} + \vb{e} \right)}{\vb{X}}
+      = \vb{a} \left( \vb{X} \vb{d} + \vb{e} \right)^\top \vb{C}^\top
+        + \vb{d} \left( \vb{X} \vb{a} + \vb{b} \right)^\top \vb{C} \\
+      \text{($\vb{a}, \vb{b}, \vb{C}, \vb{d}, \vb{e}$は定数)}
+  \end{align*}
+\end{block}
+
+\textcolor{red}{自分で導出してみましょう.} \\
+$\vb{a}^\top \vb{X} \vb{b}$, $\vb{a}^\top \vb{X}^\top \vb{b}$,
+$\vb{a}^\top \vb{X}^\top \vb{C} \vb{X} \vb{b}$についての微分の式を使えばよい (大変!).
+% {\small \begin{align*}
+%   & \pdv{\left( \vb{X} \vb{a} + \vb{b} \right)^\top \vb{C} \left( \vb{X} \vb{d} + \vb{e} \right)}{\vb{X}}
+%     = \pdv{\vb{X}} \left( \vb{a}^\top \vb{X}^\top \vb{C} \vb{X} \vb{d}
+%       + \vb{a}^\top \vb{X}^\top \vb{C} \vb{e} + \vb{b}^\top \vb{C} \vb{X} \vb{d}
+%       + \vb{b}^\top \vb{C} \vb{e} \right) \\
+%     &= \vb{a} \vb{d}^\top \vb{X}^\top \vb{C}^\top + \vb{d} \vb{a}^\top \vb{X}^\top \vb{C}
+%       + \vb{a} \left( \vb{C} \vb{e} \right)^\top + \vb{d} \left( \vb{b}^\top \vb{C} \right) \\
+%     &= \vb{a} \left( \vb{d}^\top \vb{X}^\top + \vb{e}^\top \right) \vb{C}^\top
+%       + \vb{d} \left( \vb{a} \vb{X}^\top + \vb{b}^\top \right) \vb{C} \\
+%     &= \vb{a} \left( \vb{X} \vb{d} + \vb{e} \right)^\top \vb{C}^\top
+%       + \vb{d} \left( \vb{X} \vb{a} + \vb{b} \right)^\top \vb{C}
+% \end{align*}}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{スカラの行列による微分 (二次式)}
+  \begin{align*}
+    \pdv{\left( \vb{X} \vb{a} + \vb{b} \right)^\top \vb{C} \left( \vb{X} \vb{a} + \vb{b} \right)}{\vb{X}}
+      &= \vb{a} \left( \vb{X} \vb{a} + \vb{b} \right)^\top \left( \vb{C} + \vb{C}^\top \right)
+      & \text{($\vb{a}, \vb{b}, \vb{C}$は定数)}
+  \end{align*}
+  特に, $\vb{C}$が対称行列 ($\vb{C} = \vb{C}^\top$) であれば,
+  \begin{align*}
+    \pdv{\left( \vb{X} \vb{a} + \vb{b} \right)^\top \vb{C} \left( \vb{X} \vb{a} + \vb{b} \right)}{\vb{X}}
+      &= 2 \vb{a} \left( \vb{X} \vb{a} + \vb{b} \right)^\top \vb{C}
+      & \text{($\vb{a}, \vb{b}, \vb{C}$は定数)}
+  \end{align*}
+\end{block}
+
+\textcolor{red}{自分で導出してみましょう.} \\
+以下の式について, $\vb{d}, \vb{e} \to \vb{a}, \vb{b}$とすればよい.
+\begin{align*}
+  \pdv{\left( \vb{X} \vb{a} + \vb{b} \right)^\top \vb{C} \left( \vb{X} \vb{d} + \vb{e} \right)}{\vb{X}}
+    = \vb{a} \left( \vb{X} \vb{d} + \vb{e} \right)^\top \vb{C}^\top
+      + \vb{d} \left( \vb{X} \vb{a} + \vb{b} \right)^\top \vb{C}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{スカラの行列による微分 (二次式)}
+  \begin{align*}
+    \pdv{\left( \vb{a} - \vb{X} \vb{b} \right)^\top \vb{C} \left( \vb{a} - \vb{X} \vb{b} \right)}{\vb{X}}
+      &= -\vb{b} \left( \vb{a} - \vb{X} \vb{b} \right)^\top \left( \vb{C} + \vb{C}^\top \right)
+      & \text{($\vb{a}, \vb{b}, \vb{C}$は定数)}
+  \end{align*}
+  特に, $\vb{C}$が対称行列 ($\vb{C} = \vb{C}^\top$) であれば,
+  \begin{align*}
+    \pdv{\left( \vb{a} - \vb{X} \vb{b} \right)^\top \vb{C} \left( \vb{a} - \vb{X} \vb{b} \right)}{\vb{X}}
+      &= -2 \vb{b} \left( \vb{a} - \vb{X} \vb{b} \right)^\top \vb{C}
+      & \text{($\vb{a}, \vb{b}, \vb{C}$は定数)}
+  \end{align*}
+\end{block}
+
+\textcolor{red}{自分で導出してみましょう.} \\
+以下の式について, $\vb{a}, \vb{b}, \vb{d}, \vb{e} \to -\vb{b}, \vb{a}, -\vb{b}, \vb{a}$とすればよい.
+\begin{align*}
+  \pdv{\left( \vb{X} \vb{a} + \vb{b} \right)^\top \vb{C} \left( \vb{X} \vb{d} + \vb{e} \right)}{\vb{X}}
+    = \vb{a} \left( \vb{X} \vb{d} + \vb{e} \right)^\top \vb{C}^\top
+      + \vb{d} \left( \vb{X} \vb{a} + \vb{b} \right)^\top \vb{C}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{スカラの行列による微分 (ノルムの二乗)}
+  \begin{align*}
+    \pdv{\left\| \vb{X} \vb{a} \right\|^2}{\vb{X}}
+      &= \pdv{\left( \vb{X} \vb{a} \right)^\top \vb{X} \vb{a}}{\vb{X}}
+      = 2 \vb{a} \vb{a}^\top \vb{X}^\top & \text{($\vb{a}$は定数)} \\
+    \pdv{\left\| \vb{X}^\top \vb{a} \right\|^2}{\vb{X}}
+      &= \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{X}^\top \vb{a}}{\vb{X}}
+      = 2 \vb{X}^\top \vb{a} \vb{a}^\top & \text{($\vb{a}$は定数)}
+  \end{align*}
+\end{block}
+
+\textcolor{red}{自分で導出してみましょう.} \\
+$\left( \vb{X} \vb{a} \right)^\top \vb{X} \vb{b}$,
+$\left( \vb{X}^\top \vb{a} \right)^\top \vb{X}^\top \vb{b}$の微分の式から確認できる.
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{スカラの行列による微分 (二次式)}
+  \begin{align*}
+    \pdv{\left( \vb{X} \vb{a} \right)^\top \vb{C} \left( \vb{X} \vb{a} \right)}{\vb{X}}
+      &= \pdv{\vb{a}^\top \vb{X}^\top \vb{C} \vb{X} \vb{a}}{\vb{X}}
+      = \vb{a} \vb{a}^\top \vb{X}^\top \left( \vb{C} + \vb{C}^\top \right) \\
+    \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{C} \left( \vb{X}^\top \vb{a} \right)}{\vb{X}}
+      &= \pdv{\vb{a}^\top \vb{X} \vb{C} \vb{X}^\top \vb{a}}{\vb{X}}
+      = \left( \vb{C} + \vb{C}^\top \right) \vb{X}^\top \vb{a} \vb{a}^\top
+  \end{align*}
+  特に, $\vb{C}$が対称行列 ($\vb{C} = \vb{C}^\top$) であれば,
+  \begin{align*}
+    \pdv{\left( \vb{X} \vb{a} \right)^\top \vb{C} \left( \vb{X} \vb{a} \right)}{\vb{X}}
+      &= \pdv{\vb{a}^\top \vb{X}^\top \vb{C} \vb{X} \vb{a}}{\vb{X}}
+      = 2 \vb{a} \vb{a}^\top \vb{X}^\top \vb{C} \\
+    \pdv{\left( \vb{X}^\top \vb{a} \right)^\top \vb{C} \left( \vb{X}^\top \vb{a} \right)}{\vb{X}}
+      &= \pdv{\vb{a}^\top \vb{X} \vb{C} \vb{X}^\top \vb{a}}{\vb{X}}
+      = 2 \vb{C} \vb{X}^\top \vb{a} \vb{a}^\top
+      & \text{($\vb{a}, \vb{C}$は定数)}
+  \end{align*}
+\end{block}
+
+$\left( \vb{X} \vb{a} \right)^\top \vb{C} \left( \vb{X} \vb{b} \right)$,
+$\left( \vb{X}^\top \vb{a} \right)^\top \vb{C} \left( \vb{X}^\top \vb{b} \right)$の微分の式から確認できる.
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列の累乗の, 成分による微分}
+  \begin{align*}
+    \pdv{\vb{a}^\top \vb{X}^n \vb{b}}{\vb{X}} &=
+      \sum_{r = 0}^{n - 1} \vb{X}^{n - r - 1} \vb{b} \vb{a}^\top \vb{X}^r
+    & \text{($\vb{a}, \vb{b}$は定数)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+ここでの項の展開は, 第1回の行列積で確認した.
+\begin{align*}
+  & \left( \pdv{\vb{a}^\top \vb{X}^n \vb{b}}{\vb{X}} \right)_{ij}
+    = \pdv{\vb{a}^\top \vb{X}^n \vb{b}}{x_{ji}}
+    = \pdv{x_{ji}} \sum_k \sum_l a_k \left( \vb{X}^n \right)_{kl} b_l \\
+    &= \pdv{x_{ji}} \sum_k \underbrace{\sum_{u_1} \sum_{u_2} \cdots \sum_{u_{n - 1}}}_{\text{$n - 1$個}} \sum_l
+      a_k \underbrace{x_{k, u_1} x_{u_1, u_2} \cdots x_{u_{n - 2}, u_{n - 1}} x_{u_{n - 1}, l}}_{\text{$n$個の項}} b_l
+\end{align*}
+
+合成関数の微分と, $\pdv{x_{kl}}{x_{ji}} = \delta_{kj} \delta_{li}$から,
+\begin{align*}
+  & \left( \pdv{\vb{a}^\top \vb{X}^n \vb{b}}{\vb{X}} \right)_{ij}
+    = \sum_k \sum_{u_1} \sum_{u_2} \cdots \sum_{u_{n - 1}} \sum_l \bigg( \\
+    & \quad \quad a_k \delta_{k, j} \delta_{u_1, i} x_{u_1, u_2}
+      \cdots x_{u_{n - 2}, u_{n - 1}} x_{u_{n - 1}, l} b_l \\
+    & \quad \quad + a_k x_{k, u_1} \delta_{u_1, j} \delta_{u_2, i} x_{u_2, u_3}
+      \cdots x_{u_{n - 2}, u_{n - 1}} x_{u_{n - 1}, l} b_l \\
+    & \quad \quad + \cdots + a_k x_{k, u_1} x_{u_1, u_2}
+      \cdots x_{u_{n - 2}, u_{n - 1}} \delta_{u_{n - 1}, j} \delta_{l, i} b_l \bigg)
+\end{align*}
+\newpage
+
+クロネッカーのデルタを適用して,
+\begin{align*}
+  & \left( \pdv{\vb{a}^\top \vb{X}^n \vb{b}}{\vb{X}} \right)_{ij}
+    = \sum_k \sum_{u_1} \sum_{u_2} \cdots \sum_{u_{n - 1}} \sum_l \bigg(
+      a_j x_{i, u_2} \cdots x_{u_{n - 2}, u_{n - 1}} x_{u_{n - 1}, l} b_l \\
+    & \quad + a_k x_{k, j} x_{i, u_3} \cdots x_{u_{n - 2}, u_{n - 1}} x_{u_{n - 1}, l} b_l
+      + \cdots + a_k x_{k, u_1} x_{u_1, u_2} \cdots x_{u_{n - 2}, j} b_i \bigg)
+\end{align*}
+
+これを書き直せば,
+\begin{align*}
+  &= \sum_l \left( \vb{X}^{n - 1} \right)_{il} b_l a_j
+    + \sum_l \left( \vb{X}^{n - 2} \right)_{il} b_l \left( \vb{a}^\top \vb{X} \right)_j
+    + \cdots + b_i \left( \vb{a}^\top \vb{X}^{n - 1} \right)_j \\
+  &= \left( \vb{X}^{n - 1} \vb{b} \vb{a}^\top \right)_{ij}
+    + \left( \vb{X}^{n - 2} \vb{b} \vb{a}^\top \vb{X} \right)_{ij}
+    + \cdots + \left( \vb{b} \vb{a}^\top \vb{X}^{n - 1} \right)_{ij} \\
+  &= \sum_{r = 0}^{n - 1} \vb{X}^{n - r - 1} \vb{b} \vb{a}^\top \vb{X}^r
+\end{align*}
+\end{frame}
+
+\begin{frame}{行列のスカラによる微分}
+\begin{block}{行列の累乗の, 成分による微分}
+  \begin{align*}
+    \pdv{\vb{a}^\top \left( \vb{X}^n \right)^\top \vb{X}^n \vb{b}}{\vb{X}}
+      &= \sum_{r = 0}^{n - 1} \bigg(
+        \left( \vb{X}^r \right)^\top \vb{X}^n \vb{b} \vb{a}^\top \left( \vb{X}^{n - r - 1} \right)^\top \\
+        &\quad \quad + \vb{X}^{n - r - 1} \vb{b} \vb{a}^\top \left( \vb{X}^n \right)^\top \vb{X}^r \bigg)
+      \quad \text{($\vb{a}, \vb{b}$は定数)}
+  \end{align*}
+\end{block}
+
+先ほどと同様の議論によって導出できる (証明は省略).
+\end{frame}
+
+\subsection{トレースを含む微分}
+
+\begin{frame}{行列のトレース (再掲)}
+\begin{itemize}
+  \item $\vb{A}$を, $n$次正方行列とする.
+  \item $\vb{A}$の対角成分$a_{ii}$の和を, $\vb{A}$の\textcolor{red}{トレース}とよぶ.
+  \item トレースを, $\tr(\vb{A})$とかく.
+  $$\tr(\vb{A}) = \sum_i a_{ii}$$
+  \item 単位行列 $\vb{I}_n$ のトレースは$n$.
+  \item 和: $\tr(\vb{A} + \vb{B}) = \tr(\vb{A}) + \tr(\vb{B})$
+  \item 転置: $\tr(\vb{A}^\top) = \tr(\vb{A})$
+  \item 循環性: $\tr(\vb{A} \vb{B}) = \tr(\vb{B} \vb{A})$
+  \item 循環性: $\tr(\vb{A} \vb{B} \vb{C}) = \tr(\vb{B} \vb{C} \vb{A}) = \tr(\vb{C} \vb{A} \vb{B})$
+\end{itemize}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (基本)}
+  \begin{align*}
+    \pdv{\tr(\vb{X})}{\vb{X}} &= \vb{I} \\
+    \pdv{\tr(\vb{U} + \vb{V})}{\vb{X}} &= \pdv{\tr(\vb{U})}{\vb{X}} + \pdv{\tr(\vb{V})}{\vb{X}}
+      & \text{($\vb{U} = \vb{U}(\vb{X})$, $\vb{V} = \vb{V}(\vb{X})$)} \\
+    \pdv{\tr(a \vb{U})}{\vb{X}} &= a \pdv{\tr(\vb{U})}{\vb{X}}
+  \end{align*}
+\end{block}
+
+最初の式については, 以下のように, 要素ごとに確認できる
+($\vb{I}$の$(i, j)$成分は, クロネッカーのデルタ$\delta_{ij}$).
+\begin{align*}
+  \left( \pdv{\tr(\vb{X})}{\vb{X}} \right)_{ij}
+    &= \pdv{\tr(\vb{X})}{x_{ji}}
+    = \pdv{x_{ji}} \sum_k x_{kk}
+    = \sum_k \pdv{x_{ji}}{x_{kk}} \\
+    &= \sum_k \delta_{ik} \delta_{jk}
+    = \delta_{ij} \quad (\because \text{$k = j$のときのみ$\delta_{jk} = 1$})
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{行列積のトレースを含む微分}
+  \begin{align*}
+    \pdv{\tr(\vb{U} \vb{V})}{x} &= \tr(\pdv{\vb{U}}{x} \vb{V} + \vb{U} \pdv{\vb{V}}{x})
+      & \text{($\vb{U} = \vb{U}(x)$, $\vb{V} = \vb{V}(x)$)}
+  \end{align*}
+\end{block}
+
+以下のように示せる.
+\begin{align*}
+  & \pdv{\tr(\vb{U} \vb{V})}{x} = \pdv{x} \sum_k \left( \vb{U} \vb{V} \right)_{kk}
+    = \pdv{x} \sum_k \sum_l u_{kl} v_{lk} \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % &= \sum_k \sum_l \left( \pdv{u_{kl}}{x} v_{lk} + u_{kl} \pdv{v_{lk}}{x} \right)
+    % = \sum_k \sum_l \left( \left( \pdv{\vb{U}}{x} \right)_{kl} v_{lk}
+    %   + u_{kl} \left( \pdv{\vb{V}}{x} \right)_{lk} \right) \\
+    % &= \sum_k \left( \pdv{\vb{U}}{x} \vb{V} \right)_{kk} + \sum_k \left( \vb{U} \pdv{\vb{V}}{x} \right)_{kk}
+    &= \tr(\pdv{\vb{U}}{x} \vb{V}) + \tr(\vb{U} \pdv{\vb{V}}{x})
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (行列積)}
+  \begin{align*}
+    \pdv{\tr(\vb{A} \vb{X})}{\vb{X}} &= \pdv{\tr(\vb{X} \vb{A})}{\vb{X}} = \vb{A}
+      & \text{($\vb{A}$は定数)}
+  \end{align*}
+\end{block}
+
+\textcolor{red}{$\tr(\vb{A} \vb{B}) = \tr(\vb{B} \vb{A})$}であることに注意.
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  \left( \pdv{\tr(\vb{A} \vb{X})}{\vb{X}} \right)_{ij}
+    &= \pdv{\tr(\vb{A} \vb{X})}{x_{ji}}
+    = \pdv{x_{ji}} \sum_k \left( \vb{A} \vb{X} \right)_{kk} \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % &= \pdv{x_{ji}} \sum_k \sum_l a_{kl} x_{lk}
+    % = \sum_k \sum_l a_{kl} \pdv{x_{lk}}{x_{ji}} \\
+    % &= \sum_k \sum_l a_{kl} \delta_{ki} \delta_{lj}
+    &= a_{ij} \quad (\because \text{$k, l = i, j$のとき以外は$0$})
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (行列積)}
+  \begin{align*}
+    \pdv{\tr(\vb{A} \vb{X}^\top)}{\vb{X}}
+      &= \pdv{\tr(\vb{X}^\top \vb{A})}{\vb{X}} = \vb{A}^\top
+      & \text{($\vb{A}$は定数)}
+  \end{align*}
+\end{block}
+
+\textcolor{red}{$\tr(\vb{A} \vb{B}) = \tr(\vb{B} \vb{A})$}であることに注意.
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  \left( \pdv{\tr(\vb{A} \vb{X}^\top)}{\vb{X}} \right)_{ij}
+    &= \pdv{\tr(\vb{A} \vb{X}^\top)}{x_{ji}}
+    = \pdv{x_{ji}} \sum_k \left( \vb{A} \vb{X}^\top \right)_{kk} \\
+    &= \pdv{x_{ji}} \sum_k \sum_l a_{kl} x_{kl}
+    = \sum_k \sum_l a_{kl} \pdv{x_{kl}}{x_{ji}} \\
+    &= \sum_k \sum_l a_{kl} \delta_{kj} \delta_{li}
+    = a_{ji} \quad (\because \text{$k, l = j, i$のとき以外は$0$})
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (行列積)}
+  \begin{align*}
+    \pdv{\tr(\vb{A} \vb{X} \vb{B})}{\vb{X}}
+      &= \pdv{\tr(\vb{X} \vb{B} \vb{A})}{\vb{X}}
+      = \pdv{\tr(\vb{B} \vb{A} \vb{X})}{\vb{X}}
+      = \vb{B} \vb{A} & \text{($\vb{A}, \vb{B}$は定数)} \\
+    \pdv{\tr(\vb{A} \vb{X}^\top \vb{B})}{\vb{X}}
+      &= \pdv{\tr(\vb{X}^\top \vb{B} \vb{A})}{\vb{X}}
+      = \pdv{\tr(\vb{B} \vb{A} \vb{X}^\top)}{\vb{X}}
+      = \vb{A}^\top \vb{B}^\top & \text{($\vb{A}, \vb{B}$は定数)}
+  \end{align*}
+\end{block}
+
+\textcolor{red}{$\tr(\vb{A} \vb{B} \vb{C}) = \tr(\vb{B} \vb{C} \vb{A})
+= \tr(\vb{C} \vb{A} \vb{B})$}であることに注意. \\
+トレースの循環性とよばれる.
+$\pdv{\tr(\vb{A} \vb{X})}{\vb{X}} = \vb{A}$, $\pdv{\tr(\vb{A} \vb{X}^\top)}{\vb{X}} = \vb{A}^\top$より確認できる.
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (逆行列)}
+  \begin{align*}
+    \pdv{\tr(\vb{A} \vb{X}^{-1})}{\vb{X}} &= \pdv{\tr(\vb{X}^{-1} \vb{A})}{\vb{X}}
+      = -\vb{X}^{-1} \vb{A} \vb{X}^{-1} & \text{($\vb{A}$は定数)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる (逆行列の微分の式を用いる).
+\begin{align*}
+  \left( \pdv{\tr(\vb{A} \vb{X}^{-1})}{\vb{X}} \right)_{ij}
+    &= \pdv{\tr(\vb{A} \vb{X}^{-1})}{x_{ji}}
+    = \pdv{x_{ji}} \sum_k \left( \vb{A} \vb{X}^{-1} \right)_{kk} \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % &= \sum_k \left( \vb{A} \pdv{\vb{X}^{-1}}{x_{ji}} \right)_{kk}
+    % = -\sum_k \left( \vb{A} \vb{X}^{-1} \pdv{\vb{X}}{x_{ji}} \vb{X}^{-1} \right)_{kk} \\
+    &= -\sum_k \sum_l \left( \vb{A} \vb{X}^{-1} \right)_{kl}
+      \left( \pdv{\vb{X}}{x_{ji}} \vb{X}^{-1} \right)_{lk}
+\end{align*}
+
+式変形を続けると, 次のようになる.
+\begin{align*}
+  \left( \pdv{\tr(\vb{A} \vb{X}^{-1})}{\vb{X}} \right)_{ij}
+    &= -\sum_k \sum_l \left( \vb{A} \vb{X}^{-1} \right)_{kl}
+      \left( \pdv{\vb{X}}{x_{ji}} \vb{X}^{-1} \right)_{lk} \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % &= -\sum_k \sum_l \left( \vb{A} \vb{X}^{-1} \right)_{kl}
+    %   \sum_m \left( \pdv{\vb{X}}{x_{ji}} \right)_{lm} \left( \vb{X}^{-1} \right)_{mk} \\
+    % &= -\sum_k \sum_l \left( \vb{A} \vb{X}^{-1} \right)_{kl}
+    %   \sum_m \pdv{x_{lm}}{x_{ji}} \left( \vb{X}^{-1} \right)_{mk} \\
+    % &= -\sum_k \sum_l \left( \vb{A} \vb{X}^{-1} \right)_{kl}
+    %   \sum_m \delta_{lj} \delta_{mi} \left( \vb{X}^{-1} \right)_{mk} \\
+    % &= -\sum_k \left( \vb{A} \vb{X}^{-1} \right)_{kj}
+    %   \left( \vb{X}^{-1} \right)_{ik} \quad (\because \text{$l, m = j, i$}) \\
+    &= -\left( \vb{X}^{-1} \vb{A} \vb{X}^{-1} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (逆行列)}
+  \begin{align*}
+    \pdv{\tr(\vb{X}^{-1})}{\vb{X}} &= -\vb{X}^{-2}
+  \end{align*}
+\end{block}
+
+$\pdv{\tr(\vb{A} \vb{X}^{-1})}{\vb{X}} = -\vb{X}^{-1} \vb{A} \vb{X}^{-1}$に, $\vb{A} = \vb{I}$を代入すればよい. \\
+スカラの場合における, $\dv{x} \frac{1}{x} = -\frac{1}{x^2}$とそっくりである.
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (逆行列)}
+  \begin{align*}
+    \pdv{\tr(\vb{A} \vb{X}^{-1} \vb{B})}{\vb{X}} = \pdv{\tr(\vb{X}^{-1} \vb{B} \vb{A})}{\vb{X}}
+      = \pdv{\tr(\vb{B} \vb{A} \vb{X}^{-1})}{\vb{X}}
+      = -\vb{X}^{-1} \vb{B} \vb{A} \vb{X}^{-1} \\
+    \text{($\vb{A}$は定数)}
+  \end{align*}
+\end{block}
+
+$\pdv{\tr(\vb{A} \vb{X}^{-1})}{\vb{X}} = -\vb{X}^{-1} \vb{A} \vb{X}^{-1}$に,
+$\vb{A} = \vb{B} \vb{A}$を代入すればよい.
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (二乗)}
+  \begin{align*}
+    \pdv{\tr(\vb{X}^2)}{\vb{X}} = 2 \vb{X}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  \left( \pdv{\tr(\vb{X}^2)}{\vb{X}} \right)_{ij}
+    &= \pdv{\tr(\vb{X}^2)}{x_{ji}}
+    = \pdv{x_{ji}} \sum_k \left( \vb{X}^2 \right)_{kk}
+    = \pdv{x_{ji}} \sum_k \sum_l x_{kl} x_{lk} \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % &= \sum_k \sum_l \left( x_{lk} \pdv{x_{kl}}{x_{ji}} + x_{kl} \pdv{x_{lk}}{x_{ji}} \right) \\
+    % &= \sum_k \sum_l \left( \delta_{li} \delta_{kj} x_{lk}
+    %   + \delta_{ki} \delta_{lj} x_{kl} \right)
+    &= 2 x_{ij}
+\end{align*}
+
+スカラの場合における, $(x^2)' = 2x$とそっくりである.
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (二次式)}
+  \begin{align*}
+    \pdv{\tr(\vb{X}^2 \vb{A})}{\vb{X}} &= \pdv{\tr(\vb{X} \vb{A} \vb{X})}{\vb{X}}
+      = \pdv{\tr(\vb{A} \vb{X}^2)}{\vb{X}} = \vb{X} \vb{A} + \vb{A} \vb{X}
+      & \text{($\vb{A}$は定数)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  \left( \pdv{\tr(\vb{X}^2 \vb{A})}{\vb{X}} \right)_{ij}
+    &= \pdv{\tr(\vb{X}^2 \vb{A})}{x_{ji}}
+    = \pdv{x_{ji}} \sum_k \left( \vb{X}^2 \vb{A} \right)_{kk} \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % &= \pdv{x_{ji}} \sum_k \sum_l x_{kl} \left( \vb{X} \vb{A} \right)_{lk}
+    % = \pdv{x_{ji}} \sum_k \sum_l x_{kl} \sum_m x_{lm} a_{mk} \\
+    &= \sum_k \sum_l \sum_m a_{mk} \left( x_{lm} \pdv{x_{kl}}{x_{ji}}
+      + x_{kl} \pdv{x_{lm}}{x_{ji}} \right)
+\end{align*}
+
+式変形を続けると, 次のようになる.
+\begin{align*}
+  \left( \pdv{\tr(\vb{X}^2 \vb{A})}{\vb{X}} \right)_{ij}
+    &= \sum_k \sum_l \sum_m a_{mk} \left( x_{lm} \pdv{x_{kl}}{x_{ji}}
+      + x_{kl} \pdv{x_{lm}}{x_{ji}} \right) \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % &= \sum_k \sum_l \sum_m a_{mk} \left( \delta_{kj} \delta_{li} x_{lm}
+    %   + \delta_{lj} \delta_{mi} x_{kl} \right) \\
+    &= \sum_m a_{mj} x_{im} + \sum_k a_{ik} x_{kj}
+    = \left( \vb{X} \vb{A} \right)_{ij} + \left( \vb{A} \vb{X} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (二次式)}
+  \begin{align*}
+    \pdv{\tr(\vb{X}^\top \vb{A} \vb{X})}{\vb{X}} = \pdv{\tr(\vb{A} \vb{X} \vb{X}^\top)}{\vb{X}}
+      = \pdv{\tr(\vb{X} \vb{X}^\top \vb{A})}{\vb{X}}
+      = \vb{X}^\top \left( \vb{A} + \vb{A}^\top \right) \\
+      \text{($\vb{A}$は定数)}
+  \end{align*}
+\end{block}
+
+以下のように, 要素ごとに確認できる.
+\begin{align*}
+  \left( \pdv{\tr(\vb{X} \vb{X}^\top \vb{A})}{\vb{X}} \right)_{ij}
+    &= \pdv{\tr(\vb{X} \vb{X}^\top \vb{A})}{x_{ji}}
+    = \pdv{x_{ji}} \sum_k \left( \vb{X} \vb{X}^\top \vb{A} \right)_{kk} \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % &= \pdv{x_{ji}} \sum_k \sum_l x_{kl} \left( \vb{X}^\top \vb{A} \right)_{lk} \\
+    &= \pdv{x_{ji}} \sum_k \sum_l x_{kl} \sum_m x_{ml} a_{mk}
+\end{align*}
+
+式変形を続けると, 次のようになる.
+\begin{align*}
+  \left( \pdv{\tr(\vb{X} \vb{X}^\top \vb{A})}{\vb{X}} \right)_{ij}
+    &= \pdv{x_{ji}} \sum_k \sum_l x_{kl} \sum_m x_{ml} a_{mk} \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % &= \sum_k \sum_l \sum_m a_{mk} \left( x_{ml} \pdv{x_{kl}}{x_{ji}}
+    %   + x_{kl} \pdv{x_{ml}}{x_{ji}} \right) \\
+    % &= \sum_k \sum_l \sum_m a_{mk} \left( \delta_{kj} \delta_{li} x_{ml}
+    %   + \delta_{mj} \delta_{li} x_{kl} \right) \\
+    &= \sum_m a_{mj} x_{mi} + \sum_k a_{jk} x_{ki}
+    = \left( \vb{X}^\top \vb{A} \right)_{ij} + \left( \vb{X}^\top \vb{A}^\top \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (二次式)}
+  \begin{align*}
+    \pdv{\tr(\vb{X} \vb{A} \vb{X}^\top)}{\vb{X}} = \pdv{\tr(\vb{A} \vb{X}^\top \vb{X})}{\vb{X}}
+      = \pdv{\tr(\vb{X}^\top \vb{X} \vb{A})}{\vb{X}}
+      = \left( \vb{A} + \vb{A}^\top \right) \vb{X}^\top \\
+      \text{($\vb{A}$は定数)}
+  \end{align*}
+\end{block}
+
+先ほどと同様に, 要素ごとに確認できる (練習問題).
+\begin{align*}
+  \left( \pdv{\tr(\vb{X}^\top \vb{X} \vb{A})}{\vb{X}} \right)_{ij}
+    &= \pdv{\tr(\vb{X}^\top \vb{X} \vb{A})}{x_{ji}} \\
+    &= \sum_k \sum_l \sum_m a_{mk} \left( x_{lm} \pdv{x_{lk}}{x_{ji}}
+      + x_{lk} \pdv{x_{lm}}{x_{ji}} \right) \\
+    &= \sum_m a_{mi} x_{jm} + \sum_k a_{ik} x_{jk}
+    = \left( \vb{A}^\top \vb{X}^\top \right)_{ij} + \left( \vb{A} \vb{X}^\top \right)_{ij}
+\end{align*}
+% \begin{align*}
+%   \left( \pdv{\tr(\vb{X}^\top \vb{X} \vb{A})}{\vb{X}} \right)_{ij}
+%     &= \pdv{\tr(\vb{X}^\top \vb{X} \vb{A})}{x_{ji}}
+%     = \pdv{x_{ji}} \sum_k \left( \vb{X}^\top \vb{X} \vb{A} \right)_{kk} \\
+%     &= \pdv{x_{ji}} \sum_k \sum_l x_{lk} \left( \vb{X} \vb{A} \right)_{lk} \\
+%     &= \pdv{x_{ji}} \sum_k \sum_l x_{lk} \sum_m x_{lm} a_{mk} \\
+%     &= \sum_k \sum_l \sum_m a_{mk} \left( x_{lm} \pdv{x_{lk}}{x_{ji}}
+%       + x_{lk} \pdv{x_{lm}}{x_{ji}} \right) \\
+%     &= \sum_k \sum_l \sum_m a_{mk} \left( \delta_{ki} \delta_{lj} x_{lm}
+%       + \delta_{lj} \delta_{mi} x_{lk} \right) \\
+%     &= \sum_m a_{mi} x_{jm} + \sum_k a_{ik} x_{jk}
+%     = \left( \vb{A}^\top \vb{X}^\top \right)_{ij} + \left( \vb{A} \vb{X}^\top \right)_{ij}
+% \end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (二次式)}
+  \begin{align*}
+    \pdv{\tr(\vb{X} \vb{X}^\top)}{\vb{X}} &= \pdv{\tr(\vb{X}^\top \vb{X})}{\vb{X}}
+      = 2 \vb{X}^\top
+  \end{align*}
+\end{block}
+
+$\pdv{\tr(\vb{X}^\top \vb{A} \vb{X})}{\vb{X}} = \vb{X}^\top \left( \vb{A} + \vb{A}^\top \right)$に,
+$\vb{A} = \vb{I}$を代入すればよい.
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (二次式)}
+  \begin{align*}
+    \pdv{\tr(\vb{X} \vb{A} \vb{X}^\top \vb{B})}{\vb{X}}
+      &= \pdv{\tr(\vb{A} \vb{X}^\top \vb{B} \vb{X})}{\vb{X}}
+      = \pdv{\tr(\vb{X}^\top \vb{B} \vb{X} \vb{A})}{\vb{X}} \\
+      &= \pdv{\tr(\vb{B} \vb{X} \vb{A} \vb{X}^\top)}{\vb{X}}
+      = \vb{A} \vb{X}^\top \vb{B} + \vb{A}^\top \vb{X}^\top \vb{B}^\top \\
+      & \text{($\vb{A}, \vb{B}$は定数)}
+  \end{align*}
+\end{block}
+
+多少煩雑であるが, 以下のように, 要素ごとに確認できる.
+\begin{align*}
+  \left( \pdv{\tr(\vb{X} \vb{A} \vb{X}^\top \vb{B})}{\vb{X}} \right)_{ij}
+    &= \pdv{\tr(\vb{X} \vb{A} \vb{X}^\top \vb{B})}{x_{ji}}
+    = \pdv{x_{ji}} \sum_k \left( \vb{X} \vb{A} \vb{X}^\top \vb{B} \right)_{kk}
+\end{align*}
+
+順に展開すると,
+\begin{align*}
+  \left( \pdv{\tr(\vb{X} \vb{A} \vb{X}^\top \vb{B})}{\vb{X}} \right)_{ij}
+    &= \pdv{\tr(\vb{X} \vb{A} \vb{X}^\top \vb{B})}{x_{ji}}
+    = \pdv{x_{ji}} \sum_k \left( \vb{X} \vb{A} \vb{X}^\top \vb{B} \right)_{kk} \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % &= \pdv{x_{ji}} \sum_k \sum_l x_{kl} \left( \vb{A} \vb{X}^\top \vb{B} \right)_{lk} \\
+    % &= \pdv{x_{ji}} \sum_k \sum_l x_{kl} \sum_m a_{lm} \left( \vb{X}^\top \vb{B} \right)_{mk} \\
+    % &= \pdv{x_{ji}} \sum_k \sum_l x_{kl} \sum_m a_{lm} \sum_n x_{nm} b_{nk} \\
+    &= \sum_k \sum_l \sum_m \sum_n a_{lm} b_{nk}
+      \left( x_{nm} \pdv{x_{kl}}{x_{ji}} + x_{kl} \pdv{x_{nm}}{x_{ji}} \right)
+\end{align*}
+\newpage
+
+微分を行って, 項を整えると,
+\begin{align*}
+  \left( \pdv{\tr(\vb{X} \vb{A} \vb{X}^\top \vb{B})}{\vb{X}} \right)_{ij}
+    &= \sum_k \sum_l \sum_m \sum_n a_{lm} b_{nk}
+      \left( x_{nm} \pdv{x_{kl}}{x_{ji}} + x_{kl} \pdv{x_{nm}}{x_{ji}} \right) \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % &= \sum_k \sum_l \sum_m \sum_n a_{lm} b_{nk}
+    %   \left( \delta_{kj} \delta_{li} x_{nm} + \delta_{mi} \delta_{nj} x_{kl} \right) \\
+    % &= \sum_m \sum_n a_{im} b_{nj} x_{nm} + \sum_k \sum_l a_{li} b_{jk} x_{kl} \\
+    % &= \sum_m a_{im} \left( \vb{X}^\top \vb{B} \right)_{mj}
+    %   + \sum_l a_{li} \left( \vb{X}^\top \vb{B}^\top \right)_{lj} \\
+    &= \left( \vb{A} \vb{X}^\top \vb{B} \right)_{ij}
+      + \left( \vb{A}^\top \vb{X}^\top \vb{B}^\top \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (二次式)}
+  \begin{align*}
+    \pdv{\tr(\vb{X} \vb{A} \vb{X} \vb{B})}{\vb{X}}
+      &= \pdv{\tr(\vb{A} \vb{X} \vb{B} \vb{X})}{\vb{X}}
+      = \pdv{\tr(\vb{X} \vb{B} \vb{X} \vb{A})}{\vb{X}} \\
+      &= \pdv{\tr(\vb{B} \vb{X} \vb{A} \vb{X})}{\vb{X}}
+      = \vb{A} \vb{X} \vb{B} + \vb{B} \vb{X} \vb{A}
+      & \text{($\vb{A}, \vb{B}$は定数)}
+  \end{align*}
+\end{block}
+
+こちらも多少煩雑であるが, 以下のように, 要素ごとに確認できる.
+\begin{align*}
+  \left( \pdv{\tr(\vb{X} \vb{A} \vb{X} \vb{B})}{\vb{X}} \right)_{ij}
+    &= \pdv{\tr(\vb{X} \vb{A} \vb{X} \vb{B})}{x_{ji}}
+    = \pdv{x_{ji}} \sum_k \left( \vb{X} \vb{A} \vb{X} \vb{B} \right)_{kk}
+\end{align*}
+\newpage
+
+式変形を続けると, 次のようになる.
+\begin{align*}
+  \left( \pdv{\tr(\vb{X} \vb{A} \vb{X} \vb{B})}{\vb{X}} \right)_{ij}
+    &= \pdv{\tr(\vb{X} \vb{A} \vb{X} \vb{B})}{x_{ji}}
+    = \pdv{x_{ji}} \sum_k \left( \vb{X} \vb{A} \vb{X} \vb{B} \right)_{kk} \\
+    &= \text{\color{red} (自分で導出してみましょう)} \\
+    % &= \pdv{x_{ji}} \sum_k \sum_l x_{kl} \sum_m a_{lm} \sum_n x_{mn} b_{nk} \\
+    % &= \sum_k \sum_l \sum_m \sum_n a_{lm} b_{nk}
+    %   \left( x_{mn} \pdv{x_{kl}}{x_{ji}} + x_{kl} \pdv{x_{mn}}{x_{ji}} \right) \\
+    % &= \sum_k \sum_l \sum_m \sum_n a_{lm} b_{nk}
+    %   \left( \delta_{kj} \delta_{li} x_{mn} + \delta_{mj} \delta_{ni} x_{kl} \right) \\
+    &= \sum_m \sum_n a_{im} b_{nj} x_{mn} + \sum_k \sum_l a_{lj} b_{ik} x_{kl} \\
+    &= \left( \vb{A} \vb{X} \vb{B} \right)_{ij} + \left( \vb{B} \vb{X} \vb{A} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (二次式)}
+  \begin{align*}
+    \pdv{\tr(\vb{A}^\top \vb{X}^\top \vb{B} \vb{X} \vb{A})}{\vb{X}}
+      &= \vb{A} \vb{A}^\top \vb{X}^\top \left( \vb{B} + \vb{B}^\top \right)
+      & \text{($\vb{A}, \vb{B}$は定数)}
+  \end{align*}
+\end{block}
+
+\textcolor{red}{自分で導出してみましょう.} \\
+$\pdv{\tr(\vb{X} \vb{A} \vb{X}^\top \vb{B})}{\vb{X}} = \vb{A} \vb{X}^\top \vb{B} + \vb{A}^\top \vb{X}^\top \vb{B}^\top$を用いる.
+% \begin{align*}
+%   \pdv{\tr(\vb{A}^\top \vb{X}^\top \vb{B} \vb{X} \vb{A})}{\vb{X}}
+%     &= \pdv{\tr(\vb{X} \vb{A} \vb{A}^\top \vb{X}^\top \vb{B})}{\vb{X}} \quad (\because \text{循環性}) \\
+%     &= \left( \vb{A} \vb{A}^\top \right) \vb{X}^\top \vb{B}
+%       + \left( \vb{A} \vb{A}^\top \right)^\top \vb{X}^\top \vb{B}^\top \quad (\because \vb{A} \to \vb{A} \vb{A}^\top) \\
+%     &= \vb{A} \vb{A}^\top \vb{X}^\top \vb{B} + \vb{A} \vb{A}^\top \vb{X}^\top \vb{B}^\top \\
+%     &= \vb{A} \vb{A}^\top \vb{X}^\top \left( \vb{B} + \vb{B}^\top \right)
+% \end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (二次式)}
+  \begin{align*}
+    \pdv{\tr(\vb{A} \vb{X} \vb{B} \vb{X}^\top \vb{C})}{\vb{X}}
+      &= \vb{B} \vb{X}^\top \vb{C} \vb{A} + \vb{B}^\top \vb{X}^\top \vb{A}^\top \vb{C}^\top
+      & \text{($\vb{A}, \vb{B}, \vb{C}$は定数)}
+  \end{align*}
+\end{block}
+
+$\pdv{\tr(\vb{X} \vb{A} \vb{X}^\top \vb{B})}{\vb{X}} = \vb{A} \vb{X}^\top \vb{B} + \vb{A}^\top \vb{X}^\top \vb{B}^\top$と,
+トレースの循環性を用いる (練習問題).
+% \begin{align*}
+%   \pdv{\tr(\vb{A} \vb{X} \vb{B} \vb{X}^\top \vb{C})}{\vb{X}}
+%     &= \pdv{\tr(\vb{X} \vb{B} \vb{X}^\top \vb{C} \vb{A})}{\vb{X}} \quad (\because \text{循環性}) \\
+%     &= \vb{B} \vb{X}^\top \left( \vb{C} \vb{A} \right)
+%       + \vb{B}^\top \vb{X}^\top \left( \vb{C} \vb{A} \right)^\top \quad (\because \text{文字の置き換え}) \\
+%     &= \vb{B} \vb{X}^\top \vb{C} \vb{A} + \vb{B}^\top \vb{X}^\top \vb{A}^\top \vb{C}^\top \\
+%     &= \left( \vb{A}^\top \vb{C}^\top \vb{X} \vb{B}^\top + \vb{C} \vb{A} \vb{X} \vb{B} \right)^\top
+% \end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (二次式)}
+  \begin{align*}
+    \pdv{\tr(\left( \vb{A} \vb{X} + \vb{B} \right) \vb{C} \left( \vb{D} \vb{X} + \vb{E} \right))}{\vb{X}}
+      = \left( \vb{A} \vb{X} + \vb{B} \right) \vb{C} \vb{D}
+        + \vb{C} \left( \vb{D} \vb{X} + \vb{E} \right) \vb{A} \\
+      \text{($\vb{A}, \vb{B}, \vb{C}, \vb{D}, \vb{E}$は定数)}
+  \end{align*}
+\end{block}
+
+\textcolor{red}{自分で導出してみましょう.} \\
+$\tr(\vb{A} \vb{X} \vb{B})$, $\tr(\vb{A} \vb{X})$, $\tr(\vb{A} \vb{X} \vb{B} \vb{X})$の微分の式から確認できる.
+% \begin{align*}
+%   & \pdv{\tr(\left( \vb{A} \vb{X} + \vb{B} \right) \vb{C}
+%     \left( \vb{D} \vb{X} + \vb{E} \right))}{\vb{X}} \\
+%     &= \pdv{\vb{X}} \left( \tr(\vb{A} \vb{X} \vb{C} \vb{D} \vb{X})
+%       + \tr(\vb{A} \vb{X} \vb{C} \vb{E}) + \tr(\vb{B} \vb{C} \vb{D} \vb{X})
+%       + \tr(\vb{B} \vb{C} \vb{E}) \right) \\
+%     &= \left( \vb{A} \vb{X} \vb{C} \vb{D} + \vb{C} \vb{D} \vb{X} \vb{A} \right)
+%       + \vb{C} \vb{E} \vb{A} + \vb{B} \vb{C} \vb{D} \\
+%     &= \left( \vb{A} \vb{X} + \vb{B} \right) \vb{C} \vb{D}
+%       + \vb{C} \left( \vb{D} \vb{X} + \vb{E} \right) \vb{A}
+% \end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (二次式)}
+  \begin{align*}
+    \pdv{\tr(\left( \vb{A} \vb{X} \vb{B} + \vb{C} \right) \left( \vb{A} \vb{X} \vb{B} + \vb{C} \right)^\top)}{\vb{X}}
+      = 2 \vb{B} \left( \vb{A} \vb{X} \vb{B} + \vb{C} \right)^\top \vb{A} \\
+      \text{($\vb{A}, \vb{B}, \vb{C}$は定数)}
+  \end{align*}
+\end{block}
+
+\textcolor{red}{自分で導出してみましょう.} \\
+$\tr(\vb{X} \vb{A} \vb{X}^\top \vb{B})$, $\tr(\vb{A} \vb{X} \vb{B})$の微分の式から確認できる.
+% {\small \begin{align*}
+%   &= \pdv{\vb{X}} \left( \tr(\vb{A} \vb{X} \vb{B} \vb{B}^\top \vb{X}^\top \vb{A}^\top)
+%     + \tr(\vb{A} \vb{X} \vb{B} \vb{C}^\top) + \tr(\vb{C} \vb{B}^\top \vb{X}^\top \vb{A}^\top)
+%     + \tr(\vb{C} \vb{C}^\top) \right) \\
+%   &= \pdv{\vb{X}} \left( \tr(\vb{X} \vb{B} \vb{B}^\top \vb{X}^\top \vb{A}^\top \vb{A})
+%     + 2 \tr(\vb{A} \vb{X} \vb{B} \vb{C}^\top) \right)
+%     \quad (\because \tr(\vb{P}) = \tr(\vb{P}^\top), \text{循環性}) \\
+%   &= \left( \vb{B} \vb{B}^\top \vb{X}^\top \vb{A}^\top \vb{A}
+%     + \left( \vb{B} \vb{B}^\top \right)^\top \vb{X}^\top \left( \vb{A}^\top \vb{A} \right)^\top \right)
+%     + 2 \vb{B} \vb{C}^\top \vb{A}
+%   = 2 \vb{B} \left( \vb{A} \vb{X} \vb{B} + \vb{C} \right)^\top \vb{A}
+% \end{align*}}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{itemize}
+  \item $\pdv{\tr(\vb{X}^{-1})}{\vb{X}} = -\vb{X}^{-2}$, $\pdv{\tr(\vb{X})}{\vb{X}} = \vb{I}$,
+  $\pdv{\tr(\vb{X}^2)}{\vb{X}} = 2 \vb{X}$であった.
+  \item スカラにおける微分 $(x^{-1})' = -x^{-2}$, $x' = 1$, $\left( x^2 \right)' = 2x$に対応している.
+  \item この観測から, 以下が成り立つことが予想される:
+  \begin{align*}
+    \pdv{\tr(\vb{X}^k)}{\vb{X}} = k \vb{X}^{k - 1}
+  \end{align*}
+  \item $k > 0$, $k < 0$の2つに場合分けして確認する.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+以下が, $k > 0$で成立することを確認する.
+\begin{align*}
+  \pdv{\tr(\vb{X}^k)}{\vb{X}} = k \vb{X}^{k - 1}
+\end{align*}
+
+以下のように, 要素ごとに確認する.
+\begin{align*}
+  & \left( \pdv{\tr(\vb{X}^k)}{\vb{X}} \right)_{ij} = \pdv{\tr(\vb{X}^k)}{x_{ji}}
+    = \pdv{x_{ji}} \sum_l \left( \vb{X}^k \right)_{ll} \\
+    &= \pdv{x_{ji}} \sum_l \underbrace{\sum_{u_1} \sum_{u_2} \cdots \sum_{u_{k - 1}}}_{\text{$k - 1$個}}
+      x_{l, u_1} x_{u_1, u_2} \cdots x_{u_{k - 2}, u_{k - 1}} x_{u_{k - 1}, l}
+\end{align*}
+このような項の展開は, 第1回の行列積で確認した.
+
+合成関数の微分を考えると ($\pdv{x_{kl}}{x_{ji}} = \delta_{kj} \delta_{li}$を使って),
+\begin{align*}
+  & \pdv{x_{ji}} \sum_l \underbrace{\sum_{u_1} \sum_{u_2} \cdots \sum_{u_{k - 1}}}_{\text{$k - 1$個}}
+    \underbrace{x_{l, u_1} x_{u_1, u_2}
+    \cdots x_{u_{k - 2}, u_{k - 1}} x_{u_{k - 1}, l}}_{\text{項が$k$個}} \\
+  &= \sum_l \sum_{u_1} \sum_{u_2} \cdots \sum_{u_{k - 1}} \bigg(
+    \delta_{lj} \delta_{u_1, i} x_{u_1, u_2} \cdots x_{u_{k - 2}, u_{k - 1}} x_{u_{k - 1}, l} \\
+  & \quad \quad + x_{l, u_1} \delta_{u_1, j} \delta_{u_2, i} x_{u_2, u_3} \cdots x_{u_{k - 1}, l} \\
+  & \quad \quad + \cdots + x_{l, u_1} x_{u_1, u_2} \cdots
+    x_{u_{k - 2}, u_{k - 1}} \delta_{u_{k - 1}, j} \delta_{l, i} \bigg) \\
+  &= k \sum_l \sum_{u_1} \cdots \sum_{u_{k - 1}}
+    \delta_{lj} \delta_{u_1, i} x_{u_1, u_2} \cdots x_{u_{k - 2}, u_{k - 1}} x_{u_{k - 1}, l}
+    \quad (\because \text{対称性})
+\end{align*}
+クロネッカーのデルタを適用して,
+\begin{align*}
+  & k \sum_l \sum_{u_1} \cdots \sum_{u_{k - 1}}
+    \delta_{lj} \delta_{u_1, i} x_{u_1, u_2} \cdots x_{u_{k - 2}, u_{k - 1}} x_{u_{k - 1}, l} \\
+  &= k \underbrace{\sum_{u_2} \cdots \sum_{u_{k - 1}}}_{\text{$k - 2$個}}
+    x_{i, u_2} \cdots x_{u_{k - 2}, u_{k - 1}} x_{u_{k - 1}, j}
+\end{align*}
+インデックスを置き換えると,
+\begin{align*}
+  &= k \underbrace{\sum_{v_1} \cdots \sum_{v_{k - 2}}}_{\text{$k - 2$個}}
+    x_{i, v_1} x_{v_1, v_2} \cdots x_{v_{k - 3}, v_{k - 2}} x_{v_{k - 2}, j} \\
+  &= k \left( \vb{X}^{k - 1} \right)_{ij} = \left( \pdv{\tr(\vb{X}^k)}{\vb{X}} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+続いて, 以下が$k > 0$で成立することを確認する.
+\begin{align*}
+  \pdv{\tr(\vb{X}^{-k})}{\vb{X}} = -k \vb{X}^{-k - 1}
+\end{align*}
+
+先ほどと同じように, 要素ごとに確認する.
+$\vb{X}^{-1}$の各成分を, $y_{ij}$とする.
+\begin{align*}
+  \left( \pdv{\tr(\vb{X}^{-k})}{\vb{X}} \right)_{ij}
+    &= \pdv{\tr(\vb{X}^{-k})}{x_{ji}}
+    = \pdv{x_{ji}} \sum_l \left( \vb{X}^{-k} \right)_{ll} \\
+    &= \pdv{x_{ji}} \sum_l \underbrace{\sum_{u_1} \sum_{u_2} \cdots \sum_{u_{k - 1}}}_{\text{$k - 1$個}}
+      y_{l, u_1} y_{u_1, u_2} \cdots y_{u_{k - 2}, u_{k - 1}} y_{u_{k - 1}, l}
+\end{align*}
+
+$\pdv{\left( \vb{X}^{-1} \right)_{kl}}{x_{ij}} = -\left( \vb{X}^{-1} \right)_{ki} \left( \vb{X}^{-1} \right)_{jl}$であるので,
+$\pdv{y_{kl}}{x_{ij}} = -y_{ki} y_{jl}$. \\
+合成関数の微分を考えると ($\pdv{y_{kl}}{x_{ji}} = -y_{kj} y_{il}$を使って),
+\begin{align*}
+  &= \pdv{x_{ji}} \sum_l \underbrace{\sum_{u_1} \sum_{u_2} \cdots \sum_{u_{k - 1}}}_{\text{$k - 1$個}}
+    \underbrace{y_{l, u_1} y_{u_1, u_2}
+    \cdots y_{u_{k - 2}, u_{k - 1}} y_{u_{k - 1}, l}}_{\text{$k$個}} \\
+  &= - \sum_l \sum_{u_1} \sum_{u_2} \cdots \sum_{u_{k - 1}} \bigg(
+    y_{lj} y_{i, u_1} y_{u_1, u_2} \cdots y_{u_{k - 2}, u_{k - 1}} y_{u_{k - 1}, l} \\
+    & \quad \quad + y_{l, u_1} y_{u_1, j} y_{i, u_2} y_{u_2, u_3}
+      \cdots y_{u_{k - 2}, u_{k - 1}} y_{u_{k - 1}, l} \\
+    & \quad \quad + \cdots + \underbrace{y_{l, u_1} y_{u_1, u_2}
+      \cdots y_{u_{k - 2}, u_{k - 1}} y_{u_{k - 1}, j} y_{il}}_{\text{項が$k + 1$個}} \bigg) \\
+  &= -k \sum_l \sum_{u_1} \cdots \sum_{u_{k - 1}}
+    y_{i, u_1} y_{u_1, u_2} \cdots y_{u_{k - 2}, u_{k - 1}} y_{u_{k - 1}, l} y_{lj}
+    \quad (\because \text{対称性})
+\end{align*}
+インデックスを置き換えると ($y_{ij}$は$\vb{X}^{-1}$の各成分であるので),
+\begin{align*}
+  & -k \sum_l \sum_{u_1} \cdots \sum_{u_{k - 1}}
+    y_{i, u_1} y_{u_1, u_2} \cdots y_{u_{k - 2}, u_{k - 1}} y_{u_{k - 1}, l} y_{lj} \\
+  &= -k \underbrace{\sum_{v_1} \sum_{v_2} \cdots \sum_{v_k}}_{\text{$k$個}}
+    \underbrace{y_{i, v_1} y_{v_1, v_2}
+    \cdots y_{v_{k - 2}, v_{k - 1}} y_{v_{k - 1}, v_k} y_{v_k, j}}_{\text{$k + 1$個}} \\
+  &= -k \left( \vb{X}^{-(k + 1)} \right)_{ij}
+  = -k \left( \vb{X}^{-k - 1} \right)_{ij}
+  = \left( \pdv{\tr(\vb{X}^{-k})}{\vb{X}} \right)_{ij}
+\end{align*}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{itemize}
+  \item 以上より, $k > 0$のとき, 次の2つが成り立つ.
+  \begin{align*}
+    \pdv{\tr(\vb{X}^k)}{\vb{X}} &= k \vb{X}^{k - 1} \\
+    \pdv{\tr(\vb{X}^{-k})}{\vb{X}} &= -k \vb{X}^{-k - 1}
+  \end{align*}
+  \item また$k = 0$のときは, $\pdv{\tr(\vb{I})}{\vb{X}} = \vb{0}$である.
+  \item これらをまとめると, 任意の$k$について, 次がいえる.
+  \begin{align*}
+    \pdv{\tr(\vb{X}^k)}{\vb{X}} &= k \vb{X}^{k - 1}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{スカラの行列による微分}
+\begin{block}{トレースを含む微分 (累乗)}
+  \begin{align*}
+    \pdv{\tr(\vb{X}^k)}{\vb{X}} &= k \vb{X}^{k - 1} \\
+    \pdv{\tr(\vb{A} \vb{X}^k)}{\vb{X}} &= \sum_{r = 0}^{k - 1} \vb{X}^r \vb{A} \vb{X}^{k - r - 1}
+      & \text{($\vb{A}$は定数)}
+  \end{align*}
+\end{block}
+
+2行目の式については, 1行目と同様の議論によって導出できる. \\
+2行目について, $k = 2$とすると, 先ほど確認した以下の式が得られる.
+\begin{align*}
+  \pdv{\tr(\vb{A} \vb{X}^2)}{\vb{X}} = \vb{X} \vb{A} + \vb{A} \vb{X}
+\end{align*}
+\end{frame}
+
+\begin{frame}{このスライドの概要}
+\begin{itemize}
+  \item ここまでで, 以下のパターンを確認した.
+  \begin{itemize}
+    \item ベクトルのスカラによる微分
+    \item スカラのベクトルによる微分
+    \item ベクトルのベクトルによる微分
+    \item 行列のスカラによる微分
+    \item スカラの行列による微分
+    \item 逆行列, トレースの入った微分
+  \end{itemize}
+  \item WikipediaやThe Matrix Cookbookに載っている式の, かなりの部分をみてきた.
+  \item まだ, 以下のパターンが残っている.
+  \begin{itemize}
+    \item 行列式の入った微分
+    \item スカラのスカラによる微分 (ベクトルや行列を関数として含む場合)
+  \end{itemize}
+  \item 行列式の入った微分では, ヤコビの公式が重要である.
+\end{itemize}
+\end{frame}
+
+\end{document}
