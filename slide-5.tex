@@ -826,46 +826,44 @@ $\pdv{w_{ml}}{w_{ji}} = \delta_{mj} \delta_{li}$であるから,
 \end{align*}
 \end{frame}
 
-\begin{frame}{スカラの行列による微分}
-\begin{block}{行列積と活性化関数の逆伝播}
-  $\vb{W}$を$C_\mathrm{In} \times C_\mathrm{Out}$行列, $\vb{X}$を$B \times C_\mathrm{In}$行列,
-  $\vb{Y} = \vb{X} \vb{W}$を$B \times C_\mathrm{Out}$行列とする.
-  $B \times C_\mathrm{Out}$行列$\vb{Z}$の$(i, j)$成分を, 何らかの関数を使って, $z_{ij} = f(y_{ij})$と表す.
-  即ち, $f$は, $\vb{Y}$の要素ごとの関数である. \\
-  このとき, 関数$L = L(\vb{Z})$の$\vb{X}, \vb{W}$に対する偏微分は,
-  \begin{align*}
-    \pdv{L}{\vb{X}} = \vb{W} \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right), \quad
-    \pdv{L}{\vb{W}} = \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right) \vb{X} \\
-    \quad \text{($\vb{F}'$の$(i, j)$成分は, $f'(y_{ji}) = \pdv{z_{ji}}{y_{ji}}$)}
-  \end{align*}
-\end{block}
+% \begin{frame}{スカラの行列による微分}
+% \begin{block}{行列積と活性化関数の逆伝播}
+%   $\vb{W}$を$C_\mathrm{In} \times C_\mathrm{Out}$行列, $\vb{X}$を$B \times C_\mathrm{In}$行列,
+%   $\vb{Y} = \vb{X} \vb{W}$を$B \times C_\mathrm{Out}$行列とする.
+%   $B \times C_\mathrm{Out}$行列$\vb{Z}$の$(i, j)$成分を, 何らかの関数を使って, $z_{ij} = f(y_{ij})$と表す.
+%   即ち, $f$は, $\vb{Y}$の要素ごとの関数である. \\
+%   このとき, 関数$L = L(\vb{Z})$の$\vb{X}, \vb{W}$に対する偏微分は,
+%   \begin{align*}
+%     \pdv{L}{\vb{X}} = \vb{W} \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right), \quad
+%     \pdv{L}{\vb{W}} = \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right) \vb{X} \\
+%     \quad \text{($\vb{F}'$の$(i, j)$成分は, $f'(y_{ji}) = \pdv{z_{ji}}{y_{ji}}$)}
+%   \end{align*}
+% \end{block}
 
-以下のように, 合成関数の微分を用いて, 要素ごとに確認できる.
-$L$は, $\vb{Z}$の全成分についての関数であるから,
-\begin{align*}
-  \left( \pdv{L}{\vb{X}} \right)_{ij} &= \pdv{L}{x_{ji}}
-    = \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{z_{kl}}{x_{ji}}
-    = \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{z_{kl}}{y_{kl}} \pdv{y_{kl}}{x_{ji}} \\
-    &= \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{f(y_{kl})}{y_{kl}} \pdv{x_{ji}} \sum_m x_{km} w_{ml} \\
-    &= \sum_k \sum_l \pdv{L}{z_{kl}} f'(y_{kl}) \sum_m \delta_{kj} \delta_{mi} w_{ml}
-    = \sum_l \pdv{L}{z_{jl}} f'(y_{jl}) w_{il} \\
-    &= \sum_l \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right)_{lj} w_{il}
-    = \left( \vb{W} \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right) \right)_{ij}
-\end{align*}
-また,
-\begin{align*}
-  \left( \pdv{L}{\vb{W}} \right)_{ij} &= \pdv{L}{w_{ji}}
-    = \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{z_{kl}}{w_{ji}}
-    = \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{z_{kl}}{y_{kl}} \pdv{y_{kl}}{w_{ji}} \\
-    &= \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{f(y_{kl})}{y_{kl}} \pdv{w_{ji}} \sum_m x_{km} w_{ml} \\
-    &= \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{f(y_{kl})}{y_{kl}} \sum_m x_{km} \delta_{mj} \delta_{li}
-    = \sum_k \pdv{L}{z_{ki}} f'(y_{ki}) x_{kj} \\
-    &= \sum_k \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right)_{ik} x_{kj}
-    = \left( \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right) \vb{X} \right)_{ij}
-\end{align*}
-\end{frame}
-
-% \left( \pdv{L}{\vb{Z}} \right)_{lk}
+% 以下のように, 合成関数の微分を用いて, 要素ごとに確認できる.
+% $L$は, $\vb{Z}$の全成分についての関数であるから,
+% \begin{align*}
+%   \left( \pdv{L}{\vb{X}} \right)_{ij} &= \pdv{L}{x_{ji}}
+%     = \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{z_{kl}}{x_{ji}}
+%     = \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{z_{kl}}{y_{kl}} \pdv{y_{kl}}{x_{ji}} \\
+%     &= \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{f(y_{kl})}{y_{kl}} \pdv{x_{ji}} \sum_m x_{km} w_{ml} \\
+%     &= \sum_k \sum_l \pdv{L}{z_{kl}} f'(y_{kl}) \sum_m \delta_{kj} \delta_{mi} w_{ml}
+%     = \sum_l \pdv{L}{z_{jl}} f'(y_{jl}) w_{il} \\
+%     &= \sum_l \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right)_{lj} w_{il}
+%     = \left( \vb{W} \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right) \right)_{ij}
+% \end{align*}
+% また,
+% \begin{align*}
+%   \left( \pdv{L}{\vb{W}} \right)_{ij} &= \pdv{L}{w_{ji}}
+%     = \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{z_{kl}}{w_{ji}}
+%     = \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{z_{kl}}{y_{kl}} \pdv{y_{kl}}{w_{ji}} \\
+%     &= \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{f(y_{kl})}{y_{kl}} \pdv{w_{ji}} \sum_m x_{km} w_{ml} \\
+%     &= \sum_k \sum_l \pdv{L}{z_{kl}} \pdv{f(y_{kl})}{y_{kl}} \sum_m x_{km} \delta_{mj} \delta_{li}
+%     = \sum_k \pdv{L}{z_{ki}} f'(y_{ki}) x_{kj} \\
+%     &= \sum_k \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right)_{ik} x_{kj}
+%     = \left( \left( \pdv{L}{\vb{Z}} \odot \vb{F}' \right) \vb{X} \right)_{ij}
+% \end{align*}
+% \end{frame}
 
 \end{document}
 
