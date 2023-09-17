@@ -716,7 +716,7 @@
 
 \begin{frame}{イェンセンの不等式 (Jensen's Inequality)}
 \begin{itemize}
-  \item \textcolor{red}{上に凸な}関数$f(\vb{x})$を考える.
+  \item \textcolor{red}{下に凸な}関数$f(\vb{x})$を考える.
   \item $p(\vb{x})$を, $\int p(\vb{x}) \dd{\vb{x}} = 1$をみたす関数とする.
   \item $f(\vb{x}), p(\vb{x})$について, \textcolor{red}{イェンセンの不等式}が成り立つ:
   \begin{align*}
@@ -726,7 +726,7 @@
   \begin{align*}
     \E{f(\vb{x})} &\ge f(\E{\vb{x}})
   \end{align*}
-  \item $f(\vb{x})$が\textcolor{red}{下に凸}であれば, 次が成り立つ (不等号が逆になる):
+  \item $f(\vb{x})$が\textcolor{red}{上に凸}であれば, 次が成り立つ (不等号が逆になる):
   \begin{align*}
     \int f(\vb{x}) p(\vb{x}) \dd{\vb{x}} &\le f \left( \int \vb{x} p(\vb{x}) \dd{\vb{x}} \right) \\
     \E{f(\vb{x})} &\le f(\E{\vb{x}})
@@ -828,7 +828,7 @@
     \KL{p}{q} &= -\E{\ln \frac{q(\vb{x})}{p(\vb{x})}}
       = -\int p(\vb{x}) \ln \frac{q(\vb{x})}{p(\vb{x})} \dd{\vb{x}}
   \end{align*}
-  \item $\ln$は下に凸だから, イェンセンの不等式より ($\E{f(x)} \le f(\E{x})$)
+  \item $-\ln x$は下に凸だから, イェンセンの不等式より ($\E{f(x)} \le f(\E{x})$)
   \begin{align*}
     \KL{p}{q} &= -\E{\ln \frac{q(\vb{x})}{p(\vb{x})}}
       \ge -\ln \E{\frac{q(\vb{x})}{p(\vb{x})}} \\
@@ -915,7 +915,7 @@
     \E{\hat{\vb*{\theta}}} = \vb*{\theta}
       \quad \longrightarrow \quad \E{\hat{\vb*{\theta}} - \vb*{\theta}} = \vb{0}
   \end{align*}
-  \item 推定量の期待値$\E{\hat{\vb*{\theta}}}$が, パラメータ$\vb*{\theta}$に一致する (偏りがない).
+  \item 推定量の期待値$\E{\hat{\vb*{\theta}}}$が, 真のパラメータ$\vb*{\theta}$に一致する (偏りがない).
 \end{itemize}
 \end{frame}
 
@@ -1290,7 +1290,7 @@
   \begin{align*}
     \int_{-a}^a f(x) \dd{x} &= \int_a^0 {\color{red} f(-y)} \dv{x}{y} \dd{y} + \int_0^a f(x) \dd{x} \\
       &= \int_a^0 {\color{red} -f(y)} (-1) \dd{y} + \int_0^a f(x) \dd{x} \\
-      &= \int_a^0 (-f(y)) \dd{y} + \int_0^a f(x) \dd{x} = 0
+      &= - \int_0^a f(y) \dd{y} + \int_0^a f(x) \dd{x} = 0
   \end{align*}
 \end{itemize}
 \end{frame}
