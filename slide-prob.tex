@@ -339,6 +339,58 @@
 \end{enumerate}
 \end{frame}
 
+\begin{frame}{第6回: 確率分布, ガウス積分}
+\begin{enumerate}
+  \item 変数$\vb{x}$と, ある定数$\vb{A}$について, 次が成り立つことを, 要素ごとに確認してください.
+  \begin{align*}
+    \E{\vb{A} \vb{x}} = \vb{A} \E{\vb{x}}, \quad
+    \E{\vb{x} \vb{A}} = \E{\vb{x}} \vb{A}
+  \end{align*}
+
+  \item 確率分布$p(\vb{x})$の共分散が$\vb{\Sigma} = \Var{\vb{x}}$であるとき,
+  $\vb{y} = \vb{A} \vb{x}$の分布$p(\vb{y})$の共分散が$\vb{A} \vb{\Sigma} \vb{A}^\top$となることを示してください.
+
+  \item 確率分布$p(\vb{x})$の共分散$\vb{\Sigma} = \Var{\vb{x}}$について, 次が成り立つことを示してください.
+  \begin{align*}
+    \vb{\Sigma} &= \Var{\vb{x}} = \E{\vb{x} \vb{x}^\top} - \E{\vb{x}} \E{\vb{x}}^\top
+      = \E{\vb{x} \vb{x}^\top} - \vb*{\mu} \vb*{\mu}^\top
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第6回: 確率分布, ガウス積分}
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item $\vb{x}, \vb{y}$が独立, すなわち$p(\vb{x}, \vb{y}) = p(\vb{x}) p(\vb{y})$であれば,
+  無相関, すなわち$\E{\vb{x} \vb{y}^\top} = \E{\vb{x}} \E{\vb{y}}^\top$となることを示してください.
+
+  \item 次を示してください.
+  \begin{align*}
+    & \E{\left( \vb{A} \vb{x} + \vb{b} \right) \left( \vb{C} \vb{x} + \vb{d} \right)^\top} \\
+    &= \vb{A} \Var{\vb{x}} \vb{C}^\top
+    + \left( \vb{A} \E{\vb{x}} + \vb{b} \right)
+      \left( \vb{C} \E{\vb{x}} + \vb{d} \right)^\top
+  \end{align*}
+
+  \item カルバック--ライブラーダイバージェンスが非負, すなわち$\KL{p}{q} \ge 0$となることを示してください.
+
+  \item エントロピーと相互情報量に関する, 次の式を示してください.
+  \begin{align*}
+    \MutualInfo{\vb{x}, \vb{y}} &= \Entropy{\vb{x}} + \Entropy{\vb{y}} - \Entropy{\vb{x}, \vb{y}}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第6回: 確率分布, ガウス積分}
+\begin{enumerate}
+  \setcounter{enumi}{7}
+  \item 次の積分を求めてください.
+  \begin{align*}
+    \int_0^\infty x^4 \exp(-a x^2) \dd{x}, \quad \int_0^\infty x^5 \exp(-a x^2) \dd{x}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
 \begin{frame}{}
 \end{frame}
 
@@ -751,6 +803,160 @@
     &= -\frac{1}{2} \vb{\Sigma}^{-1} \left( \vb{I}
       - \left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top
       \vb{\Sigma}^{-1} \right)
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第6回: 確率分布, ガウス積分}
+\begin{enumerate}
+  \item 変数$\vb{x}$と, ある定数$\vb{A}$について, 次が成り立つことを, 要素ごとに確認してください.
+  \begin{align*}
+    \E{\vb{A} \vb{x}} = \vb{A} \E{\vb{x}}, \quad
+    \E{\vb{x} \vb{A}} = \E{\vb{x}} \vb{A}
+  \end{align*}
+  $\vb{A}$の$(i, j)$成分を$a_{ij}$とする.
+  $\E{\vb{A} \vb{x}}$の第$i$成分は,
+  \begin{align*}
+    \left( \E{\vb{A} \vb{x}} \right)_i = \E{\sum_j a_{ij} x_j}
+      = \sum_j \E{a_{ij} x_j} = \sum_j a_{ij} \E{x_j} = \left( \vb{A} \E{\vb{x}} \right)_i
+  \end{align*}
+  より, $\vb{A} \E{\vb{x}}$の第$i$成分に等しいので, 最初の式が成り立つ. \\
+  ただし, $\E{x + y} = \E{x} + \E{y}$, $\E{ax} = a \E{x}$を用いた.
+  $\E{\vb{x} \vb{A}} = \E{\vb{x}} \vb{A}$についても同様に示せる.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第6回: 確率分布, ガウス積分}
+\begin{enumerate}
+  \setcounter{enumi}{1}
+  \item 確率分布$p(\vb{x})$の共分散が$\vb{\Sigma} = \Var{\vb{x}}$であるとき,
+  $\vb{y} = \vb{A} \vb{x}$の分布$p(\vb{y})$の共分散が$\vb{A} \vb{\Sigma} \vb{A}^\top$となることを示してください. \\
+  次のように示せる:
+  \begin{align*}
+    \Var{\vb{y}}
+    &= \E{\left( \vb{y} - \E{\vb{y}} \right) \left( \vb{y} - \E{\vb{y}} \right)^\top} \\
+    &= \E{\left( \vb{A} \vb{x} - \E{\vb{A} \vb{x}} \right)
+      \left( \vb{A} \vb{x} - \E{\vb{A} \vb{x}} \right)^\top} \\
+    &= \E{\vb{A} \left( \vb{x} - \E{\vb{x}} \right) \left( \vb{x} - \E{\vb{x}} \right)^\top \vb{A}^\top} \\
+    &= \vb{A} \E{\left( \vb{x} - \E{\vb{x}} \right) \left( \vb{x} - \E{\vb{x}} \right)^\top} \vb{A}^\top
+    = \vb{A} \vb{\Sigma} \vb{A}^\top
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第6回: 確率分布, ガウス積分}
+\begin{enumerate}
+  \setcounter{enumi}{2}
+  \item 確率分布$p(\vb{x})$の共分散$\vb{\Sigma} = \Var{\vb{x}}$について, 次が成り立つことを示してください.
+  \begin{align*}
+    \vb{\Sigma} &= \Var{\vb{x}} = \E{\vb{x} \vb{x}^\top} - \E{\vb{x}} \E{\vb{x}}^\top
+      = \E{\vb{x} \vb{x}^\top} - \vb*{\mu} \vb*{\mu}^\top
+  \end{align*}
+  次のように示せる:
+  \begin{align*}
+    \vb{\Sigma} &= \E{\left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top} \\
+      &= \E{\vb{x} \vb{x}^\top} - \E{\vb{x} \vb*{\mu}^\top}
+        - \E{\vb*{\mu} \vb{x}^\top} + \E{\vb*{\mu} \vb*{\mu}^\top} \\
+      &= \E{\vb{x} \vb{x}^\top} - \E{\vb{x}} \vb*{\mu}^\top
+        - \vb*{\mu} \E{\vb{x}}^\top + \vb*{\mu} \vb*{\mu}^\top \\
+      &= \E{\vb{x} \vb{x}^\top} - \vb*{\mu} \vb*{\mu}^\top
+        - \vb*{\mu} \vb*{\mu}^\top + \vb*{\mu} \vb*{\mu}^\top \\
+      &= \E{\vb{x} \vb{x}^\top} - \vb*{\mu} \vb*{\mu}^\top
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第6回: 確率分布, ガウス積分}
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item $\vb{x}, \vb{y}$が独立, すなわち$p(\vb{x}, \vb{y}) = p(\vb{x}) p(\vb{y})$であれば,
+  無相関, すなわち$\E{\vb{x} \vb{y}^\top} = \E{\vb{x}} \E{\vb{y}}^\top$となることを示してください. \\
+  次のように示せる:
+  \begin{align*}
+    \E{\vb{x} \vb{y}^\top} &= \iint \vb{x} \vb{y}^\top p(\vb{x}, \vb{y}) \dd{\vb{x}} \dd{\vb{y}} \\
+      &= \iint \vb{x} \vb{y}^\top p(\vb{x}) p(\vb{y}) \dd{\vb{x}} \dd{\vb{y}} \, (\because \text{独立}) \\
+      &= \int \vb{x} p(\vb{x}) \dd{\vb{x}} \int \vb{y}^\top p(\vb{y}) \dd{\vb{y}} \\
+      &= \E{\vb{x}} \E{\vb{y}}^\top
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第6回: 確率分布, ガウス積分}
+\begin{enumerate}
+  \setcounter{enumi}{4}
+  \item 次を示してください.
+  \begin{align*}
+    & \E{\left( \vb{A} \vb{x} + \vb{b} \right) \left( \vb{C} \vb{x} + \vb{d} \right)^\top} \\
+    &= \vb{A} \Var{\vb{x}} \vb{C}^\top
+    + \left( \vb{A} \E{\vb{x}} + \vb{b} \right)
+      \left( \vb{C} \E{\vb{x}} + \vb{d} \right)^\top
+  \end{align*}
+  次のようになる:
+  \begin{align*}
+    & \E{\left( \vb{A} \vb{x} + \vb{b} \right) \left( \vb{C} \vb{x} + \vb{d} \right)^\top} \\
+    &= \Cov{\vb{A} \vb{x} + \vb{b}}{\vb{C} \vb{x} + \vb{d}}
+      + \E{\vb{A} \vb{x} + \vb{b}} \E{\vb{C} \vb{x} + \vb{d}}^\top \\
+    &= \Cov{\vb{A} \vb{x}}{\vb{C} \vb{x}}
+      + \left( \vb{A} \E{\vb{x}} + \vb{b} \right) \left( \vb{C} \E{\vb{x}} + \vb{d} \right)^\top \\
+    &= \vb{A} \Cov{\vb{x}}{\vb{x}} \vb{C}^\top
+      + \left( \vb{A} \E{\vb{x}} + \vb{b} \right) \left( \vb{C} \E{\vb{x}} + \vb{d} \right)^\top \\
+    &= \vb{A} \Var{\vb{x}} \vb{C}^\top
+      + \left( \vb{A} \E{\vb{x}} + \vb{b} \right) \left( \vb{C} \E{\vb{x}} + \vb{d} \right)^\top
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第6回: 確率分布, ガウス積分}
+\begin{enumerate}
+  \setcounter{enumi}{5}
+  \item カルバック--ライブラーダイバージェンスが非負, すなわち$\KL{p}{q} \ge 0$となることを示してください. \\
+  $-\ln x$は下に凸だから, イェンセンの不等式より ($\E{f(x)} \le f(\E{x})$)
+  \begin{align*}
+    \KL{p}{q} &= -\E{\ln \frac{q(\vb{x})}{p(\vb{x})}} \\
+      &\ge -\ln \E{\frac{q(\vb{x})}{p(\vb{x})}} \\
+      &= -\ln \int p(\vb{x}) \frac{q(\vb{x})}{p(\vb{x})} \dd{\vb{x}} \\
+      &= -\ln \int q(\vb{x}) \dd{\vb{x}} = -\ln 1 = 0
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第6回: 確率分布, ガウス積分}
+\begin{enumerate}
+  \setcounter{enumi}{6}
+  \item エントロピーと相互情報量に関する, 次の式を示してください.
+  \begin{align*}
+    \MutualInfo{\vb{x}, \vb{y}} &= \Entropy{\vb{x}} + \Entropy{\vb{y}} - \Entropy{\vb{x}, \vb{y}}
+  \end{align*}
+  次のように示せる:
+  {\small \begin{align*}
+    \MutualInfo{\vb{x}, \vb{y}} &= \iint p(\vb{x}, \vb{y})
+      \ln \frac{p(\vb{x}, \vb{y})}{p(\vb{x}) p(\vb{y})} \dd{\vb{x}} \dd{\vb{y}} \\
+      &= \iint p(\vb{x}, \vb{y}) \left( \ln p(\vb{x}, \vb{y}) - \ln p(\vb{x}) - \ln p(\vb{y}) \right)
+        \dd{\vb{x}} \dd{\vb{y}} \\
+      &= -\Entropy{\vb{x}, \vb{y}} - \int \ln p(\vb{x}) \int p(\vb{x}, \vb{y}) \dd{\vb{y}} \dd{\vb{x}}
+        - \int \ln p(\vb{y}) \int p(\vb{x}, \vb{y}) \dd{\vb{x}} \dd{\vb{y}} \\
+      &= -\Entropy{\vb{x}, \vb{y}} - \int p(\vb{x}) \ln p(\vb{x}) \dd{\vb{x}}
+        - \int p(\vb{y}) \ln p(\vb{y}) \dd{\vb{y}} \\
+      &= \Entropy{\vb{x}} + \Entropy{\vb{y}} - \Entropy{\vb{x}, \vb{y}}
+  \end{align*}}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第6回: 確率分布, ガウス積分}
+\begin{enumerate}
+  \setcounter{enumi}{7}
+  \item 次の積分を求めてください.
+  \begin{align*}
+    \int_0^\infty x^4 \exp(-a x^2) \dd{x}, \quad \int_0^\infty x^5 \exp(-a x^2) \dd{x}
+  \end{align*}
+  $I_n = \int_0^\infty x^n \exp(-a x^2) \dd{x}$とすると, $I_2 = \frac{1}{4} \sqrt{\frac{\pi}{a^3}}$,
+  $I_3 = \frac{1}{2 a^2}$である.
+  $I_{n + 2} = \frac{n + 1}{2a} I_n$の関係を使えば,
+  \begin{align*}
+    I_4 &= I_{2 + 2} = \frac{2 + 1}{2a} I_2 = \frac{3}{2a} \frac{1}{4} \sqrt{\frac{\pi}{a^3}}
+      = \frac{3}{8} \sqrt{\frac{\pi}{a^5}} \\
+    I_5 &= I_{3 + 2} = \frac{3 + 1}{2a} I_3 = \frac{4}{2a} \frac{1}{2 a^2}
+      = \frac{1}{a^3}
   \end{align*}
 \end{enumerate}
 \end{frame}
