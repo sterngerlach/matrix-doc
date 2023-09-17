@@ -1321,81 +1321,55 @@
   \item $\vb{a} = (a_1, a_2, \ldots, a_n)^\top$として, $-\vb{a}$から$\vb{a}$までの$f(\vb{x})$の積分は,
   \begin{align*}
     \int_{-\vb{a}}^{\vb{a}} f(\vb{x}) \dd{\vb{x}}
-      &= \int_{-\vb{a}}^{\vb{0}} f(\vb{x}) \dd{\vb{x}}
-        + \int_{\vb{0}}^{\vb{a}} f(\vb{x}) \dd{\vb{x}}
+      &= \int_{-a_1}^{a_1} \int_{-a_2}^{a_2} \cdots \int_{-a_n}^{a_n} f(x_1, x_2, \ldots, x_n)
+        \dd{x_1} \dd{x_2} \cdots \dd{x_n}
   \end{align*}
-  \item 上式の積分は, 次と同じことである:
+  $x_1$に関する積分を, $[-a_1, 0]$, $[0, a_1]$の2つの範囲に分割すると,
   \begin{align*}
-    & \int_{-a_1}^{a_1} \int_{-a_2}^{a_2} \cdots \int_{-a_n}^{a_n} f(x_1, x_2, \ldots, x_n)
+    \int_{-\vb{a}}^{\vb{a}} f(\vb{x}) \dd{\vb{x}}
+      &= \int_{-a_1}^0 \int_{-a_2}^{a_2} \cdots \int_{-a_n}^{a_n} f(x_1, x_2, \ldots, x_n)
+        \dd{x_1} \dd{x_2} \cdots \dd{x_n} \\
+      & \quad + \int_0^{a_1} \int_{-a_2}^{a_2} \cdots \int_{-a_n}^{a_n} f(x_1, x_2, \ldots, x_n)
+        \dd{x_1} \dd{x_2} \cdots \dd{x_n}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{偶関数, 奇関数の積分 (多変数関数)}
+\begin{itemize}
+  \item 第一項について$x_i = -y_i$とすると, $\dv{x_i}{y_i} = -1$であり, 積分範囲の正負も入れ替わるから,
+  \begin{align*}
+    & \int_{-a_1}^0 \int_{-a_2}^{a_2} \cdots \int_{-a_n}^{a_n} f(x_1, x_2, \ldots, x_n)
       \dd{x_1} \dd{x_2} \cdots \dd{x_n} \\
-    &= \int_{-a_1}^0 \int_{-a_2}^0 \cdots \int_{-a_n}^0 f(x_1, x_2, \ldots, x_n)
+    &= \int_{a_1}^0 \int_{a_2}^{-a_2} \cdots \int_{a_n}^{-a_n} f(-y_1, -y_2, \ldots, -y_n)
+      (-1)^n \dd{y_1} \dd{y_2} \cdots \dd{y_n} \\
+    &= \int_0^{a_1} \int_{-a_2}^{a_2} \cdots \int_{-a_n}^{a_n} f(-y_1, -y_2, \ldots, -y_n)
+      \dd{y_1} \dd{y_2} \cdots \dd{y_n} \\
+    &= \int_0^{a_1} \int_{-a_2}^{a_2} \cdots \int_{-a_n}^{a_n} f(-\vb{y}) \dd{\vb{y}}
+  \end{align*}
+  \item 積分範囲を交換すると, 符号が反転する.
+  \item 上記の例では, $n$個の積分範囲を交換したので, $(-1)^n$が消える.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{偶関数, 奇関数の積分 (多変数関数)}
+\begin{itemize}
+  \item この結果を使って, 第一項を置き換えれば,
+  \begin{align*}
+    & \int_{-\vb{a}}^{\vb{a}} f(\vb{x}) \dd{\vb{x}}
+    = \int_{-a_1}^0 \int_{-a_2}^{a_2} \cdots \int_{-a_n}^{a_n} f(x_1, x_2, \ldots, x_n)
       \dd{x_1} \dd{x_2} \cdots \dd{x_n} \\
-    & \quad + \int_0^{a_1} \int_0^{a_2} \cdots \int_0^{a_n} f(x_1, x_2, \ldots, x_n)
-      \dd{x_1} \dd{x_2} \cdots \dd{x_n}
+    & \quad + \int_0^{a_1} \int_{-a_2}^{a_2} \cdots \int_{-a_n}^{a_n} f(x_1, x_2, \ldots, x_n)
+      \dd{x_1} \dd{x_2} \cdots \dd{x_n} \\
+    &= \int_0^{a_1} \int_{-a_2}^{a_2} \cdots \int_{-a_n}^{a_n} f(-\vb{y}) \dd{\vb{y}}
+      + \int_0^{a_1} \int_{-a_2}^{a_2} \cdots \int_{-a_n}^{a_n} f(\vb{x}) \dd{\vb{x}}
   \end{align*}
-\end{itemize}
-\end{frame}
-
-\begin{frame}{偶関数, 奇関数の積分 (多変数関数)}
-\begin{itemize}
-  \item $n$次変数$\vb{x} = (x_1, x_2, \ldots, x_n)^\top$を考える.
-  \item $\vb{a} = (a_1, a_2, \ldots, a_n)^\top$として, $-\vb{a}$から$\vb{a}$までの$f(\vb{x})$の積分は,
-  \begin{align*}
-    \int_{-\vb{a}}^{\vb{a}} f(\vb{x}) \dd{\vb{x}}
-      &= \int_{-\vb{a}}^{\vb{0}} f(\vb{x}) \dd{\vb{x}}
-        + \int_{\vb{0}}^{\vb{a}} f(\vb{x}) \dd{\vb{x}}
-  \end{align*}
-  \item 第一項において$\vb{x} = -\vb{y}$とすると,
-  ヤコビ行列は$\pdv{\vb{x}}{\vb{y}} = -\vb{I}$, ヤコビアンは$\det(-\vb{I}) = (-1)^n$.
-  積分範囲は$[-\vb{a}, \vb{0}]$から$[\vb{a}, \vb{0}]$になるので,
-  \begin{align*}
-    \int_{-\vb{a}}^{\vb{a}} f(\vb{x}) {\color{red} \dd{\vb{x}}}
-      &= \int_{\vb{a}}^{\vb{0}} f(-\vb{y}) {\color{red} (-1)^n \dd{\vb{y}}}
-        + \int_{\vb{0}}^{\vb{a}} f(\vb{x}) \dd{\vb{x}}
-  \end{align*}
-  \item $\pdv{\vb{x}}{\vb{x}} = \vb{I}$, $\det(c \vb{A}) = c^n \det \vb{A}$を用いた.
-\end{itemize}
-\end{frame}
-
-\begin{frame}{偶関数, 奇関数の積分 (多変数関数)}
-\begin{itemize}
-  \item $\vb{a} = (a_1, a_2, \ldots, a_n)^\top$として, $-\vb{a}$から$\vb{a}$までの$f(\vb{x})$の積分は,
-  \begin{align*}
-    \int_{-\vb{a}}^{\vb{a}} f(\vb{x}) \dd{\vb{x}}
-      &= \int_{\vb{a}}^{\vb{0}} f(-\vb{y}) (-1)^n \dd{\vb{y}}
-        + \int_{\vb{0}}^{\vb{a}} f(\vb{x}) \dd{\vb{x}} \quad (\vb{y} = -\vb{x})
-  \end{align*}
-  \item 第一項は, 次と同じことである:
-  \begin{align*}
-    \int_{\vb{a}}^{\vb{0}} f(-\vb{y}) (-1)^n \dd{\vb{y}}
-      &= \int_{a_1}^0 \int_{a_2}^0 \cdots \int_{a_n}^0 f(-\vb{y})
-        (-1)^n \dd{y_1} \dd{y_2} \cdots \dd{y_n} \\
-      &= \int_0^{a_1} \int_0^{a_2} \cdots \int_0^{a_n} f(-\vb{y})
-        \dd{y_1} \dd{y_2} \cdots \dd{y_n} \\
-      &= \int_{\vb{0}}^{\vb{a}} f(-\vb{y}) \dd{\vb{y}}
-  \end{align*}
-  \item 積分範囲を入れ替えると, 符号が反転することに注意 (上では$n$回入れ替える).
-\end{itemize}
-\end{frame}
-
-\begin{frame}{偶関数, 奇関数の積分 (多変数関数)}
-\begin{itemize}
-  \item $\vb{a} = (a_1, a_2, \ldots, a_n)^\top$として, $-\vb{a}$から$\vb{a}$までの$f(\vb{x})$の積分は,
-  \begin{align*}
-    \int_{-\vb{a}}^{\vb{a}} f(\vb{x}) \dd{\vb{x}}
-      &= \int_{-\vb{a}}^{\vb{0}} f(\vb{x}) \dd{\vb{x}}
-        + \int_{\vb{0}}^{\vb{a}} f(\vb{x}) \dd{\vb{x}} \\
-      &= \int_{\vb{a}}^{\vb{0}} f(-\vb{y}) (-1)^n \dd{\vb{y}}
-        + \int_{\vb{0}}^{\vb{a}} f(\vb{x}) \dd{\vb{x}} \quad (\vb{y} = -\vb{x}) \\
-      &= \int_{\vb{0}}^{\vb{a}} f(-\vb{y}) \dd{\vb{y}}
-        + \int_{\vb{0}}^{\vb{a}} f(\vb{x}) \dd{\vb{x}}
-  \end{align*}
-
-  \item 偶関数なら$f(-\vb{x}) = f(\vb{x})$, 奇関数なら$f(-\vb{x}) = -f(\vb{x})$だから,
+  \item 偶関数なら$f(-\vb{y}) = f(\vb{y})$, 奇関数なら$f(-\vb{y}) = -f(\vb{y})$だから,
   \begin{align*}
     \int_{-\vb{a}}^{\vb{a}} f(\vb{x}) \dd{\vb{x}}
       &= \left\{ \begin{array}{ll}
-        2 \int_{\vb{0}}^{\vb{a}} f(\vb{x}) \dd{\vb{x}} & (\text{$f(\vb{x})$が偶関数}) \\
+        2 \int_0^{a_1} \int_{-a_2}^{a_2} \cdots \int_{-a_n}^{a_n} f(\vb{x}) \dd{\vb{x}}
+        & (\text{$f(\vb{x})$が偶関数}) \\
         0 & (\text{$f(\vb{x})$が奇関数}) \end{array} \right.
   \end{align*}
 \end{itemize}
