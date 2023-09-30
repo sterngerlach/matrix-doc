@@ -1,0 +1,1563 @@
+
+% slide-7.tex
+
+\documentclass[dvipdfmx,notheorems,t]{beamer}
+
+\usepackage{docmute}
+\input{settings}
+
+\title{行列輪講: 第7回 ガウス分布1}
+\author{杉浦 圭祐}
+\institute[松谷研究室]{慶應義塾大学理工学部情報工学科 松谷研究室}
+\date{\today}
+
+% Always use the \displaystyle
+\everymath{\displaystyle}
+
+\begin{document}
+
+\linespread{1.1}
+
+\frame{\titlepage}
+
+\section{}
+
+\begin{frame}[t,allowdisplaybreaks,allowframebreaks]{目次}
+\tableofcontents
+\end{frame}
+
+\section{概要}
+
+\begin{frame}{このスライドの概要}
+\begin{itemize}
+  \item ガウス分布について確認する
+  \begin{itemize}
+    \item 基本的な事項
+    \item モーメント (平均, 分散)
+  \end{itemize}
+  \item 以下の資料を参考に作成しました:
+  \begin{itemize}
+    \item パターン認識と機械学習 (上巻)
+    \item State Estimation For Robotics
+  \end{itemize}
+  \item 重要な分布なので, 考えることがたくさんある
+\end{itemize}
+\end{frame}
+
+\section{ガウス分布 (1次元)}
+
+\begin{frame}{ガウス分布 (1次元)}
+\begin{block}{ガウス分布 (正規分布) (1次元)}
+  \begin{align*}
+    p(x \mid \mu, \sigma^2)
+      &= \frac{1}{\sqrt{2 \pi \sigma^2}}
+      \exp \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right)
+  \end{align*}
+  $\mu$は\textcolor{red}{平均} (Mean), $\sigma^2$は\textcolor{red}{分散} (Variance)とよぶ.
+\end{block}
+
+\begin{itemize}
+  \item $p(x \mid \mu, \sigma^2)$を, $\mathcal{N}(x \mid \mu, \sigma^2)$とかくこともある.
+  \item 確率変数$x$が, 平均$\mu$, 分散$\sigma^2$のガウス分布に従うとき, 次のようにかく:
+  \begin{align*}
+    x \sim \mathcal{N}(\mu, \sigma^2)
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布 (1次元)}
+\begin{block}{標準正規分布 (1次元)}
+  平均$\mu = 0$, 分散$\sigma^2 = 1$としたとき, \textcolor{red}{標準正規分布}とよぶ.
+  \begin{align*}
+    \mathcal{N}(x \mid 0, 1) &= \frac{1}{\sqrt{2\pi}} \exp(-\frac{1}{2} x^2)
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{ガウス分布 (1次元)}
+ガウス分布$\mathcal{N}(x \mid \mu, \sigma^2)$が次を満たすことを, ガウス積分を使って確かめよう:
+\begin{gather*}
+  \int_{-\infty}^\infty \mathcal{N}(x \mid \mu, \sigma^2) \dd{x} = 1 \\
+  \E{x} = \mu \\
+  \E{(x - \mu)^2} = \Var{x} = \sigma^2
+\end{gather*}
+\end{frame}
+
+\begin{frame}{ガウス積分の公式}
+\begin{block}{ガウス積分の公式 ($-\infty$から$\infty$)}
+  \begin{align*}
+    \int_{-\infty}^\infty \exp \left( -a x^2 \right) \dd{x}
+      &= \sqrt{\frac{\pi}{a}} \quad (a > 0) \\
+    \int_{-\infty}^\infty x \exp \left( -a x^2 \right) \dd{x}
+      &= 0 \quad (a > 0) \\
+    \int_{-\infty}^\infty x^2 \exp \left( -a x^2 \right) \dd{x}
+      &= \frac{1}{2} \sqrt{\frac{\pi}{a^3}} \quad (a > 0) \\
+    \int_{-\infty}^\infty x^3 \exp \left( -a x^2 \right) \dd{x}
+      &= 0 \quad (a > 0) \\
+    \int_{-\infty}^\infty x^4 \exp \left( -a x^2 \right) \dd{x}
+      &= \frac{3}{4} \sqrt{\frac{\pi}{a^5}} \quad (a > 0)
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{ガウス分布 (1次元)}
+\begin{itemize}
+  \item 以下の積分を確認する:
+  \begin{align*}
+    \int_{-\infty}^\infty \exp \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x}
+      = \sqrt{2 \pi \sigma^2}
+  \end{align*}
+  \item $y = \frac{x - \mu}{\sqrt{2 \sigma^2}}$とすると,
+  \begin{align*}
+    x = \sqrt{2 \sigma^2} y + \mu \quad \longrightarrow \quad
+      \dv{x}{y} = \sqrt{2 \sigma^2}
+  \end{align*}
+  \item 積分を変数変換すると, $x \in (-\infty, \infty)$のとき$y \in (-\infty, \infty)$だから,
+  \begin{align*}
+    \int_{-\infty}^\infty \exp \left( -y^2 \right) \dv{x}{y} \dd{y}
+      &= \sqrt{2 \sigma^2} \underbrace{\int_{-\infty}^\infty \exp \left( -y^2 \right) \dd{y}}_{= \sqrt{\pi}} \\
+      &= \sqrt{2 \sigma^2} \sqrt{\pi} = \sqrt{2 \pi \sigma^2}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布 (1次元)}
+\begin{itemize}
+  \item よって,
+  \begin{align*}
+    & \int_{-\infty}^\infty \mathcal{N}(x \mid \mu, \sigma^2) \dd{x} \\
+    &= \int_{-\infty}^\infty \frac{1}{\sqrt{2 \pi \sigma^2}}
+      \exp \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x} \\
+    &= \frac{1}{\sqrt{2 \pi \sigma^2}} \underbrace{\int_{-\infty}^\infty
+      \exp \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x}}_{= \sqrt{2 \pi \sigma^2}} \\
+    &= \frac{1}{\sqrt{2 \pi \sigma^2}} \sqrt{2 \pi \sigma^2} = 1
+  \end{align*}
+  \item 積分すると1になるから, ガウス分布$\mathcal{N}(x \mid \mu, \sigma^2)$は確率分布である.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の平均 (1次元)}
+\begin{itemize}
+  \item 続いて, 平均が, 以下を満たすことを確かめよう:
+  \begin{align*}
+    \E{x} &= \mu
+  \end{align*}
+  \item ただし,
+  \begin{align*}
+    \E{x} &= \int_{-\infty}^\infty x \mathcal{N}(x \mid \mu, \sigma^2) \dd{x} \\
+      &= \int_{-\infty}^\infty \frac{1}{\sqrt{2 \pi \sigma^2}} x
+        \exp \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x}
+  \end{align*}
+  \item 次の積分に着目する:
+  \begin{align*}
+    & \int_{-\infty}^\infty x \exp
+      \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x}
+      = \mu \sqrt{2 \pi \sigma^2}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の平均 (1次元)}
+\begin{itemize}
+  \item 次のように分解する:
+  {\small \begin{align*}
+    \int_{-\infty}^\infty x \exp
+      \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x}
+      &= \int_{-\infty}^\infty (x - \mu) \exp
+        \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x} \\
+      & \quad + \mu \underbrace{\int_{-\infty}^\infty \exp
+        \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x}}_{= \sqrt{2 \pi \sigma^2}}
+  \end{align*}}
+  \item 第1項は, $y = \frac{x - \mu}{\sqrt{2 \sigma^2}}$とすると,
+  $x = \sqrt{2 \sigma^2} y + \mu, \dv{x}{y} = \sqrt{2 \sigma^2}$だから,
+  \begin{align*}
+    \sqrt{2 \sigma^2} \int_{-\infty}^\infty y \exp \left( -y^2 \right) \dv{x}{y} \dd{y}
+      = 2 \sigma^2 \underbrace{\int_{-\infty}^\infty y \exp \left( -y^2 \right) \dd{y}}_{= 0}
+      = 0
+  \end{align*}
+  \item $y \exp \left( -y^2 \right)$は奇関数だから, $-\infty$から$\infty$まで積分すると$0$.
+  \item 第2項は, $\mu \sqrt{2 \pi \sigma^2}$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の平均 (1次元)}
+\begin{itemize}
+  \item よって,
+  \begin{align*}
+    \E{x} &= \int_{-\infty}^\infty x \mathcal{N}(x \mid \mu, \sigma^2) \dd{x} \\
+      &= \int_{-\infty}^\infty \frac{1}{\sqrt{2 \pi \sigma^2}} x
+        \exp \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x} \\
+      &= \frac{1}{\sqrt{2 \pi \sigma^2}} \underbrace{\int_{-\infty}^\infty x
+        \exp \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x}}_{= \mu \sqrt{2 \pi \sigma^2}} \\
+      &= \frac{1}{\sqrt{2 \pi \sigma^2}} \mu \sqrt{2 \pi \sigma^2}
+      = \mu
+  \end{align*}
+  \item ガウス分布の平均は, $\E{x} = \mu$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の分散 (1次元)}
+\begin{itemize}
+  \item 続いて, 分散が, 以下を満たすことを確かめよう:
+  \begin{align*}
+    \E{(x - \mu)^2} = \Var{x} = \sigma^2
+  \end{align*}
+  \item ただし,
+  \begin{align*}
+    \E{(x - \mu)^2} &= \int_{-\infty}^\infty (x - \mu)^2 \mathcal{N}(x \mid \mu, \sigma^2) \dd{x} \\
+      &= \int_{-\infty}^\infty \frac{1}{\sqrt{2 \pi \sigma^2}} (x - \mu)^2
+        \exp \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x}
+  \end{align*}
+  \item 次の積分に着目する:
+  \begin{align*}
+    \int_{-\infty}^\infty (x - \mu)^2
+      \exp \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x}
+      = \sigma^2 \sqrt{2 \pi \sigma^2}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の分散 (1次元)}
+\begin{itemize}
+  \item 次の積分に着目する:
+  \begin{align*}
+    \int_{-\infty}^\infty (x - \mu)^2
+      \exp \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x}
+      = \sigma^2 \sqrt{2\pi \sigma^2}
+  \end{align*}
+  \item \textcolor{red}{練習問題.}
+  % \item $y = \frac{x - \mu}{\sqrt{2 \sigma^2}}$とすると,
+  % $x = \sqrt{2 \sigma^2} y + \mu, \dv{x}{y} = \sqrt{2 \sigma^2}$だから,
+  % \begin{align*}
+  %   2 \sigma^2 \int_{-\infty}^\infty y^2 \exp \left( -y^2 \right) \dv{x}{y} \dd{y}
+  %     &= 2 \sigma^2 \cdot \sqrt{2 \sigma^2}
+  %       \underbrace{\int_{-\infty}^\infty y^2 \exp \left( -y^2 \right) \dd{y}}_{= \frac{1}{2} \sqrt{\pi}} \\
+  %     &= 2 \sigma^2 \cdot \sqrt{2 \sigma^2} \frac{1}{2} \sqrt{\pi} \\
+  %     &= \sigma^2 \sqrt{2 \pi \sigma^2}
+  % \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の分散 (1次元)}
+\begin{itemize}
+  \item よって,
+  \begin{align*}
+    \E{(x - \mu)^2} &= \int_{-\infty}^\infty (x - \mu)^2 \mathcal{N}(x \mid \mu, \sigma^2) \dd{x} \\
+      &= \int_{-\infty}^\infty \frac{1}{\sqrt{2 \pi \sigma^2}} (x - \mu)^2
+        \exp \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x} \\
+      &= \frac{1}{\sqrt{2 \pi \sigma^2}} \underbrace{\int_{-\infty}^\infty (x - \mu)^2
+        \exp \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x}}_{\sigma^2 \sqrt{2 \pi \sigma^2}} \\
+      &= \frac{1}{\sqrt{2 \pi \sigma^2}} \sigma^2 \sqrt{2 \pi \sigma^2} = \sigma^2
+  \end{align*}
+  \item ガウス分布の分散は, $\E{(x - \mu)^2} = \Var{x} = \sigma^2$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の平均と分散 (1次元)}
+\begin{block}{ガウス分布の平均と分散 (1次元)}
+  \begin{align*}
+    \mathcal{N}(x \mid \mu, \sigma^2) = \frac{1}{\sqrt{2 \pi \sigma^2}}
+      \exp \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right)
+  \end{align*}
+  このガウス分布の平均と分散は,
+  \begin{gather*}
+    \E{x} = \mu \\
+    \E{(x - \mu)^2} = \Var{x} = \sigma^2
+  \end{gather*}
+\end{block}
+
+\begin{itemize}
+  \item ガウス積分を使えば, $\E{(x - \mu)^3}$や$\E{(x - \mu)^4}$も同様に求まる.
+  \item \textcolor{red}{モーメント母関数} (積率母関数) を使えば, もっと楽に求められる.
+\end{itemize}
+\end{frame}
+
+\subsection{ガウス分布のモーメント母関数 (1次元)}
+
+\begin{frame}{モーメント母関数 (Moment-generating Function) (1次元)}
+\begin{block}{モーメント母関数}
+  $x$の確率分布$p(x)$があるとき, $\E{\exp(tx)}$を, モーメント母関数という.
+  \begin{align*}
+    \E{\exp(tx)} = \E{1 + tx + \frac{1}{2!} t^2 x^2 + \frac{1}{3!} t^3 x^3 + \cdots}
+  \end{align*}
+  $t$で$n$回微分して, $t = 0$を代入すると, $\E{x^n}$が得られる.
+  \begin{align*}
+    \E{x^n} = \left. \pdv[n]{t} \E{\exp(tx)} \right|_{t = 0}
+  \end{align*}
+  ガウス分布$\mathcal{N}(x \mid \mu, \sigma^2)$に対するモーメント母関数は,
+  \begin{align*}
+    \E{\exp(tx)} = \exp(\mu t + \frac{\sigma^2 t^2}{2})
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{モーメント母関数 (Moment-generating Function) (1次元)}
+\begin{itemize}
+  \item モーメント母関数:
+  \begin{align*}
+    \E{\exp(tx)} &= \E{1 + tx + \frac{1}{2!} t^2 x^2 + \frac{1}{3!} t^3 x^3 + \cdots} \\
+    &= 1 + \E{x} t + \frac{1}{2!} \E{x^2} t^2 + \frac{1}{3!} \E{x^3} t^3 + \cdots
+  \end{align*}
+  \item 例えば, 上式を$t$で$n = 3$回微分すれば,
+  \begin{align*}
+    \pdv[3]{t} \E{\exp(tx)} = \E{x^3} + \E{x^4} t
+      + \frac{1}{2!} \E{x^5} t^2 + \frac{1}{3!} \E{x^6} t^3 + \cdots
+  \end{align*}
+  \item $t = 0$を代入すれば,
+  \begin{align*}
+    \left. \pdv[3]{t} \E{\exp(tx)} \right|_{t = 0} = \E{x^3}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布に対するモーメント母関数 (1次元)}
+\begin{itemize}
+  \item ガウス分布$\mathcal{N}(x \mid \mu, \sigma^2)$に対する, モーメント母関数$\E{\exp(tx)}$を求めてみよう.
+  \begin{align*}
+    \E{\exp(tx)} &= \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi \sigma^2}} \exp(tx)
+      \exp(-\frac{1}{2 \sigma^2} \left( x - \mu \right)^2) \dd{x}
+  \end{align*}
+  \item $\exp(\cdot)$の中身を, 平方完成する:
+  \begin{align*}
+    tx - \frac{1}{2 \sigma^2} \left( x - \mu \right)^2
+    &= \text{\color{red} (練習問題)} \\
+    % &= -\frac{1}{2 \sigma^2} \left( x^2 - 2 \mu x - 2 \sigma^2 tx + \mu^2 \right) \\
+    % &= -\frac{1}{2 \sigma^2} \left( \left( x - \left( \mu + \sigma^2 t \right) \right)^2
+    %   - 2 \mu \sigma^2 t - \sigma^4 t^2 \right) \\
+    &= \left( \mu t + \frac{\sigma^2 t^2}{2} \right)
+      -\frac{1}{2 \sigma^2} \left( x - \left( \mu + \sigma^2 t \right) \right)^2
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布に対するモーメント母関数 (1次元)}
+\begin{itemize}
+  \item よって,
+  \begin{align*}
+    & \E{\exp(tx)} = \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi \sigma^2}} \exp(tx)
+      \exp(-\frac{1}{2 \sigma^2} \left( x - \mu \right)^2) \dd{x} \\
+      &= \exp(\mu t + \frac{\sigma^2 t^2}{2}) \frac{1}{\sqrt{2\pi \sigma^2}}
+        \int_{-\infty}^\infty \exp(-\frac{1}{2 \sigma^2}
+        \left( x - \left( \mu + \sigma^2 t \right) \right)^2) \dd{x}
+  \end{align*}
+  \item $y = \frac{x - \left( \mu + \sigma^2 t \right)}{\sqrt{2 \sigma^2}}$とおくと,
+  $x = \sqrt{2 \sigma^2} y + \mu + \sigma^2 t$であり,
+  $\dv{x}{y} = \sqrt{2 \sigma^2}$となるから,
+  \begin{align*}
+    & \int_{-\infty}^\infty \exp(-\frac{1}{2 \sigma^2}
+      \left( x - \left( \mu + \sigma^2 t \right) \right)^2) \dd{x}
+    = \int_{-\infty}^\infty \exp(-y^2) \dv{x}{y} \dd{y} \\
+    &= \sqrt{2 \sigma^2} \int_{-\infty}^\infty \exp(-y^2) \dd{y}
+    = \sqrt{2 \sigma^2} \sqrt{\pi}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布に対するモーメント母関数 (1次元)}
+\begin{itemize}
+  \item よって, ガウス分布に対するモーメント母関数は,
+  \begin{align*}
+    & \E{\exp(tx)} = \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi \sigma^2}} \exp(tx)
+      \exp(-\frac{1}{2 \sigma^2} \left( x - \mu \right)^2) \dd{x} \\
+      &= \exp(\mu t + \frac{\sigma^2 t^2}{2}) \frac{1}{\sqrt{2\pi \sigma^2}}
+        \int_{-\infty}^\infty \exp(-\frac{1}{2 \sigma^2}
+        \left( x - \left( \mu + \sigma^2 t \right) \right)^2) \dd{x} \\
+      &= \exp(\mu t + \frac{\sigma^2 t^2}{2}) \frac{1}{\sqrt{2\pi \sigma^2}}
+        \sqrt{2\pi \sigma^2} \\
+      &= \exp(\mu t + \frac{\sigma^2 t^2}{2})
+  \end{align*}
+  \item このモーメント母関数を使って, モーメントを求めてみよう.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布に対するモーメント母関数 (1次元)}
+\begin{itemize}
+  \item モーメント母関数を使うと, ガウス分布の平均と分散は,
+  \begin{align*}
+    \E{x} &= \left. \dv{t} \exp(\mu t + \frac{\sigma^2 t^2}{2}) \right|_{t = 0}
+      = \text{\color{red} (練習問題)}
+      % &= \left. \exp(\mu t + \frac{\sigma^2 t^2}{2}) \left( \mu + \sigma^2 t \right) \right|_{t = 0}
+      = \mu \\
+    \E{x^2} &= \left. \dv[2]{t} \exp(\mu t + \frac{\sigma^2 t^2}{2}) \right|_{t = 0}
+      = \text{\color{red} (練習問題)}
+      % &= \left. \exp(\mu t + \frac{\sigma^2 t^2}{2}) \sigma^2 +
+      %   \exp(\mu t + \frac{\sigma^2 t^2}{2}) \left( \mu + \sigma^2 t \right)^2 \right|_{t = 0} \\
+      = \sigma^2 + \mu^2 \\
+    \Var{x} &= \E{x^2} - \E{x}^2 = \sigma^2
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の高次のモーメント (1次元)}
+\begin{itemize}
+  \item ガウス分布$\mathcal{N}(x \mid \mu, \sigma^2)$のモーメント:
+  \begin{align*}
+    \E{x} &= \mu \\
+    \E{x^2} &= \mu^2 + \sigma^2 \\
+    \E{x^3} &= \mu^3 + 3 \mu \sigma^2 \\
+    \E{x^4} &= \mu^4 + 6 \mu^2 \sigma^2 + 3 \sigma^4 \\
+    \E{x^5} &= \mu^5 + 10 \mu^3 \sigma^2 + 15 \mu \sigma^4 \\
+    \E{x^6} &= \mu^6 + 15 \mu^4 \sigma^2 + 45 \mu^2 \sigma^4
+      + 15 \sigma^6 \\
+    \E{x^7} &= \mu^7 + 21 \mu^5 \sigma^2 + 105 \mu^3 \sigma^4
+      + 105 \mu \sigma^6 \\
+    \E{x^8} &= \mu^8 + 28 \mu^6 \sigma^2 + 210 \mu^4 \sigma^4
+      + 420 \mu^2 \sigma^6 + 105 \sigma^8 \\
+    \E{x^9} &= \mu^9 + 36 \mu^7 \sigma^2 + 378 \mu^5 \sigma^4
+      + 1260 \mu^3 \sigma^6 + 945 \mu \sigma^8 \\
+    \E{x^{10}} &= \mu^{10} + 45 \mu^8 \sigma^2 + 630 \mu^6 \sigma^4
+      + 3150 \mu^4 \sigma^6 + 4725 \mu^2 \sigma^8 + 945 \sigma^{10}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の高次のモーメント (平均まわり; 1次元)}
+\begin{itemize}
+  \item ガウス分布$\mathcal{N}(x \mid \mu, \sigma^2)$の, 平均まわりのモーメント:
+  \begin{align*}
+    \E{x - \mu} = 0, \quad &
+    \E{\left( x - \mu \right)^2} = \sigma^2 \\
+    \E{\left( x - \mu \right)^3} = 0, \quad &
+    \E{\left( x - \mu \right)^4} = 3 \sigma^4 \\
+    \E{\left( x - \mu \right)^5} = 0, \quad &
+    \E{\left( x - \mu \right)^6} = 15 \sigma^6 \\
+    \E{\left( x - \mu \right)^7} = 0, \quad &
+    \E{\left( x - \mu \right)^8} = 105 \sigma^8 \\
+    \E{\left( x - \mu \right)^9} = 0, \quad &
+    \E{\left( x - \mu \right)^{10}} = 945 \sigma^{10}
+  \end{align*}
+  \item $y = x - \mu$としたとき, $p(y)$は平均$0$, 分散$\sigma^2$のガウス分布 (後述).
+  \item よって, $\E{y^n} = \E{\left( x - \mu \right)^n}$は,
+  先程求めた$\mathcal{N}(x \mid \mu, \sigma^2)$のモーメント$\E{x^n}$に, $\mu = 0$を代入したものとなる.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布の高次のモーメント (平均まわり; 1次元)}
+\begin{itemize}
+  \item 平均$\mu$, 分散$\sigma^2$のガウス分布を考える:
+  \begin{align*}
+    \mathcal{N}(x \mid \mu, \sigma^2)
+    = \frac{1}{\sqrt{2\pi \sigma^2}} \exp(-\frac{1}{2 \sigma^2} \left( x - \mu \right)^2)
+  \end{align*}
+  \item $y = x - \mu$としたとき, $p(y)$は平均$0$, 分散$\sigma^2$のガウス分布:
+  \begin{align*}
+    p(y) = \mathcal{N}(y \mid 0, \sigma^2) = \frac{1}{\sqrt{2\pi \sigma^2}} \exp(-\frac{1}{2 \sigma^2} y^2)
+  \end{align*}
+  \item ガウス分布の線形変換, 周辺分布, 条件付き分布なども, ガウス分布になる (後述).
+  \item 多変量の確率分布についても, 同様の計算ができる (後述).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ガウス分布のモーメント (1次元)}
+\begin{block}{ガウス分布のモーメント (1次元)}
+  ガウス分布$\mathcal{N}(x \mid \mu, \sigma^2)$について,
+  \begin{gather*}
+    \E{x} = \mu \quad \text{(\textcolor{red}{平均})}, \quad
+    \E{\left( x - \mu \right)^2} = \Var{x} = \sigma^2 \quad \text{(\textcolor{red}{分散})} \\
+    \E{\left( \frac{x - \mu}{\sigma} \right)^3} = 0 \quad \text{(\textcolor{red}{歪度})}, \quad
+    \E{\left( \frac{x - \mu}{\sigma} \right)^4} = 3 \quad \text{(\textcolor{red}{尖度})} \\
+    \E{x^2} = \mu^2 + \sigma^2, \quad
+    \E{\left( x - \mu \right)^3} = 0, \quad
+    \E{\left( x - \mu \right)^4} = 3 \sigma^4
+  \end{gather*}
+  高次の平均まわりのモーメントは,
+  \begin{align*}
+    \E{\left( x - \mu \right)^n} = \left\{ \begin{array}{ll}
+      0 & \text{($n$が奇数)} \\
+      \left( (n - 1) (n - 3) (n - 5) \cdots 3 \cdot 1 \right) \sigma^n & \text{($n$が偶数)} \end{array} \right.
+  \end{align*}
+\end{block}
+\end{frame}
+
+
+\begin{frame}{休憩}
+\begin{itemize}
+  \item ここまで, 1次元のガウス分布を確認した.
+  \begin{itemize}
+    \item 定義
+    \item 積分
+    \item モーメント母関数
+    \item モーメント (平均, 分散, 歪度, 尖度)
+  \end{itemize}
+  \item 既にお腹いっぱい.
+  \item 続いて, 多変量ガウス分布を確認する.
+\end{itemize}
+\end{frame}
+
+\section{多変量ガウス分布}
+
+\begin{frame}{多変量ガウス分布}
+\begin{block}{多変量ガウス分布 (多変量正規分布)}
+  $D$次元のとき, 次のように定義される:
+  \begin{align*}
+    p(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})
+      = \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+        \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+        \left( \vb{x} - \vb*{\mu} \right))
+  \end{align*}
+  $\vb*{\mu}$は\textcolor{red}{平均}, $\vb{\Sigma}$は\textcolor{red}{共分散} (\textcolor{red}{分散共分散行列}) とよぶ.
+\end{block}
+
+\begin{itemize}
+  \item 平均$\vb*{\mu}$は$D$次ベクトル, 共分散$\vb{\Sigma}$は$D \times D$行列.
+  \item $\exp(\cdot)$の中身は, スカラー.
+  \item $p(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$を, $\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$とかくこともある.
+  \item 確率変数$\vb{x}$が, 平均$\vb*{\mu}$, 共分散$\vb{\Sigma}$の多変量ガウス分布に従うとき, 次のようにかく:
+  \begin{align*}
+    \vb{x} \sim \mathcal{N}(\vb*{\mu}, \vb{\Sigma})
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布}
+\begin{block}{多変量ガウス分布 (多変量正規分布)}
+  \begin{align*}
+    \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})
+      = \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+        \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+        \left( \vb{x} - \vb*{\mu} \right))
+  \end{align*}
+\end{block}
+
+\begin{itemize}
+  \item 定数項の分母には, いくつかの書き方がある:
+  \begin{align*}
+    \left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}
+    = \sqrt{\left( 2\pi \right)^D \det \vb{\Sigma}}
+    = \sqrt{\det(2\pi \vb{\Sigma})}
+  \end{align*}
+  \item $\vb{\Sigma}$は$D$次行列だから, $\det(c \vb{\Sigma}) = c^D \det \vb{\Sigma}$である.
+  \item $\det \vb{A}$を, $\left| \vb{A} \right|$と書くこともある.
+  \item 絶対値との混同を避けるため, ここでは$\det$と表記する.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{共分散行列 (分散共分散行列)}
+\begin{itemize}
+  \item $\vb{x} = (x_1, \ldots, x_D)$と表す ($D$次元).
+  \item 共分散$\vb{\Sigma}$は, 次のように表される ($D \times D$行列):
+  \begin{align*}
+    \vb{\Sigma} = \mqty(\Var{x_1} & \Cov{x_1}{x_2} & \cdots & \Cov{x_1}{x_D} \\
+      \Cov{x_2}{x_1} & \Var{x_2} & \cdots & \Cov{x_2}{x_D} \\
+      \vdots & \vdots & \ddots & \vdots \\
+      \Cov{x_D}{x_1} & \Cov{x_D}{x_2} & \cdots & \Var{x_D})
+  \end{align*}
+  \item $\vb{\Sigma}$の$(i, j)$成分は, $\Cov{x_i}{x_j} = \E{\left( x_i - \E{x_i} \right) \left( x_j - \E{x_j} \right)}$.
+  \item $\Cov{x_i}{x_j} = \Cov{x_j}{x_i}$だから, $\vb{\Sigma}$は対称.
+  \item $\Var{x_i} = \Cov{x_i}{x_i}$に注意.
+  \item $\vb{\Sigma}$の対角成分は分散, それ以外の成分は共分散となる.
+  \item \textcolor{red}{重要: $\vb{x}$の各成分が互いに独立 (無相関) ならば, $\vb{\Sigma}$は対角行列となる}
+  ($i \neq j \to \Cov{x_i}{x_j} = 0$).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{標準正規分布 (多次元)}
+\begin{block}{標準正規分布 (多次元)}
+  平均$\vb*{\mu} = \vb{0}$, 共分散$\vb{\Sigma} = \vb{I}$としたとき, \textcolor{red}{標準正規分布}とよぶ.
+  \begin{align*}
+    \mathcal{N}(\vb{x} \mid \vb{0}, \vb{I})
+    &= \frac{1}{\left( 2\pi \right)^\frac{D}{2}}
+      \exp(-\frac{1}{2} \vb{x}^\top \vb{x}) \\
+    &= \prod_{i = 1}^D \frac{1}{\sqrt{2\pi}} \exp(-\frac{1}{2} x_i^2)
+    = \prod_{i = 1}^D \mathcal{N}(x_i \mid 0, 1)
+  \end{align*}
+  $\vb{x}$の各成分についてのガウス分布に分解される. \\
+  従って, 各成分は互いに独立で, 無相関:
+  $$\forall i \neq j \ \E{x_i x_j} = \E{x_i} \E{x_j}, \Cov{x_i}{x_j} = 0$$
+  各成分は, 平均0, 分散1のガウス分布に従う: $x_i \sim \mathcal{N}(0, 1)$
+\end{block}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+\begin{block}{多変量ガウス分布 (多変量正規分布)}
+  \begin{align*}
+    \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})
+      = \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+        \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+        \left( \vb{x} - \vb*{\mu} \right))
+  \end{align*}
+\end{block}
+
+\begin{itemize}
+  \item 共分散$\vb{\Sigma}$は, \textcolor{red}{正定値対称}行列.
+  \begin{gather*}
+    \vb{\Sigma}^\top = \vb{\Sigma} \\
+    \forall \vb{x} \neq \vb{0}, \ \vb{x}^\top \vb{\Sigma} \vb{x} \ge \vb{0}
+      \quad \text{($\vb{\Sigma} \ge 0$ともかく)}
+  \end{gather*}
+  \item 逆行列$\vb{\Sigma}^{-1}$も, \textcolor{red}{正定値対称}行列になる.
+  \begin{gather*}
+    \left( \vb{\Sigma}^{-1} \right)^\top = \vb{\Sigma}^{-1} \\
+    \forall \vb{x} \neq \vb{0}, \ \vb{x}^\top \vb{\Sigma}^{-1} \vb{x} \ge \vb{0}
+      \quad \text{($\vb{\Sigma}^{-1} \ge 0$ともかく)}
+  \end{gather*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+\begin{itemize}
+  \item 共分散$\vb{\Sigma}$は, \textcolor{red}{正定値対称}行列.
+  \item このとき, 逆行列$\vb{\Sigma}^{-1}$も, \textcolor{red}{正定値対称}行列になる.
+  \item 対称性:
+  \begin{align*}
+    \left( \vb{\Sigma}^{-1} \right)^\top
+      = \left( \vb{\Sigma}^\top \right)^{-1} = \vb{\Sigma}^{-1}
+  \end{align*}
+  \item 正定値性:
+  \begin{align*}
+    \text{$\vb{\Sigma}$が正定値} &\to \text{$\vb{\Sigma}$の固有値$\left\{ \lambda_i \right\}$は全て正} \\
+    &\to \text{$\vb{\Sigma}^{-1}$の固有値は$\left\{ \lambda_i^{-1} \right\}$であるが, それらも全て正} \\
+    &\to \text{$\vb{\Sigma}^{-1}$は正定値}
+  \end{align*}
+  \item $\vb{\Sigma}, \vb{\Sigma}^{-1}$は正定値行列なので,
+  \textcolor{red}{平方根} $\vb{\Sigma}^\frac{1}{2}, \vb{\Sigma}^{-\frac{1}{2}}$が存在する (後述).
+  \item 注意: 正定値性は, 対称行列について定義される.
+  \item 注意: 対称行列の固有値は, 全て実数となる.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+\begin{itemize}
+  \item $\vb{\Sigma}$の固有値が$\{ \lambda_1, \ldots, \lambda_D \}$であるとき,
+  $\vb{\Sigma}^{-1}$の固有値は$\{ \lambda_1^{-1}, \ldots, \lambda_D^{-1} \}$となることを確認しよう.
+  \item 実対称行列$\vb{\Sigma}$は, 直交行列$\vb{U}$で, $\vb{\Lambda} = \vb{U}^\top \vb{\Sigma} \vb{U}$と対角化できる.
+  \item $\vb{\Lambda}$は, $\vb{\Sigma}$の固有値$\lambda_i$を対角成分にもった, 対角行列:
+  \begin{align*}
+    \vb{\Lambda} = \diag(\lambda_1, \ldots, \lambda_D)
+  \end{align*}
+  \item $\vb{\Lambda}^{-1}$は, $\vb{\Sigma}$の固有値の逆数$\lambda_i^{-1}$を対角成分にもった, 対角行列:
+  \begin{align*}
+    \vb{\Lambda}^{-1} = \diag(\lambda_1^{-1}, \ldots, \lambda_D^{-1})
+  \end{align*}
+  \item $\vb{\Lambda}^{-1} = \vb{U}^\top \vb{\Sigma}^{-1} \vb{U}$だから,
+  実対称行列$\vb{\Sigma}^{-1}$も, 直交行列$\vb{U}$で対角化される ($\vb{U}^{-1} = \vb{U}$に注意).
+  \item $\vb{\Lambda}^{-1}$の対角成分は, $\vb{\Sigma}^{-1}$の固有値 ($=$ $\vb{\Sigma}$の固有値の逆数)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+\begin{itemize}
+  \item $\vb{\Sigma}, \vb{\Sigma}^{-1}$は正定値行列なので,
+  \textcolor{red}{平方根} $\vb{\Sigma}^\frac{1}{2}, \vb{\Sigma}^{-\frac{1}{2}}$が存在する.
+  \item $\vb{A}$を半正定値対称行列とする.
+  \item 対称行列なので, 直交行列$\vb{U}$で, $\vb{\Lambda} = \vb{U}^\top \vb{A} \vb{U}$と対角化できる.
+  \item $\vb{\Lambda}$は, $\vb{A}$の固有値$\lambda_i$を対角成分にもった, 対角行列:
+  \begin{align*}
+    \vb{\Lambda} = \diag(\lambda_1, \ldots, \lambda_D)
+  \end{align*}
+  \item $\vb{A}$は半正定値だから, 固有値は全て$\ge 0$.
+  $\vb{\Lambda}$には平方根$\vb{\Lambda}^\frac{1}{2}$が存在し,
+  \begin{align*}
+    \vb{\Lambda}^\frac{1}{2} = \diag \left( \sqrt{\lambda_1}, \ldots, \sqrt{\lambda_D} \right)
+  \end{align*}
+  \item $\vb{A}^\frac{1}{2} = \vb{U} \vb{\Lambda}^\frac{1}{2} \vb{U}^\top$は$\vb{A}$の平方根となる
+  ($\vb{U}^{-1} = \vb{U}^\top, \vb{U}^\top \vb{U} = \vb{I}$):
+  \begin{align*}
+    \vb{A}^\frac{1}{2} \vb{A}^\frac{1}{2}
+    = \vb{U} \vb{\Lambda}^\frac{1}{2} \vb{U}^\top \vb{U} \vb{\Lambda}^\frac{1}{2} \vb{U}^\top
+    = \vb{U} \vb{\Lambda}^\frac{1}{2} \vb{\Lambda}^\frac{1}{2} \vb{U}^\top
+    = \vb{U} \vb{\Lambda} \vb{U}^\top
+    = \vb{A}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+\begin{itemize}
+  \item $\vb{\Sigma}, \vb{\Sigma}^{-1}$は正定値行列なので,
+  平方根$\vb{\Sigma}^\frac{1}{2}, \vb{\Sigma}^{-\frac{1}{2}}$が存在する.
+  \item 対角化$\vb{\Lambda} = \vb{U}^\top \vb{\Sigma} \vb{U}$の結果を使えば,
+  \begin{gather*}
+    \vb{\Sigma} = \vb{U} \vb{\Lambda} \vb{U}^\top, \quad
+    \vb{\Sigma}^{-1} = \vb{U} \vb{\Lambda}^{-1} \vb{U}^\top \\
+    \vb{\Sigma}^\frac{1}{2} = \vb{U} \vb{\Lambda}^\frac{1}{2} \vb{U}^\top, \quad
+    \vb{\Sigma}^{-\frac{1}{2}} = \vb{U} \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top
+  \end{gather*}
+  \item $\vb{\Lambda}$は, $\vb{A}$の固有値$\lambda_i$を対角成分にもった, 対角行列:
+  \begin{gather*}
+    \vb{\Lambda} = \diag(\lambda_1, \ldots, \lambda_D), \quad
+    \vb{\Lambda}^{-1} = \diag \left( \frac{1}{\lambda_1}, \ldots, \frac{1}{\lambda_D} \right) \\
+    \vb{\Lambda}^\frac{1}{2} = \diag \left( \sqrt{\lambda_1}, \ldots, \sqrt{\lambda_D} \right), \quad
+    \vb{\Lambda}^{-\frac{1}{2}} = \diag \left(
+      \frac{1}{\sqrt{\lambda_1}}, \ldots, \frac{1}{\sqrt{\lambda_D}} \right)
+  \end{gather*}
+  \item $\vb{U}$は直交行列 ($\vb{U}^{-1} = \vb{U}^\top, \vb{U} \vb{U}^\top = \vb{U}^\top \vb{U} = \vb{I}$).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+\begin{itemize}
+  \item $\vb{\Sigma}$は正定値行列なので, 行列式は常に正: $\det \vb{\Sigma} > 0$.
+  \begin{align*}
+    \text{$\vb{\Sigma}$が正定値} &\to \text{$\vb{\Sigma}$の固有値$\left\{ \lambda_i \right\}$は全て正} \\
+    &\to \text{行列式は, 全ての固有値の積なので正}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の無相関化}
+\begin{itemize}
+  \item 対角化の結果 ($\vb{\Sigma} = \vb{U} \vb{\Lambda} \vb{U}^\top$) を使って, ガウス分布を書き換え:
+  \begin{align*}
+    \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})
+      &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+        \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+        \left( \vb{x} - \vb*{\mu} \right))
+  \end{align*}
+  \item $\vb{U} \vb{U}^\top = \vb{I}$と, 行列式の性質
+  ($\det \vb{A}^\top = \det \vb{A}$, $\det \vb{A} \vb{B} = \det \vb{A} \det \vb{B}$) から,
+  \begin{align*}
+    \det \vb{U} \vb{U}^\top &= \det \vb{I} = 1 \\
+    \det \vb{U} \vb{U}^\top &= \det \vb{U} \det \vb{U}^\top = \left( \det \vb{U} \right)^2 = 1
+    \quad \longrightarrow \quad
+    \det \vb{U} = \pm 1
+  \end{align*}
+  \item 対角行列の行列式は, 対角成分の積であるから,
+  \begin{align*}
+    \det \vb{\Sigma} = \det \left( \vb{U} \vb{\Lambda} \vb{U}^\top \right)
+      = \det \vb{U} \det \vb{\Lambda} \det \vb{U}^\top
+      = \det \vb{\Lambda} = \prod_{i = 1}^D \lambda_i
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の無相関化}
+\begin{itemize}
+  \item $\exp(\cdot)$の中身 ($\vb{\Sigma}^{-1} = \vb{U} \vb{\Lambda}^{-1} \vb{U}^\top$):
+  \begin{align*}
+    \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right)
+    &= \left( \vb{x} - \vb*{\mu} \right)^\top
+      \vb{U} \vb{\Lambda}^{-1} \vb{U}^\top
+      \left( \vb{x} - \vb*{\mu} \right)
+    = \vb{y}^\top \vb{\Lambda}^{-1} \vb{y}
+  \end{align*}
+  \item ここで, $\vb{y} = \vb{U}^\top \left( \vb{x} - \vb*{\mu} \right)$とおいた.
+  $\vb{\Lambda}^{-1} = \diag(\lambda_1^{-1}, \ldots, \lambda_D^{-1})$だから,
+  \begin{align*}
+    \vb{y}^\top \vb{\Lambda}^{-1} \vb{y}
+    &= \mqty(y_1 & \cdots & y_D) \mqty(\dmat{\lambda_1^{-1}, \ddots, \lambda_D^{-1}})
+      \mqty(y_1 \\ \vdots \\ y_D) \\
+    &= \mqty(y_1 & \cdots & y_D) \mqty(\lambda_1^{-1} y_1 \\ \vdots \\ \lambda_D^{-1} y_D)
+    = \sum_{i = 1}^D \frac{y_i^2}{\lambda_i}
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の無相関化}
+\begin{itemize}
+  \item 係数部分:
+  \begin{align*}
+    \det \vb{\Sigma} = \det \vb{\Lambda} = \prod_{i = 1}^D \lambda_i \quad &\longrightarrow \quad
+      \frac{1}{\sqrt{\det \vb{\Sigma}}} = \prod_{i = 1}^D \frac{1}{\sqrt{\lambda_i}} \\
+      &\longrightarrow \quad
+      \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+      = \prod_{i = 1}^D \frac{1}{\sqrt{2\pi \lambda_i}}
+  \end{align*}
+  \item $\exp(\cdot)$の中身:
+  \begin{align*}
+    & \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right)
+      = \vb{y}^\top \vb{\Lambda}^{-1} \vb{y}
+      = \sum_{i = 1}^D \frac{y_i^2}{\lambda_i} \\
+    & \longrightarrow \quad
+    \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right))
+      = \prod_{i = 1}^D \exp(-\frac{y_i^2}{2 \lambda_i})
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の無相関化}
+\begin{itemize}
+  \item これらの結果を基に, ガウス分布を書き換えると,
+  \begin{align*}
+    \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})
+      &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+        \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+        \left( \vb{x} - \vb*{\mu} \right)) \\
+      &= \left( \prod_{i = 1}^D \frac{1}{\sqrt{2\pi \lambda_i}} \right)
+        \left( \prod_{i = 1}^D \exp(-\frac{y_i^2}{2 \lambda_i}) \right) \\
+      &= \prod_{i = 1}^D \frac{1}{\sqrt{2\pi \lambda_i}} \exp(-\frac{y_i^2}{2 \lambda_i})
+      = \prod_{i = 1}^D \mathcal{N}(y_i \mid 0, \lambda_i)
+  \end{align*}
+  \item $\vb{y} = \vb{U}^\top \left( \vb{x} - \vb*{\mu} \right)$の変数変換を施すと,
+  $\vb{x}$のガウス分布は, $\vb{y}$の各成分についてのガウス分布に分解された.
+  \item $\vb{y}$の各成分は, 互いに\textcolor{red}{独立}だから, \textcolor{red}{無相関}でもある.
+  \begin{gather*}
+    \forall i \neq j \ \E{y_i y_j} = \E{y_i} \E{y_j}, \Cov{y_i}{y_j} = 0
+  \end{gather*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の無相関化}
+\begin{itemize}
+  \item 次のように, 行列の形でも書き換えておく:
+  \begin{align*}
+    \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})
+      &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+        \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+        \left( \vb{x} - \vb*{\mu} \right)) \\
+      &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Lambda}}}
+        \exp(-\frac{1}{2} \vb{y}^\top \vb{\Lambda}^{-1} \vb{y})
+      = \mathcal{N}(\vb{y} \mid \vb{0}, \vb{\Lambda})
+  \end{align*}
+  \item $\vb{y} = \vb{U}^\top \left( \vb{x} - \vb*{\mu} \right)$の変数変換を施すと,
+  平均$\vb{0}$, 共分散$\vb{\Lambda}$のガウス分布となる.
+  $\vb{\Lambda}$は対角行列だから, 対角成分以外は全て$0$.
+  \item 共分散$\vb{\Lambda}$の$(i, j)$成分は, $\Cov{y_i}{y_j}$である (対角成分は$\Var{y_i}$).
+  \item $i \neq j$であるとき, $\Cov{y_i}{y_j} = 0$だから, $y_i$と$y_j$は\textcolor{red}{無相関}である.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の無相関化 (まとめ)}
+\begin{itemize}
+  \item $\vb{x}$についてのガウス分布:
+  \begin{align*}
+    \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})
+      &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+        \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+        \left( \vb{x} - \vb*{\mu} \right))
+  \end{align*}
+  \item 共分散を, 直交行列で対角化する ($\vb{\Sigma} = \vb{U} \vb{\Lambda} \vb{U}^\top$).
+  \item $\vb{\Lambda}$は, $\vb{\Sigma}$の固有値を斜めに並べた, 対角行列.
+  \item $\vb{y} = \vb{U}^\top \left( \vb{x} - \vb*{\mu} \right)$の変数変換を施すと, $\vb{y}$についてのガウス分布となる:
+  \begin{align*}
+    \mathcal{N}(\vb{y} \mid \vb{0}, \vb{\Lambda}) = \prod_{i = 1}^D \mathcal{N}(y_i \mid 0, \lambda_i)
+  \end{align*}
+  \item $\vb{y}$の各成分は, 互いに独立, 無相関となる.
+  \item このような手続きを, \textcolor{red}{無相関化}という.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布}
+多変量ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$が次を満たすことを確かめよう:
+\begin{gather*}
+  \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}} \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma}) \dd{\vb{x}} = 1 \\
+  \E{\vb{x}} = \vb*{\mu} \\
+  \E{\vb{x} \vb{x}^\top} = \vb{\Sigma} + \vb*{\mu} \vb*{\mu}^\top \\
+  \E{\left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top} = \Var{\vb{x}} = \vb{\Sigma}
+\end{gather*}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布}
+\begin{itemize}
+  \item 共分散を, 直交行列$\vb{U}$で対角化する ($\vb{\Sigma} = \vb{U} \vb{\Lambda} \vb{U}^\top$).
+  \item $\vb{y} = \vb{U}^\top \left( \vb{x} - \vb*{\mu} \right)$の変数変換を施すと, 積分の変数変換から,
+  \begin{align*}
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}} \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma}) \dd{\vb{x}}
+    &= \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}} \mathcal{N}(\vb{y} \mid \vb{0}, \vb{\Lambda})
+      \left| \det \vb{J} \right| \dd{\vb{y}}
+  \end{align*}
+  \item ヤコビ行列$\vb{J}$は, $\vb{x} = \vb{U} \left( \vb{y} + \vb*{\mu} \right)$だから,
+  $\pdv{\vb{A} \vb{x}}{\vb{x}} = \vb{A}$ (分子レイアウト) を使うと,
+  \begin{align*}
+    \vb{J} &= \pdv{\vb{x}}{\vb{y}} = \pdv{\vb{y}} \vb{U} \left( \vb{y} + \vb*{\mu} \right) = \vb{U}
+  \end{align*}
+  \item $\vb{U}$は直交行列だから, $\det \vb{J} = \det \vb{U} = \pm 1$ (先述).
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布}
+\begin{itemize}
+  \item $\left| \det \vb{J} \right| = \left| \det \vb{U} \right| = 1$と
+  $\mathcal{N}(\vb{y} \mid \vb{0}, \vb{\Lambda}) = \prod_{i = 1}^D \mathcal{N}(y_i \mid 0, \lambda_i)$から,
+  \begin{align*}
+    & \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}} \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma}) \dd{\vb{x}}
+    = \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}} \mathcal{N}(\vb{y} \mid \vb{0}, \vb{\Lambda})
+      \left| \det \vb{J} \right| \dd{\vb{y}} \\
+    &= \int_{-\infty}^\infty \cdots \int_{-\infty}^\infty
+      \prod_{i = 1}^D \mathcal{N}(y_i \mid 0, \lambda_i) \dd{y_1} \cdots \dd{y_D} \\
+    &= \int_{-\infty}^\infty \mathcal{N}(y_1 \mid 0, \lambda_1) \dd{y_1} \cdots
+      \int_{-\infty}^\infty \mathcal{N}(y_D \mid 0, \lambda_1) \dd{y_D} = 1
+  \end{align*}
+  \item 1次元のガウス分布について, 積分すると$1$になることを用いた.
+  \item 積分すると1になるから, ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$は確率分布である.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の平均}
+続いて, 平均が, 以下を満たすことを確かめよう:
+\begin{align*}
+  \E{\vb{x}} = \vb*{\mu}
+\end{align*}
+
+ただし,
+\begin{align*}
+  \E{\vb{x}} &= \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma}) \vb{x} \dd{\vb{x}} \\
+    &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+      \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+      \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right)) \vb{x} \dd{\vb{x}}
+\end{align*}
+
+$\vb{z} = \vb{x} - \vb*{\mu}$とすると, $\vb{x} = \vb{z} + \vb*{\mu}$だから,
+\begin{align*}
+  \E{\vb{x}} &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \left( \vb{z} + \vb*{\mu} \right)
+    \left| \det \vb{J} \right| \dd{\vb{z}}
+\end{align*}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の平均}
+ヤコビ行列$\vb{J}$は, $\vb{x} = \vb{z} + \vb*{\mu}$だから, $\pdv{\vb{x}}{\vb{x}} = \vb{I}$を使うと,
+\begin{align*}
+  \vb{J} &= \pdv{\vb{x}}{\vb{z}} = \pdv{\vb{z}} \left( \vb{z} + \vb*{\mu} \right) = \vb{I}
+\end{align*}
+
+$\left| \det \vb{J} \right| = \left| \det \vb{I} \right| = \left| 1 \right| = 1$だから,
+{\small \begin{align*}
+  \E{\vb{x}} &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \left( \vb{z} + \vb*{\mu} \right)
+    \left| \det \vb{J} \right| \dd{\vb{z}} \\
+    &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \left( \vb{z} + \vb*{\mu} \right)
+    \dd{\vb{z}}
+\end{align*}}
+
+$\vb{f}(\vb{z}) = \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \vb{z}$とおくと,
+$\vb{f}(-\vb{z}) = -\vb{f}(\vb{z})$より奇関数なので,
+\begin{align*}
+  \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+  \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \vb{z} \dd{\vb{z}} = \vb{0}
+\end{align*}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の平均}
+また, ガウス分布の積分は1となるから,
+\begin{align*}
+  & \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+  \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \vb*{\mu} \dd{\vb{z}} \\
+  &= \vb*{\mu} \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \dd{\vb{z}} \\
+  &= \vb*{\mu} \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \mathcal{N}(\vb{z} \mid \vb{0}, \vb{\Sigma}) \dd{\vb{z}} = \vb*{\mu}
+\end{align*}
+
+よって, ガウス分布の平均は$\E{\vb{x}} = \vb*{\mu}$:
+\begin{align*}
+  \E{\vb{x}} &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \left( \vb{z} + \vb*{\mu} \right)
+    \dd{\vb{z}} = \vb{0} + \vb*{\mu} = \vb*{\mu}
+\end{align*}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+続いて, $\E{\vb{x} \vb{x}^\top}$が, 以下を満たすことを確かめよう:
+\begin{align*}
+  \E{\vb{x} \vb{x}^\top} = \vb{\Sigma} + \vb*{\mu} \vb*{\mu}^\top
+\end{align*}
+
+ただし,
+\begin{align*}
+  \E{\vb{x} \vb{x}^\top}
+  &= \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})
+    \vb{x} \vb{x}^\top \dd{\vb{x}} \\
+  &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right)) \vb{x} \vb{x}^\top \dd{\vb{x}}
+\end{align*}
+$\vb{z} = \vb{x} - \vb*{\mu}$とすると, $\vb{x} = \vb{z} + \vb*{\mu}$だから,
+\begin{align*}
+  \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z})
+    \left( \vb{z} + \vb*{\mu} \right) \left( \vb{z} + \vb*{\mu} \right)^\top
+    \left| \det \vb{J} \right| \dd{\vb{z}}
+\end{align*}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+先程と同様に, ヤコビ行列は$\vb{J} = \pdv{\vb{x}}{\vb{z}} = \vb{I}$,
+ゆえにヤコビアンは$\left| \det \vb{J} \right| = 1$だから,
+\begin{align*}
+  \E{\vb{x} \vb{x}^\top} &=
+    \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z})
+    \left( \vb{z} + \vb*{\mu} \right) \left( \vb{z} + \vb*{\mu} \right)^\top \dd{\vb{z}}
+\end{align*}
+$\vb{f}(\vb{z}) = \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \vb*{\mu} \vb{z}^\top$,
+$\vb{g}(\vb{z}) = \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \vb{z} \vb*{\mu}^\top$とおく. \\
+$\vb{f}(-\vb{z}) = -\vb{f}(\vb{z})$, $\vb{g}(-\vb{z}) = -\vb{g}(\vb{z})$だから, どちらも奇関数.
+よって,
+\begin{align*}
+  \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+  \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \vb*{\mu} \vb{z}^\top \dd{\vb{z}} &= \vb{0} \\
+  \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+  \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \vb{z} \vb*{\mu}^\top \dd{\vb{z}} &= \vb{0}
+\end{align*}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+また,
+\begin{align*}
+  & \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+  \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \vb*{\mu} \vb*{\mu}^\top \dd{\vb{z}} \\
+  &= \vb*{\mu} \vb*{\mu}^\top \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \dd{\vb{z}} \\
+  &= \vb*{\mu} \vb*{\mu}^\top \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \mathcal{N}(\vb{z} \mid \vb{0}, \vb{\Sigma}) \dd{\vb{z}}
+  = \vb*{\mu} \vb*{\mu}^\top
+\end{align*}
+ガウス分布を積分すると1になるので, 容易に求まる.
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+続いて, 以下の積分を考える:
+\begin{align*}
+  \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+  \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \vb{z} \vb{z}^\top \dd{\vb{z}}
+\end{align*}
+
+直交行列$\vb{U}$による対角化 ($\vb{\Sigma} = \vb{U} \vb{\Lambda} \vb{U}^\top$) と,
+$\vb{y} = \vb{U}^\top \left( \vb{x} - \vb*{\mu} \right)$を用いる.
+このとき, $\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma}) = \mathcal{N}(\vb{y} \mid \vb{0}, \vb{\Lambda})$であったから,
+\begin{align*}
+  & \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z})
+    \quad \text{($\vb{z} = \vb{x} - \vb*{\mu}$を使って, 元に戻す)} \\
+  &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top
+    \vb{\Sigma}^{-1} \left( \vb{x} - \vb*{\mu} \right))
+  = \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma}) \\
+  &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Lambda}}}
+    \exp(-\frac{1}{2} \vb{y}^\top \vb{\Lambda}^{-1} \vb{y})
+  = \mathcal{N}(\vb{y} \mid \vb{0}, \vb{\Lambda})
+\end{align*}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+$\vb{z} = \vb{x} - \vb*{\mu}$, $\vb{y} = \vb{U}^\top \left( \vb{x} - \vb*{\mu} \right)$より,
+$\vb{y} = \vb{U}^\top \vb{z}$. \\
+$\vb{U}^{-1} = \vb{U}^\top$に注意すれば, $\vb{z} = \vb{U} \vb{y}$.
+積分を変数変換すると,
+\begin{align*}
+  & \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+  \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \vb{z} \vb{z}^\top \dd{\vb{z}} \\
+  &= \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \mathcal{N}(\vb{y} \mid \vb{0}, \vb{\Lambda})
+    \vb{U} \vb{y} \vb{y}^\top \vb{U}^\top \left| \det \vb{J} \right| \dd{\vb{y}}
+\end{align*}
+ヤコビ行列は$\vb{J} = \pdv{\vb{z}}{\vb{y}} = \vb{U}$である.
+$\vb{U}$は直交行列だから, $\det \vb{U} = \pm 1$. \\
+また$\mathcal{N}(\vb{y} \mid \vb{0}, \vb{\Lambda})$は, 各成分のガウス分布の積に分解される:
+\begin{align*}
+  \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z})
+  = \mathcal{N}(\vb{y} \mid \vb{0}, \vb{\Lambda})
+  = \prod_{i = 1}^D \mathcal{N}(y_i \mid 0, \lambda_i)
+\end{align*}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+これらの結果を使うと,
+{\small \begin{align*}
+  & \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+  \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \vb{z} \vb{z}^\top \dd{\vb{z}} \\
+  &= \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \mathcal{N}(\vb{y} \mid \vb{0}, \vb{\Lambda})
+    \vb{U} \vb{y} \vb{y}^\top \vb{U}^\top \left| \det \vb{J} \right| \dd{\vb{y}} \\
+  &= \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \prod_{i = 1}^D \mathcal{N}(y_i \mid 0, \lambda_i)
+    \vb{U} \vb{y} \vb{y}^\top \vb{U}^\top \dd{\vb{y}} \\
+  &= \vb{U} \left( \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \prod_{i = 1}^D \mathcal{N}(y_i \mid 0, \lambda_i)
+    \vb{y} \vb{y}^\top \dd{\vb{y}} \right) \vb{U}^\top
+\end{align*}}
+以下の積分を示そう:
+\begin{align*}
+  \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \prod_{i = 1}^D \mathcal{N}(y_i \mid 0, \lambda_i)
+    \vb{y} \vb{y}^\top \dd{\vb{y}} = \vb{\Lambda}
+\end{align*}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+$\vb{y} \vb{y}^\top$の$(i, j)$成分は$y_i y_j$だから, 積分の$(i, j)$成分を考えると,
+\begin{align*}
+  & \left( \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \prod_{k = 1}^D \mathcal{N}(y_k \mid 0, \lambda_k)
+    \vb{y} \vb{y}^\top \dd{\vb{y}} \right)_{ij} \\
+  &= \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \prod_{j = 1}^D \mathcal{N}(y_k \mid 0, \lambda_k)
+    y_i y_j \dd{\vb{y}} \\
+  &= \int_{-\infty}^\infty \cdots \int_{-\infty}^\infty
+    \mathcal{N}(y_1 \mid 0, \lambda_1) \cdots \mathcal{N}(y_D \mid 0, \lambda_D)
+    y_i y_j \dd{y_1} \cdots \dd{y_D}
+\end{align*}
+全ての$k \neq i, j$について, $\mathcal{N}(y_k \mid 0, \lambda_k)$は積分により1となるから,
+\begin{align*}
+  \int_{-\infty}^\infty \int_{-\infty}^\infty
+    \mathcal{N}(y_i \mid 0, \lambda_i) \mathcal{N}(y_j \mid 0, \lambda_j)
+    y_i y_j \dd{y_i} \dd{y_j} = \E{y_i y_j}
+\end{align*}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+$i \neq j$ならば,
+\begin{align*}
+  \int_{-\infty}^\infty \mathcal{N}(y_i \mid 0, \lambda_i) y_i \dd{y_i}
+    \int_{-\infty}^\infty \mathcal{N}(y_j \mid 0, \lambda_j) y_j \dd{y_j} = 0
+\end{align*}
+$\mathcal{N}(y_i \mid 0, \lambda_i) y_i$は奇関数なので, 積分すると0になることを用いた:
+\begin{align*}
+  \mathcal{N}(y_i \mid 0, \lambda_i) y_i =
+    \frac{1}{\sqrt{2\pi \lambda_i}}
+    \exp(-\frac{1}{2 \lambda_i} y_i^2) y_i \quad \text{(奇関数)}
+\end{align*}
+$i = j$ならば, $\int_{-\infty}^\infty x^2 \exp(-a x^2) \dd{x} = \frac{1}{2} \sqrt{\frac{\pi}{a^3}}$を使って,
+\begin{align*}
+  \int_{-\infty}^\infty \mathcal{N}(y_i \mid 0, \lambda_i) y_i^2 \dd{y_i}
+  &= \frac{1}{\sqrt{2\pi \lambda_i}} \int_{-\infty}^\infty
+    \exp(-\frac{1}{2 \lambda_i} y_i^2) y_i^2 \dd{y_i} \\
+  &= \frac{1}{\sqrt{2\pi \lambda_i}}
+    \cdot \frac{1}{2} \sqrt{8 \lambda_i^3 \pi}
+  = \lambda_i
+\end{align*}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+$i = j$のときの積分は, 次のようにも求められる:
+\begin{align*}
+  \int_{-\infty}^\infty \mathcal{N}(y_i \mid 0, \lambda_i) y_i^2 \dd{y_i}
+  &= \E{y_i^2} = \Var{y_i} + \E{y_i}^2 = \lambda_i + 0^2 = \lambda_i
+\end{align*}
+$\Var{x} = \E{x^2} - \E{x}^2$と, $\E{y_i} = 0, \Var{y_i} = \lambda_i$を用いた. \\
+以上より, 次の積分は, 対角要素が$\lambda_i$, それ以外の成分が0だから,
+\begin{align*}
+  \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \prod_{k = 1}^D \mathcal{N}(y_k \mid 0, \lambda_k)
+    \vb{y} \vb{y}^\top \dd{\vb{y}}
+  = \diag(\lambda_1, \ldots, \lambda_D)
+  = \vb{\Lambda}
+\end{align*}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+よって,
+\begin{align*}
+  & \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+  \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \vb{z} \vb{z}^\top \dd{\vb{z}} \\
+  &= \vb{U} \left( \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \prod_{i = 1}^D \mathcal{N}(y_i \mid 0, \lambda_i)
+    \vb{y} \vb{y}^\top \dd{\vb{y}} \right) \vb{U}^\top
+  = \vb{U} \vb{\Lambda} \vb{U}^\top = \vb{\Sigma}
+\end{align*}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+以上より,
+{\small \begin{align*}
+  \E{\vb{x} \vb{x}^\top} &=
+    \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z})
+    \left( \vb{z} + \vb*{\mu} \right) \left( \vb{z} + \vb*{\mu} \right)^\top \dd{\vb{z}} \\
+  &= \vb{\Sigma} + \vb*{\mu} \vb*{\mu}^\top
+\end{align*}}
+ただし,
+{\small \begin{align*}
+  \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+  \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z})
+    \vb*{\mu} \vb{z}^\top \dd{\vb{z}} &= \vb{0} \\
+  \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+  \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z})
+    \vb{z} \vb*{\mu}^\top \dd{\vb{z}} &= \vb{0} \\
+  \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+  \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z})
+    \vb*{\mu} \vb*{\mu}^\top \dd{\vb{z}} &= \vb*{\mu} \vb*{\mu}^\top \\
+  \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+  \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z})
+    \vb{z} \vb{z}^\top \dd{\vb{z}} &= \vb{\Sigma}
+\end{align*}}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+最後に, $\E{\left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top}$が, 以下を満たすことを確かめよう:
+\begin{align*}
+  \E{\left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top} = \vb{\Sigma}
+\end{align*}
+
+ただし,
+{\small \begin{align*}
+  & \E{\left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top}
+  = \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})
+    \left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top \dd{\vb{x}} \\
+  &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+    \left( \vb{x} - \vb*{\mu} \right))
+    \left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top \dd{\vb{x}}
+\end{align*}}
+$\vb{z} = \vb{x} - \vb*{\mu}$とすると, $\vb{x} = \vb{z} + \vb*{\mu}$だから,
+\begin{align*}
+  \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \vb{z} \vb{z}^\top
+    \left| \det \vb{J} \right| \dd{\vb{z}}
+\end{align*}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の共分散}
+ヤコビ行列は$\vb{J} = \pdv{\vb{x}}{\vb{z}} = \vb{I}$, ゆえにヤコビアンは$\left| \det \vb{J} \right| = 1$だから,
+\begin{align*}
+  & \E{\left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top} \\
+  &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \vb{z} \vb{z}^\top
+    \left| \det \vb{J} \right| \dd{\vb{z}} \\
+  &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \vb{z}^\top \vb{\Sigma}^{-1} \vb{z}) \vb{z} \vb{z}^\top \dd{\vb{z}} \\
+  &= \vb{\Sigma} \quad \text{(先程行った積分と同じ)}
+\end{align*}
+
+次のようにも確かめられる:
+\begin{align*}
+  \E{\left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top}
+  &= \E{\left( \vb{x} - \E{\vb{x}} \right) \left( \vb{x} - \E{\vb{x}} \right)^\top}
+  = \Var{\vb{x}} \\
+  &= \E{\vb{x} \vb{x}^\top} - \E{\vb{x}} \E{\vb{x}}^\top
+  = \vb{\Sigma} + \vb*{\mu} \vb*{\mu}^\top - \vb*{\mu} \vb*{\mu}^\top
+  = \vb{\Sigma}
+\end{align*}
+\end{frame}
+
+\begin{frame}{多変量ガウス分布の平均と共分散}
+\begin{block}{多変量ガウス分布の平均と共分散}
+  \begin{align*}
+    \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})
+    = \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right))
+  \end{align*}
+  このガウス分布の平均と共分散は,
+  \begin{gather*}
+    \E{\vb{x}} = \vb*{\mu} \\
+    \E{\left( \vb{x} - \vb*{\mu} \right) \left( \vb{x} - \vb*{\mu} \right)^\top}
+      = \Var{\vb{x}} = \vb{\Sigma}
+  \end{gather*}
+\end{block}
+
+\begin{itemize}
+  \item スカラの場合と同じように, \textcolor{red}{モーメント母関数} (積率母関数) を使うこともできる.
+\end{itemize}
+\end{frame}
+
+\subsection{多次元ガウス分布のモーメント母関数}
+
+\begin{frame}{モーメント母関数 (多次元)}
+\begin{block}{モーメント母関数 (多次元)}
+  確率分布$p(\vb{x})$があるとき, $\E{\exp(\vb{t}^\top \vb{x})}$を, モーメント母関数という.
+  \begin{align*}
+    \E{\exp(\vb{t}^\top \vb{x})} = \E{1 + \vb{t}^\top \vb{x}
+      + \frac{1}{2!} \left( \vb{t}^\top \vb{x} \right)^2
+      + \frac{1}{3!} \left( \vb{t}^\top \vb{x} \right)^3 + \cdots}
+  \end{align*}
+  $\vb{t}$で1回微分してから$\vb{t} = \vb{0}$を代入すると, $\E{\vb{x}}$が得られる. \\
+  $\vb{t}$で2回微分してから$\vb{t} = \vb{0}$を代入すると, $\E{\vb{x} \vb{x}^\top}$が得られる.
+  \begin{align*}
+    \E{\vb{x}} &= \left. \pdv{\vb{t}}
+      \E{\exp(\vb{t}^\top \vb{x})} \right|_{\vb{t} = \vb{0}} \\
+    \E{\vb{x} \vb{x}^\top} &= \left. \frac{\partial^2}{\partial \vb{t}^\top \partial \vb{t}}
+      \E{\exp(\vb{t}^\top \vb{x})} \right|_{\vb{t} = \vb{0}}
+  \end{align*}
+\end{block}
+\end{frame}
+
+\begin{frame}{モーメント母関数 (多次元)}
+\begin{itemize}
+  \item 分子レイアウトでは, 次が成り立つ (スカラのベクトルによる微分):
+  \begin{gather*}
+    \pdv{\vb{a}^\top \vb{x}}{\vb{x}}
+      = \pdv{\vb{x}^\top \vb{a}}{\vb{x}}
+      = \vb{a}^\top, \quad \\
+    \pdv{\left( \vb{a}^\top \vb{x} \right)^2}{\vb{x}}
+      = \pdv{\left( \vb{x}^\top \vb{a} \right)^2}{\vb{x}}
+      = 2 \left( \vb{x}^\top \vb{a} \right) \vb{a}^\top \\
+    \pdv{\left( \vb{a}^\top \vb{x} \right)^n}{\vb{x}}
+      = \pdv{\left( \vb{x}^\top \vb{a} \right)^n}{\vb{x}}
+      = n \left( \vb{x}^\top \vb{a} \right)^{n - 1} \vb{a}^\top
+  \end{gather*}
+  \item 各要素$x_i$に対する微分を考えると, 合成関数の微分から,
+  \begin{align*}
+    \pdv{\left( \vb{a}^\top \vb{x} \right)^n}{x_i}
+    &= \pdv{\left( \vb{x}^\top \vb{a} \right)^n}{x_i}
+    = n \left( \vb{x}^\top \vb{a} \right)^{n - 1} \pdv{\vb{x}^\top \vb{a}}{x_i} \\
+    &= n \left( \vb{x}^\top \vb{a} \right)^{n - 1}
+      \left( \pdv{\vb{x}^\top \vb{a}}{\vb{x}} \right)_i
+    = n \left( \vb{x}^\top \vb{a} \right)^{n - 1} \left( \vb{a} \right)_i
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{モーメント母関数 (多次元)}
+\begin{itemize}
+  \item スカラの$\vb{x}^\top$による微分は, $\vb{x}$による微分を転置したものと考える:
+  \begin{gather*}
+    \pdv{\vb{a}^\top \vb{x}}{\vb{x}^\top}
+      = \pdv{\vb{x}^\top \vb{a}}{\vb{x}^\top}
+      = \vb{a}, \quad \\
+    \pdv{\left( \vb{a}^\top \vb{x} \right)^2}{\vb{x}^\top}
+      = \pdv{\left( \vb{x}^\top \vb{a} \right)^2}{\vb{x}^\top}
+      = 2 \left( \vb{x}^\top \vb{a} \right) \vb{a} \\
+    \pdv{\left( \vb{a}^\top \vb{x} \right)^n}{\vb{x}^\top}
+      = \pdv{\left( \vb{x}^\top \vb{a} \right)^n}{\vb{x}^\top}
+      = n \left( \vb{x}^\top \vb{a} \right)^{n - 1} \vb{a}
+  \end{gather*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{モーメント母関数 (多次元)}
+\begin{itemize}
+  \item モーメント母関数:
+  \begin{align*}
+    & \E{\exp(\vb{t}^\top \vb{x})} = \E{1 + \vb{t}^\top \vb{x}
+      + \frac{1}{2!} \left( \vb{t}^\top \vb{x} \right)^2
+      + \frac{1}{3!} \left( \vb{t}^\top \vb{x} \right)^3 + \cdots} \\
+    &= 1 + \E{\vb{t}^\top \vb{x}} + \frac{1}{2!} \E{\left( \vb{t}^\top \vb{x} \right)^2}
+      + \frac{1}{3!} \E{\left( \vb{t}^\top \vb{x} \right)^3} + \cdots \\
+    &= 1 + \vb{t}^\top \E{\vb{x}} + \frac{1}{2!} \vb{t}^\top \E{\vb{x} \vb{x}^\top} \vb{t}
+      + \frac{1}{3!} \vb{t}^\top \E{\vb{x} \vb{t}^\top \vb{x} \vb{x}^\top} \vb{t} + \cdots
+  \end{align*}
+  \item $\vb{t}$で1回微分して$\vb{t} = \vb{0}$を代入すれば, $\E{\vb{x}}^\top$を得る.
+  \begin{align*}
+    \pdv{\vb{t}} \E{\exp(\vb{t}^\top \vb{x})}
+    &= \E{\vb{x}}^\top + \vb{t}^\top \E{\vb{x} \vb{x}^\top} + \cdots
+  \end{align*}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{モーメント母関数 (多次元)}
+\begin{itemize}
+  \item $\vb{t}$で1回微分すると,
+  \begin{align*}
+    \pdv{\vb{t}} \E{\exp(\vb{t}^\top \vb{x})}
+    &= \E{\vb{x}}^\top + \vb{t}^\top \E{\vb{x} \vb{x}^\top} + \cdots
+  \end{align*}
+  \item $\vb{t}^\top$で, さらにもう1回微分すると,
+  \begin{align*}
+    \frac{\partial^2}{\partial \vb{t}^\top \partial \vb{t}} \E{\exp(\vb{t}^\top \vb{x})}
+    &= \E{\vb{x} \vb{x}^\top} + \cdots
+  \end{align*}
+  \item $\vb{t} = \vb{0}$を代入すれば, $\E{\vb{x} \vb{x}^\top}$を得る.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{多次元ガウス分布に対するモーメント母関数}
+\begin{block}{ガウス分布のモーメント母関数 (多次元)}
+  ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$に対するモーメント母関数は,
+  \begin{align*}
+    \E{\exp(\vb{t}^\top \vb{x})} = \exp(\vb*{\mu}^\top \vb{t}
+      + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+  \end{align*}
+\end{block}
+
+ただし,
+\begin{align*}
+  \E{\exp(\vb{t}^\top \vb{x})} &= \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma}) \exp(\vb{t}^\top \vb{x}) \dd{\vb{x}} \\
+  &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right)) \\
+  & \quad \exp(\vb{t}^\top \vb{x}) \dd{\vb{x}}
+\end{align*}
+\end{frame}
+
+\begin{frame}{多次元ガウス分布に対するモーメント母関数}
+$\exp(\cdot)$の中身を平方完成させる ($\vb{t}^\top \vb{x} = \vb{x}^\top \vb{t}$):
+\begin{align*}
+  & -\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+    \left( \vb{x} - \vb*{\mu} \right) + \vb{t}^\top \vb{x} \\
+  &= -\frac{1}{2} \left( \vb{x}^\top \vb{\Sigma}^{-1} \vb{x}
+    - \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb{x}
+    - \vb{x}^\top \vb{\Sigma}^{-1} \vb*{\mu}
+    + \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb*{\mu} {\color{red} - 2 \vb{t}^\top \vb{x}} \right) \\
+  &= -\frac{1}{2} \left( \vb{x}^\top \vb{\Sigma}^{-1} \vb{x}
+    - \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb{x} - {\color{red} \vb{t}^\top \vb{x}}
+    - \vb{x}^\top \vb{\Sigma}^{-1} \vb*{\mu} - {\color{red} \vb{x}^\top \vb{t}}
+    + \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb*{\mu} \right)
+\end{align*}
+$\vb{\Sigma}, \vb{\Sigma}^{-1}$には平方根$\vb{\Sigma}^{\frac{1}{2}}, \vb{\Sigma}^{-\frac{1}{2}}$が存在する.
+対角化$\vb{\Lambda} = \vb{U}^\top \vb{\Sigma} \vb{U}$の結果を使えば
+($\vb{U}$は直交行列, $\vb{\Lambda}$は$\vb{\Sigma}$の固有値を並べた対角行列),
+\begin{gather*}
+  \vb{\Sigma}^\frac{1}{2} = \vb{U} \vb{\Lambda}^\frac{1}{2} \vb{U}^\top, \quad
+  \vb{\Sigma}^{-\frac{1}{2}} = \vb{U} \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top
+\end{gather*}
+$\vb{\Lambda}^\frac{1}{2}, \vb{\Lambda}^{-\frac{1}{2}}$は対角行列だから対称.
+よって, $\vb{\Sigma}^{\frac{1}{2}}, \vb{\Sigma}^{-\frac{1}{2}}$も対称.
+\end{frame}
+
+\begin{frame}{多次元ガウス分布に対するモーメント母関数}
+平方根$\vb{\Sigma}^{\frac{1}{2}}, \vb{\Sigma}^{-\frac{1}{2}}$を使い (対称性に注意), さらに平方完成すると,
+{\small \begin{align*}
+  & -\frac{1}{2} \left( \vb{x}^\top \vb{\Sigma}^{-1} \vb{x}
+    - \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb{x} - \vb{t}^\top \vb{x}
+    - \vb{x}^\top \vb{\Sigma}^{-1} \vb*{\mu} - \vb{x}^\top \vb{t}
+    + \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb*{\mu} \right) \\
+  &= \text{\color{red} (練習問題)} \\
+  % &= -\frac{1}{2} \bigg( \vb{x}^\top \vb{\Sigma}^{-\frac{1}{2}} \vb{\Sigma}^{-\frac{1}{2}} \vb{x}
+  %   - \left( \vb*{\mu}^\top \vb{\Sigma}^{-\frac{1}{2}} + \vb{t}^\top \vb{\Sigma}^{\frac{1}{2}} \right)
+  %     \vb{\Sigma}^{-\frac{1}{2}} \vb{x} \\
+  % & \quad - \vb{x}^\top \vb{\Sigma}^{-\frac{1}{2}}
+  %     \left( \vb{\Sigma}^{-\frac{1}{2}} \vb*{\mu} + \vb{\Sigma}^{\frac{1}{2}} \vb{t} \right)
+  %   + \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb*{\mu} \bigg) \\
+  % &= -\frac{1}{2} \bigg( \left( \vb{\Sigma}^{-\frac{1}{2}} \vb{x} \right)^\top
+  %   \vb{\Sigma}^{-\frac{1}{2}} \vb{x}
+  %   - \left( \vb{\Sigma}^{-\frac{1}{2}} \vb*{\mu} + \vb{\Sigma}^{\frac{1}{2}} \vb{t} \right)^\top
+  %   \vb{\Sigma}^{-\frac{1}{2}} \vb{x} \\
+  % & \quad - \left( \vb{\Sigma}^{-\frac{1}{2}} \vb{x} \right)^\top
+  %   \left( \vb{\Sigma}^{-\frac{1}{2}} \vb*{\mu} + \vb{\Sigma}^{\frac{1}{2}} \vb{t} \right)
+  %   + \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb*{\mu} \bigg) \quad \text{($\because$対称性)} \\
+  &= -\frac{1}{2} \bigg( \left( \vb{\Sigma}^{-\frac{1}{2}} \vb{x}
+    - \left( \vb{\Sigma}^{-\frac{1}{2}} \vb*{\mu} + \vb{\Sigma}^{\frac{1}{2}} \vb{t} \right) \right)^\top
+    \left( \vb{\Sigma}^{-\frac{1}{2}} \vb{x}
+    - \left( \vb{\Sigma}^{-\frac{1}{2}} \vb*{\mu} + \vb{\Sigma}^{\frac{1}{2}} \vb{t} \right) \right) \\
+  & \quad - \vb*{\mu}^\top \vb{t} - \vb{t}^\top \vb*{\mu} - \vb{t}^\top \vb{\Sigma} \vb{t} \bigg)
+\end{align*}}
+\end{frame}
+
+\begin{frame}{多次元ガウス分布に対するモーメント母関数}
+以上より, $\exp(\cdot)$の中身は,
+\begin{align*}
+  & -\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+    \left( \vb{x} - \vb*{\mu} \right) + \vb{t}^\top \vb{x} \\
+  &= -\frac{1}{2} \bigg( \left( \vb{\Sigma}^{-\frac{1}{2}} \vb{x}
+    - \left( \vb{\Sigma}^{-\frac{1}{2}} \vb*{\mu} + \vb{\Sigma}^{\frac{1}{2}} \vb{t} \right) \right)^\top
+    \left( \vb{\Sigma}^{-\frac{1}{2}} \vb{x}
+    - \left( \vb{\Sigma}^{-\frac{1}{2}} \vb*{\mu} + \vb{\Sigma}^{\frac{1}{2}} \vb{t} \right) \right) \\
+  & \quad - \vb*{\mu}^\top \vb{t} - \vb{t}^\top \vb*{\mu} - \vb{t}^\top \vb{\Sigma} \vb{t} \bigg) \\
+  &= \text{\color{red} (練習問題)} \\
+  % &= -\frac{1}{2} \left( \vb{x}
+  %   - \left( \vb*{\mu} + \vb{\Sigma} \vb{t} \right) \right)^\top \vb{\Sigma}^{-\frac{1}{2}}
+  %   \vb{\Sigma}^{-\frac{1}{2}} \left( \vb{x}
+  %   - \left( \vb*{\mu} + \vb{\Sigma} \vb{t} \right) \right)
+  %   \quad \text{($\vb{\Sigma}^{-\frac{1}{2}}$をくくり出す)} \\
+  % & \quad + \vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t}
+  %   \quad \text{($\because$ $\vb*{\mu}^\top \vb{t} = \vb{t}^\top \vb*{\mu}$)} \\
+  &= -\frac{1}{2} \left( \vb{x} - \left( \vb*{\mu} + \vb{\Sigma} \vb{t} \right) \right)^\top \vb{\Sigma}^{-1}
+    \left( \vb{x} - \left( \vb*{\mu} + \vb{\Sigma} \vb{t} \right) \right)
+    + \vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t}
+\end{align*}
+\end{frame}
+
+\begin{frame}{多次元ガウス分布に対するモーメント母関数}
+以上より, モーメント母関数は,
+\begin{align*}
+  \E{\exp(\vb{t}^\top \vb{x})}
+  &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right)) \\
+  & \quad \exp(\vb{t}^\top \vb{x}) \dd{\vb{x}} \\
+  &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+    \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t}) \\
+  & \quad \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \exp(-\frac{1}{2} \left( \vb{x} - \left( \vb*{\mu} + \vb{\Sigma} \vb{t} \right) \right)^\top \vb{\Sigma}^{-1}
+    \left( \vb{x} - \left( \vb*{\mu} + \vb{\Sigma} \vb{t} \right) \right)) \dd{\vb{x}} \\
+  &= \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+    \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+    \mathcal{N}(\vb{x} \mid \vb*{\mu} + \vb{\Sigma} \vb{t}, \vb{\Sigma}) \dd{\vb{x}} \\
+  &= \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+    \quad \text{($\because$ガウス分布の積分は1)}
+\end{align*}
+\end{frame}
+
+\begin{frame}{多次元ガウス分布に対するモーメント母関数}
+ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$の平均は,
+\begin{align*}
+  \E{\vb{x}}^\top
+  &= \left. \dv{\vb{t}} \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+    \right|_{\vb{t} = \vb{0}} \\
+  % &= \left. \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+  %   \dv{\vb{t}} \left( \vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t} \right)
+  %   \right|_{\vb{t} = \vb{0}} \\
+  % &= \left. \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+  %   \left( \vb*{\mu}^\top + \vb{t}^\top \vb{\Sigma} \right)
+  %   \right|_{\vb{t} = \vb{0}} = \vb*{\mu}^\top
+  &= \text{\color{red} (練習問題)} = \vb*{\mu}^\top
+\end{align*}
+であるから, $\E{\vb{x}} = \vb*{\mu}$.
+\end{frame}
+
+\begin{frame}{多次元ガウス分布に対するモーメント母関数}
+ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$の2次モーメントは, 合成関数の微分より,
+\begin{align*}
+  \E{\vb{x} \vb{x}^\top}
+  &= \left. \frac{\dd[2]}{\dd{\vb{t}^\top} \dd{\vb{t}}}
+    \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+    \right|_{\vb{t} = \vb{0}} \\
+  &= \text{\color{red} (練習問題)} \\
+  % &= \pdv{\vb{t}^\top} \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+  %   \left( \vb*{\mu}^\top + \vb{t}^\top \vb{\Sigma} \right) \\
+  % & \quad + \left. \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+  %   \pdv{\vb{t}^\top} \left( \vb*{\mu}^\top + \vb{t}^\top \vb{\Sigma} \right)
+  %   \right|_{\vb{t} = \vb{0}} \\
+  % &= \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})^2
+  %   \left( \vb*{\mu} + \vb{\Sigma} \vb{t} \right)
+  %   \left( \vb*{\mu}^\top + \vb{t}^\top \vb{\Sigma} \right) \\
+  % & \quad + \left. \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+  %   \vb{\Sigma} \right|_{\vb{t} = \vb{0}}
+  % = \vb*{\mu} \vb*{\mu}^\top + \vb{\Sigma}
+  &= \vb*{\mu} \vb*{\mu}^\top + \vb{\Sigma}
+\end{align*}
+$\vb{t}^\top$による微分は, $\vb{t}$による微分を転置させたものとなる.
+\end{frame}
+
+\begin{frame}{多次元ガウス分布に対するモーメント母関数}
+ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$の分散は,
+$\E{\vb{x} \vb{x}^\top}$, $\E{\vb{x}}$を使えば簡単に求められる:
+\begin{align*}
+  \Var{\vb{x}} &= \E{\left( \vb{x} - \E{\vb{x}} \right) \left( \vb{x} - \E{\vb{x}} \right)^\top} \\
+  &= \E{\vb{x} \vb{x}^\top} - \E{\vb{x}} \E{\vb{x}}^\top \\
+  &= \vb*{\mu} \vb*{\mu}^\top + \vb{\Sigma} - \vb*{\mu} \vb*{\mu}^\top = \vb{\Sigma}
+\end{align*}
+
+モーメント母関数を使うことで, 積分を使った最初の方法よりも楽に, 平均と共分散を計算できた.
+\end{frame}
+
+\begin{frame}{まとめ}
+\begin{itemize}
+  \item ガウス分布 (1次元)
+  \begin{itemize}
+    \item 平均, 分散, 高次のモーメント, モーメント母関数
+  \end{itemize}
+  \item 多変量ガウス分布
+  \begin{itemize}
+    \item 平均, 共分散, 共分散の性質, 無相関化, モーメント母関数
+  \end{itemize}
+  \item \textcolor{red}{まだ, モーメントしか確認できていない!}
+  \item 次回以降, ガウス分布の他の性質について確認していく:
+  \begin{itemize}
+    \item 条件付き分布, 周辺分布, 線形変換, 非線形変換
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\end{document}
