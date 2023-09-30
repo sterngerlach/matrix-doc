@@ -391,6 +391,69 @@
 \end{enumerate}
 \end{frame}
 
+\begin{frame}{第7回: ガウス分布1}
+\begin{enumerate}
+  \item 次の積分を計算してください:
+  \begin{align*}
+    \int_{-\infty}^\infty (x - \mu)^2
+      \exp \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x}
+  \end{align*}
+
+  \item ガウス分布$\mathcal{N}(x \mid \mu, \sigma^2)$のモーメント母関数$\E{\exp(tx)}$について,
+  $\exp(\cdot)$の中身を平方完成させてください:
+  \begin{align*}
+    \E{\exp(tx)} &= \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi \sigma^2}}
+      \exp(tx -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2) \dd{x}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第7回: ガウス分布1}
+\begin{enumerate}
+  \setcounter{enumi}{2}
+  \item モーメント母関数を使って, ガウス分布の平均と分散を求めてください.
+  \begin{align*}
+    \E{x} &= \left. \dv{t} \exp(\mu t + \frac{\sigma^2 t^2}{2}) \right|_{t = 0} \\
+    \E{x^2} &= \left. \dv[2]{t} \exp(\mu t + \frac{\sigma^2 t^2}{2}) \right|_{t = 0} \\
+    \Var{x} &= \E{x^2} - \E{x}^2
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第7回: ガウス分布1}
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$の
+  モーメント母関数$\E{\exp(\vb{t}^\top \vb{x})}$について,
+  $\exp(\cdot)$の中身を平方完成させてください:
+  \begin{align*}
+    & \E{\exp(\vb{t}^\top \vb{x})} \\
+    &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+      \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+      \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+        \left( \vb{x} - \vb*{\mu} \right) + \vb{t}^\top \vb{x}) \dd{\vb{x}}
+  \end{align*}
+  ヒントはスライドに載っているので, 適宜参考にしてください.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第7回: ガウス分布1}
+\begin{enumerate}
+  \setcounter{enumi}{4}
+  \item モーメント母関数を使って, 多変量ガウス分布の平均と共分散を求めてください.
+  \begin{align*}
+    \E{\vb{x}}^\top
+    &= \left. \dv{\vb{t}} \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+      \right|_{\vb{t} = \vb{0}} \\
+    \E{\vb{x} \vb{x}^\top}
+    &= \left. \frac{\dd[2]}{\dd{\vb{t}^\top} \dd{\vb{t}}}
+      \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+      \right|_{\vb{t} = \vb{0}} \\
+    \Var{\vb{x}} &= \E{\vb{x} \vb{x}^\top} - \E{\vb{x}} \E{\vb{x}}^\top
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
 \begin{frame}{}
 \end{frame}
 
@@ -957,6 +1020,199 @@
       = \frac{3}{8} \sqrt{\frac{\pi}{a^5}} \\
     I_5 &= I_{3 + 2} = \frac{3 + 1}{2a} I_3 = \frac{4}{2a} \frac{1}{2 a^2}
       = \frac{1}{a^3}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第7回: ガウス分布1}
+\begin{enumerate}
+  \item 次の積分を計算してください:
+  \begin{align*}
+    \int_{-\infty}^\infty (x - \mu)^2
+      \exp \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x}
+  \end{align*}
+  $y = \frac{x - \mu}{\sqrt{2 \sigma^2}}$とすると,
+  $x = \sqrt{2 \sigma^2} y + \mu, \dv{x}{y} = \sqrt{2 \sigma^2}$だから,
+  \begin{align*}
+    2 \sigma^2 \int_{-\infty}^\infty y^2 \exp \left( -y^2 \right) \dv{x}{y} \dd{y}
+      &= 2 \sigma^2 \cdot \sqrt{2 \sigma^2}
+        \underbrace{\int_{-\infty}^\infty y^2 \exp \left( -y^2 \right) \dd{y}}_{= \frac{1}{2} \sqrt{\pi}} \\
+      &= 2 \sigma^2 \cdot \sqrt{2 \sigma^2} \frac{1}{2} \sqrt{\pi} \\
+      &= \sigma^2 \sqrt{2 \pi \sigma^2}
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第7回: ガウス分布1}
+\begin{enumerate}
+  \setcounter{enumi}{1}
+  \item ガウス分布$\mathcal{N}(x \mid \mu, \sigma^2)$のモーメント母関数$\E{\exp(tx)}$について,
+  $\exp(\cdot)$の中身を平方完成させてください:
+  \begin{align*}
+    \E{\exp(tx)} &= \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi \sigma^2}}
+      \exp(tx -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2) \dd{x}
+  \end{align*}
+  次のようになる:
+  \begin{align*}
+    tx - \frac{1}{2 \sigma^2} \left( x - \mu \right)^2
+    &= -\frac{1}{2 \sigma^2} \left( x^2 - 2 \mu x - 2 \sigma^2 tx + \mu^2 \right) \\
+    &= -\frac{1}{2 \sigma^2} \left( \left( x - \left( \mu + \sigma^2 t \right) \right)^2
+      - 2 \mu \sigma^2 t - \sigma^4 t^2 \right) \\
+    &= \left( \mu t + \frac{\sigma^2 t^2}{2} \right)
+      -\frac{1}{2 \sigma^2} \left( x - \left( \mu + \sigma^2 t \right) \right)^2
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第7回: ガウス分布1}
+\begin{enumerate}
+  \setcounter{enumi}{2}
+  \item モーメント母関数を使って, ガウス分布の平均と分散を求めてください.
+  \begin{align*}
+    \E{x} &= \left. \dv{t} \exp(\mu t + \frac{\sigma^2 t^2}{2}) \right|_{t = 0} \\
+    \E{x^2} &= \left. \dv[2]{t} \exp(\mu t + \frac{\sigma^2 t^2}{2}) \right|_{t = 0} \\
+    \Var{x} &= \E{x^2} - \E{x}^2
+  \end{align*}
+
+  \newpage
+  平均は,
+  \begin{align*}
+    \E{x} &= \left. \dv{t} \exp(\mu t + \frac{\sigma^2 t^2}{2}) \right|_{t = 0} \\
+      &= \left. \exp(\mu t + \frac{\sigma^2 t^2}{2}) \left( \mu + \sigma^2 t \right) \right|_{t = 0}
+      = \mu
+  \end{align*}
+  分散は,
+  \begin{align*}
+    \E{x^2} &= \left. \dv[2]{t} \exp(\mu t + \frac{\sigma^2 t^2}{2}) \right|_{t = 0} \\
+      &= \left. \exp(\mu t + \frac{\sigma^2 t^2}{2}) \sigma^2 +
+        \exp(\mu t + \frac{\sigma^2 t^2}{2}) \left( \mu + \sigma^2 t \right)^2 \right|_{t = 0} \\
+      &= \sigma^2 + \mu^2 \\
+    \Var{x} &= \E{x^2} - \E{x}^2 = \sigma^2
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第7回: ガウス分布1}
+\begin{enumerate}
+  \setcounter{enumi}{3}
+  \item ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$の
+  モーメント母関数$\E{\exp(\vb{t}^\top \vb{x})}$について,
+  $\exp(\cdot)$の中身を平方完成させてください:
+  \begin{align*}
+    & \E{\exp(\vb{t}^\top \vb{x})} \\
+    &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
+      \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+      \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+        \left( \vb{x} - \vb*{\mu} \right) + \vb{t}^\top \vb{x}) \dd{\vb{x}}
+  \end{align*}
+  最初に,
+  {\small \begin{align*}
+    & -\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right) + \vb{t}^\top \vb{x} \\
+    &= -\frac{1}{2} \left( \vb{x}^\top \vb{\Sigma}^{-1} \vb{x}
+      - \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb{x}
+      - \vb{x}^\top \vb{\Sigma}^{-1} \vb*{\mu}
+      + \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb*{\mu} {\color{red} - 2 \vb{t}^\top \vb{x}} \right) \\
+    &= -\frac{1}{2} \left( \vb{x}^\top \vb{\Sigma}^{-1} \vb{x}
+      - \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb{x} - {\color{red} \vb{t}^\top \vb{x}}
+      - \vb{x}^\top \vb{\Sigma}^{-1} \vb*{\mu} - {\color{red} \vb{x}^\top \vb{t}}
+      + \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb*{\mu} \right)
+  \end{align*}}
+  平方根$\vb{\Sigma}^{\frac{1}{2}}, \vb{\Sigma}^{-\frac{1}{2}}$を使い (対称性に注意), さらに平方完成すると,
+  {\small \begin{align*}
+    & -\frac{1}{2} \left( \vb{x}^\top \vb{\Sigma}^{-1} \vb{x}
+      - \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb{x} - \vb{t}^\top \vb{x}
+      - \vb{x}^\top \vb{\Sigma}^{-1} \vb*{\mu} - \vb{x}^\top \vb{t}
+      + \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb*{\mu} \right) \\
+    &= -\frac{1}{2} \bigg( \vb{x}^\top \vb{\Sigma}^{-\frac{1}{2}} \vb{\Sigma}^{-\frac{1}{2}} \vb{x}
+      - \left( \vb*{\mu}^\top \vb{\Sigma}^{-\frac{1}{2}} + \vb{t}^\top \vb{\Sigma}^{\frac{1}{2}} \right)
+        \vb{\Sigma}^{-\frac{1}{2}} \vb{x} \\
+    & \quad - \vb{x}^\top \vb{\Sigma}^{-\frac{1}{2}}
+        \left( \vb{\Sigma}^{-\frac{1}{2}} \vb*{\mu} + \vb{\Sigma}^{\frac{1}{2}} \vb{t} \right)
+      + \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb*{\mu} \bigg) \\
+    &= -\frac{1}{2} \bigg( \left( \vb{\Sigma}^{-\frac{1}{2}} \vb{x} \right)^\top
+      \vb{\Sigma}^{-\frac{1}{2}} \vb{x}
+      - \left( \vb{\Sigma}^{-\frac{1}{2}} \vb*{\mu} + \vb{\Sigma}^{\frac{1}{2}} \vb{t} \right)^\top
+      \vb{\Sigma}^{-\frac{1}{2}} \vb{x} \\
+    & \quad - \left( \vb{\Sigma}^{-\frac{1}{2}} \vb{x} \right)^\top
+      \left( \vb{\Sigma}^{-\frac{1}{2}} \vb*{\mu} + \vb{\Sigma}^{\frac{1}{2}} \vb{t} \right)
+      + \vb*{\mu}^\top \vb{\Sigma}^{-1} \vb*{\mu} \bigg) \quad \text{($\because$対称性)} \\
+    &= -\frac{1}{2} \bigg( \left( \vb{\Sigma}^{-\frac{1}{2}} \vb{x}
+      - \left( \vb{\Sigma}^{-\frac{1}{2}} \vb*{\mu} + \vb{\Sigma}^{\frac{1}{2}} \vb{t} \right) \right)^\top
+      \left( \vb{\Sigma}^{-\frac{1}{2}} \vb{x}
+      - \left( \vb{\Sigma}^{-\frac{1}{2}} \vb*{\mu} + \vb{\Sigma}^{\frac{1}{2}} \vb{t} \right) \right) \\
+    & \quad - \vb*{\mu}^\top \vb{t} - \vb{t}^\top \vb*{\mu} - \vb{t}^\top \vb{\Sigma} \vb{t} \bigg)
+  \end{align*}}
+  これを整理すれば,
+  {\small \begin{align*}
+    & -\frac{1}{2} \bigg( \left( \vb{\Sigma}^{-\frac{1}{2}} \vb{x}
+      - \left( \vb{\Sigma}^{-\frac{1}{2}} \vb*{\mu} + \vb{\Sigma}^{\frac{1}{2}} \vb{t} \right) \right)^\top
+      \left( \vb{\Sigma}^{-\frac{1}{2}} \vb{x}
+      - \left( \vb{\Sigma}^{-\frac{1}{2}} \vb*{\mu} + \vb{\Sigma}^{\frac{1}{2}} \vb{t} \right) \right) \\
+    & \quad - \vb*{\mu}^\top \vb{t} - \vb{t}^\top \vb*{\mu} - \vb{t}^\top \vb{\Sigma} \vb{t} \bigg) \\
+    &= -\frac{1}{2} \left( \vb{x}
+      - \left( \vb*{\mu} + \vb{\Sigma} \vb{t} \right) \right)^\top \vb{\Sigma}^{-\frac{1}{2}}
+      \vb{\Sigma}^{-\frac{1}{2}} \left( \vb{x}
+      - \left( \vb*{\mu} + \vb{\Sigma} \vb{t} \right) \right)
+      \quad \text{($\vb{\Sigma}^{-\frac{1}{2}}$をくくり出す)} \\
+    & \quad + \vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t}
+      \quad \text{($\because$ $\vb*{\mu}^\top \vb{t} = \vb{t}^\top \vb*{\mu}$)} \\
+    &= -\frac{1}{2} \left( \vb{x} - \left( \vb*{\mu} + \vb{\Sigma} \vb{t} \right) \right)^\top \vb{\Sigma}^{-1}
+      \left( \vb{x} - \left( \vb*{\mu} + \vb{\Sigma} \vb{t} \right) \right)
+      + \vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t}
+  \end{align*}}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第7回: ガウス分布1}
+\begin{enumerate}
+  \setcounter{enumi}{4}
+  \item モーメント母関数を使って, 多変量ガウス分布の平均と共分散を求めてください.
+  \begin{align*}
+    \E{\vb{x}}^\top
+    &= \left. \dv{\vb{t}} \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+      \right|_{\vb{t} = \vb{0}} \\
+    \E{\vb{x} \vb{x}^\top}
+    &= \left. \frac{\dd[2]}{\dd{\vb{t}^\top} \dd{\vb{t}}}
+      \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+      \right|_{\vb{t} = \vb{0}} \\
+    \Var{\vb{x}} &= \E{\vb{x} \vb{x}^\top} - \E{\vb{x}} \E{\vb{x}}^\top
+  \end{align*}
+
+  \newpage
+  平均は,
+  \begin{align*}
+    \E{\vb{x}}^\top
+    &= \left. \dv{\vb{t}} \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+      \right|_{\vb{t} = \vb{0}} \\
+    &= \left. \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+      \dv{\vb{t}} \left( \vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t} \right)
+      \right|_{\vb{t} = \vb{0}} \\
+    &= \left. \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+      \left( \vb*{\mu}^\top + \vb{t}^\top \vb{\Sigma} \right)
+      \right|_{\vb{t} = \vb{0}} = \vb*{\mu}^\top
+  \end{align*}
+
+  \newpage
+  分散は,
+  \begin{align*}
+    \E{\vb{x} \vb{x}^\top}
+    &= \left. \frac{\dd[2]}{\dd{\vb{t}^\top} \dd{\vb{t}}}
+      \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+      \right|_{\vb{t} = \vb{0}} \\
+    &= \pdv{\vb{t}^\top} \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+      \left( \vb*{\mu}^\top + \vb{t}^\top \vb{\Sigma} \right) \\
+    & \quad + \left. \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+      \pdv{\vb{t}^\top} \left( \vb*{\mu}^\top + \vb{t}^\top \vb{\Sigma} \right)
+      \right|_{\vb{t} = \vb{0}} \\
+    &= \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})^2
+      \left( \vb*{\mu} + \vb{\Sigma} \vb{t} \right)
+      \left( \vb*{\mu}^\top + \vb{t}^\top \vb{\Sigma} \right) \\
+    & \quad + \left. \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
+      \vb{\Sigma} \right|_{\vb{t} = \vb{0}}
+    = \vb*{\mu} \vb*{\mu}^\top + \vb{\Sigma} \\
+    \Var{\vb{x}} &= \E{\vb{x} \vb{x}^\top} - \E{\vb{x}} \E{\vb{x}}^\top
+    = \vb*{\mu} \vb*{\mu}^\top + \vb{\Sigma} - \vb*{\mu} \vb*{\mu}^\top = \vb{\Sigma}
   \end{align*}
 \end{enumerate}
 \end{frame}
