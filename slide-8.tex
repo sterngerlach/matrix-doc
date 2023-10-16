@@ -667,13 +667,13 @@
   \item モーメント母関数 (確率分布と一対一で対応) からも確認できる:
   \item $\vb{x}$のモーメント母関数は,
   \begin{align*}
-    \E{\exp(\vb{t}^\top \vb{x})}
+    \E{\exp(\vb{t}^\top \vb{X})}
     &= \exp(\vb*{\mu}^\top \vb{t} + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
   \end{align*}
   \item 続いて, $\vb{y} = \vb{A} \vb{x} + \vb{b}$のモーメント母関数は,
   \begin{align*}
-    \E{\exp(\vb{t}^\top \left( \vb{A} \vb{x} + \vb{b} \right))}
-    &= \E{\exp(\vb{t}^\top \vb{A} \vb{x})} \exp(\vb{t}^\top \vb{b}) \\
+    \E{\exp(\vb{t}^\top \left( \vb{A} \vb{X} + \vb{b} \right))}
+    &= \E{\exp(\vb{t}^\top \vb{A} \vb{X})} \exp(\vb{t}^\top \vb{b}) \\
     &= \exp(\vb*{\mu}^\top \vb{A}^\top \vb{t}
       + \frac{1}{2} \vb{t}^\top \vb{A} \vb{\Sigma} \vb{A}^\top \vb{t})
       \exp(\vb{b}^\top \vb{t}) \\
