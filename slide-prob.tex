@@ -399,10 +399,10 @@
       \exp \left( -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2 \right) \dd{x}
   \end{align*}
 
-  \item ガウス分布$\mathcal{N}(x \mid \mu, \sigma^2)$のモーメント母関数$\E{\exp(tx)}$について,
+  \item ガウス分布$\mathcal{N}(x \mid \mu, \sigma^2)$のモーメント母関数$M_X(t) = \E{\exp(tX)}$について,
   $\exp(\cdot)$の中身を平方完成させてください:
   \begin{align*}
-    \E{\exp(tx)} &= \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi \sigma^2}}
+    M_X(t) = \E{\exp(tX)} = \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi \sigma^2}}
       \exp(tx -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2) \dd{x}
   \end{align*}
 \end{enumerate}
@@ -424,10 +424,10 @@
 \begin{enumerate}
   \setcounter{enumi}{3}
   \item ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$の
-  モーメント母関数$\E{\exp(\vb{t}^\top \vb{x})}$について,
+  モーメント母関数$M_{\vb{X}}(\vb{t}) = \E{\exp(\vb{t}^\top \vb{X})}$について,
   $\exp(\cdot)$の中身を平方完成させてください:
   \begin{align*}
-    & \E{\exp(\vb{t}^\top \vb{x})} \\
+    & M_{\vb{X}}(\vb{t}) = \E{\exp(\vb{t}^\top \vb{x})} \\
     &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
       \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
       \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
@@ -1046,10 +1046,10 @@
 \begin{frame}{第7回: ガウス分布1}
 \begin{enumerate}
   \setcounter{enumi}{1}
-  \item ガウス分布$\mathcal{N}(x \mid \mu, \sigma^2)$のモーメント母関数$\E{\exp(tx)}$について,
+  \item ガウス分布$\mathcal{N}(x \mid \mu, \sigma^2)$のモーメント母関数$M_X(t) = \E{\exp(tX)}$について,
   $\exp(\cdot)$の中身を平方完成させてください:
   \begin{align*}
-    \E{\exp(tx)} &= \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi \sigma^2}}
+    M_X(t) = \E{\exp(tX)} = \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi \sigma^2}}
       \exp(tx -\frac{1}{2 \sigma^2} \left( x - \mu \right)^2) \dd{x}
   \end{align*}
   次のようになる:
@@ -1096,10 +1096,10 @@
 \begin{enumerate}
   \setcounter{enumi}{3}
   \item ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$の
-  モーメント母関数$\E{\exp(\vb{t}^\top \vb{x})}$について,
+  モーメント母関数$M_{\vb{X}}(\vb{t}) = \E{\exp(\vb{t}^\top \vb{X})}$について,
   $\exp(\cdot)$の中身を平方完成させてください:
   \begin{align*}
-    & \E{\exp(\vb{t}^\top \vb{x})} \\
+    & M_{\vb{X}}(\vb{t}) = \E{\exp(\vb{t}^\top \vb{x})} \\
     &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
       \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
       \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
