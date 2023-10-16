@@ -58,10 +58,12 @@
 
 \begin{itemize}
   \item $p(x \mid \mu, \sigma^2)$を, $\mathcal{N}(x \mid \mu, \sigma^2)$とかくこともある.
-  \item 確率変数$x$が, 平均$\mu$, 分散$\sigma^2$のガウス分布に従うとき, 次のようにかく:
+  \item 確率変数$X$が, 平均$\mu$, 分散$\sigma^2$のガウス分布に従うとき, 次のようにかく:
   \begin{align*}
-    x \sim \mathcal{N}(\mu, \sigma^2)
+    X \sim \mathcal{N}(\mu, \sigma^2)
   \end{align*}
+  \item 大文字$X$を確率変数, 小文字$x$を実現値 (実際の観測値) として, 区別することが多い
+  (このスライドでは, あまり正確に区別していない).
 \end{itemize}
 \end{frame}
 
@@ -276,17 +278,17 @@
 
 \begin{frame}{モーメント母関数 (Moment-generating Function) (1次元)}
 \begin{block}{モーメント母関数}
-  $x$の確率分布$p(x)$があるとき, $\E{\exp(tx)}$を, モーメント母関数という.
+  $X$の確率分布$p(x)$があるとき, $M_X(t) = \E{\exp(tX)}$を, モーメント母関数という.
   \begin{align*}
-    \E{\exp(tx)} = \E{1 + tx + \frac{1}{2!} t^2 x^2 + \frac{1}{3!} t^3 x^3 + \cdots}
+    M_X(t) = \E{\exp(tX)} = \E{1 + tX + \frac{1}{2!} t^2 X^2 + \frac{1}{3!} t^3 X^3 + \cdots}
   \end{align*}
-  $t$で$n$回微分して, $t = 0$を代入すると, $\E{x^n}$が得られる.
+  $t$で$n$回微分して, $t = 0$を代入すると, $\E{X^n}$が得られる.
   \begin{align*}
-    \E{x^n} = \left. \pdv[n]{t} \E{\exp(tx)} \right|_{t = 0}
+    \E{X^n} = \left. M_X^{(n)}(t) \right|_{t = 0} = \left. \pdv[n]{t} \E{\exp(tX)} \right|_{t = 0}
   \end{align*}
   ガウス分布$\mathcal{N}(x \mid \mu, \sigma^2)$に対するモーメント母関数は,
   \begin{align*}
-    \E{\exp(tx)} = \exp(\mu t + \frac{\sigma^2 t^2}{2})
+    M_X(t) = \E{\exp(tX)} = \exp(\mu t + \frac{\sigma^2 t^2}{2})
   \end{align*}
 \end{block}
 \end{frame}
@@ -295,26 +297,26 @@
 \begin{itemize}
   \item モーメント母関数:
   \begin{align*}
-    \E{\exp(tx)} &= \E{1 + tx + \frac{1}{2!} t^2 x^2 + \frac{1}{3!} t^3 x^3 + \cdots} \\
-    &= 1 + \E{x} t + \frac{1}{2!} \E{x^2} t^2 + \frac{1}{3!} \E{x^3} t^3 + \cdots
+    M_X(t) &= \E{\exp(tX)} = \E{1 + tX + \frac{1}{2!} t^2 X^2 + \frac{1}{3!} t^3 X^3 + \cdots} \\
+    &= 1 + \E{X} t + \frac{1}{2!} \E{X^2} t^2 + \frac{1}{3!} \E{X^3} t^3 + \cdots
   \end{align*}
   \item 例えば, 上式を$t$で$n = 3$回微分すれば,
   \begin{align*}
-    \pdv[3]{t} \E{\exp(tx)} = \E{x^3} + \E{x^4} t
-      + \frac{1}{2!} \E{x^5} t^2 + \frac{1}{3!} \E{x^6} t^3 + \cdots
+    M_X^{(3)}(t) = \pdv[3]{t} \E{\exp(tX)} = \E{X^3} + \E{X^4} t
+      + \frac{1}{2!} \E{X^5} t^2 + \cdots
   \end{align*}
   \item $t = 0$を代入すれば,
   \begin{align*}
-    \left. \pdv[3]{t} \E{\exp(tx)} \right|_{t = 0} = \E{x^3}
+    \left. M_X^{(3)}(t) \right|_{t = 0} = \left. \pdv[3]{t} \E{\exp(tX)} \right|_{t = 0} = \E{X^3}
   \end{align*}
 \end{itemize}
 \end{frame}
 
 \begin{frame}{ガウス分布に対するモーメント母関数 (1次元)}
 \begin{itemize}
-  \item ガウス分布$\mathcal{N}(x \mid \mu, \sigma^2)$に対する, モーメント母関数$\E{\exp(tx)}$を求めてみよう.
+  \item ガウス分布$\mathcal{N}(x \mid \mu, \sigma^2)$に対する, モーメント母関数$M_X(t)$を求めてみよう.
   \begin{align*}
-    \E{\exp(tx)} &= \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi \sigma^2}} \exp(tx)
+    M_X(t) &= \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi \sigma^2}} \exp(tx)
       \exp(-\frac{1}{2 \sigma^2} \left( x - \mu \right)^2) \dd{x}
   \end{align*}
   \item $\exp(\cdot)$の中身を, 平方完成する:
@@ -334,7 +336,7 @@
 \begin{itemize}
   \item よって,
   \begin{align*}
-    & \E{\exp(tx)} = \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi \sigma^2}} \exp(tx)
+    & M_X(t) = \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi \sigma^2}} \exp(tx)
       \exp(-\frac{1}{2 \sigma^2} \left( x - \mu \right)^2) \dd{x} \\
       &= \exp(\mu t + \frac{\sigma^2 t^2}{2}) \frac{1}{\sqrt{2\pi \sigma^2}}
         \int_{-\infty}^\infty \exp(-\frac{1}{2 \sigma^2}
@@ -357,7 +359,7 @@
 \begin{itemize}
   \item よって, ガウス分布に対するモーメント母関数は,
   \begin{align*}
-    & \E{\exp(tx)} = \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi \sigma^2}} \exp(tx)
+    & M_X(t) = \int_{-\infty}^\infty \frac{1}{\sqrt{2\pi \sigma^2}} \exp(tx)
       \exp(-\frac{1}{2 \sigma^2} \left( x - \mu \right)^2) \dd{x} \\
       &= \exp(\mu t + \frac{\sigma^2 t^2}{2}) \frac{1}{\sqrt{2\pi \sigma^2}}
         \int_{-\infty}^\infty \exp(-\frac{1}{2 \sigma^2}
@@ -1272,19 +1274,18 @@ $\vb{z} = \vb{x} - \vb*{\mu}$とすると, $\vb{x} = \vb{z} + \vb*{\mu}$だか�
 
 \begin{frame}{モーメント母関数 (多次元)}
 \begin{block}{モーメント母関数 (多次元)}
-  確率分布$p(\vb{x})$があるとき, $\E{\exp(\vb{t}^\top \vb{x})}$を, モーメント母関数という.
+  確率分布$p(\vb{x})$があるとき, $M_{\vb{X}}(\vb{t}) = \E{\exp(\vb{t}^\top \vb{X})}$を, モーメント母関数という.
   \begin{align*}
-    \E{\exp(\vb{t}^\top \vb{x})} = \E{1 + \vb{t}^\top \vb{x}
-      + \frac{1}{2!} \left( \vb{t}^\top \vb{x} \right)^2
-      + \frac{1}{3!} \left( \vb{t}^\top \vb{x} \right)^3 + \cdots}
+    M_{\vb{X}}(\vb{t}) = \E{\exp(\vb{t}^\top \vb{X})} = \E{1 + \vb{t}^\top \vb{X}
+      + \frac{1}{2!} \left( \vb{t}^\top \vb{X} \right)^2 + \cdots}
   \end{align*}
-  $\vb{t}$で1回微分してから$\vb{t} = \vb{0}$を代入すると, $\E{\vb{x}}$が得られる. \\
-  $\vb{t}$で2回微分してから$\vb{t} = \vb{0}$を代入すると, $\E{\vb{x} \vb{x}^\top}$が得られる.
+  $\vb{t}$で1回微分してから$\vb{t} = \vb{0}$を代入すると, $\E{\vb{X}}$が得られる. \\
+  $\vb{t}$で2回微分してから$\vb{t} = \vb{0}$を代入すると, $\E{\vb{X} \vb{X}^\top}$が得られる.
   \begin{align*}
-    \E{\vb{x}} &= \left. \pdv{\vb{t}}
-      \E{\exp(\vb{t}^\top \vb{x})} \right|_{\vb{t} = \vb{0}} \\
-    \E{\vb{x} \vb{x}^\top} &= \left. \frac{\partial^2}{\partial \vb{t}^\top \partial \vb{t}}
-      \E{\exp(\vb{t}^\top \vb{x})} \right|_{\vb{t} = \vb{0}}
+    \E{\vb{X}} &= \left. \pdv{\vb{t}}
+      M_{\vb{X}}(\vb{t}) \right|_{\vb{t} = \vb{0}} \\
+    \E{\vb{X} \vb{X}^\top} &= \left. \frac{\partial^2}{\partial \vb{t}^\top \partial \vb{t}}
+      M_{\vb{X}}(\vb{t}) \right|_{\vb{t} = \vb{0}}
   \end{align*}
 \end{block}
 \end{frame}
@@ -1336,18 +1337,18 @@ $\vb{z} = \vb{x} - \vb*{\mu}$とすると, $\vb{x} = \vb{z} + \vb*{\mu}$だか�
 \begin{itemize}
   \item モーメント母関数:
   \begin{align*}
-    & \E{\exp(\vb{t}^\top \vb{x})} = \E{1 + \vb{t}^\top \vb{x}
-      + \frac{1}{2!} \left( \vb{t}^\top \vb{x} \right)^2
-      + \frac{1}{3!} \left( \vb{t}^\top \vb{x} \right)^3 + \cdots} \\
-    &= 1 + \E{\vb{t}^\top \vb{x}} + \frac{1}{2!} \E{\left( \vb{t}^\top \vb{x} \right)^2}
-      + \frac{1}{3!} \E{\left( \vb{t}^\top \vb{x} \right)^3} + \cdots \\
-    &= 1 + \vb{t}^\top \E{\vb{x}} + \frac{1}{2!} \vb{t}^\top \E{\vb{x} \vb{x}^\top} \vb{t}
-      + \frac{1}{3!} \vb{t}^\top \E{\vb{x} \vb{t}^\top \vb{x} \vb{x}^\top} \vb{t} + \cdots
+    & M_{\vb{X}}(\vb{t}) = \E{\exp(\vb{t}^\top \vb{X})} = \E{1 + \vb{t}^\top \vb{X}
+      + \frac{1}{2!} \left( \vb{t}^\top \vb{X} \right)^2
+      + \frac{1}{3!} \left( \vb{t}^\top \vb{X} \right)^3 + \cdots} \\
+    &= 1 + \E{\vb{t}^\top \vb{X}} + \frac{1}{2!} \E{\left( \vb{t}^\top \vb{X} \right)^2}
+      + \frac{1}{3!} \E{\left( \vb{t}^\top \vb{X} \right)^3} + \cdots \\
+    &= 1 + \vb{t}^\top \E{\vb{X}} + \frac{1}{2!} \vb{t}^\top \E{\vb{X} \vb{X}^\top} \vb{t}
+      + \frac{1}{3!} \vb{t}^\top \E{\vb{X} \vb{t}^\top \vb{X} \vb{X}^\top} \vb{t} + \cdots
   \end{align*}
-  \item $\vb{t}$で1回微分して$\vb{t} = \vb{0}$を代入すれば, $\E{\vb{x}}^\top$を得る.
+  \item $\vb{t}$で1回微分して$\vb{t} = \vb{0}$を代入すれば, $\E{\vb{X}}^\top$を得る.
   \begin{align*}
-    \pdv{\vb{t}} \E{\exp(\vb{t}^\top \vb{x})}
-    &= \E{\vb{x}}^\top + \vb{t}^\top \E{\vb{x} \vb{x}^\top} + \cdots
+    \pdv{\vb{t}} M_{\vb{X}}(\vb{t})
+    &= \E{\vb{X}}^\top + \vb{t}^\top \E{\vb{X} \vb{X}^\top} + \cdots
   \end{align*}
 \end{itemize}
 \end{frame}
@@ -1356,15 +1357,15 @@ $\vb{z} = \vb{x} - \vb*{\mu}$とすると, $\vb{x} = \vb{z} + \vb*{\mu}$だか�
 \begin{itemize}
   \item $\vb{t}$で1回微分すると,
   \begin{align*}
-    \pdv{\vb{t}} \E{\exp(\vb{t}^\top \vb{x})}
-    &= \E{\vb{x}}^\top + \vb{t}^\top \E{\vb{x} \vb{x}^\top} + \cdots
+    \pdv{\vb{t}} M_{\vb{X}}(\vb{t})
+    &= \E{\vb{X}}^\top + \vb{t}^\top \E{\vb{X} \vb{X}^\top} + \cdots
   \end{align*}
   \item $\vb{t}^\top$で, さらにもう1回微分すると,
   \begin{align*}
-    \frac{\partial^2}{\partial \vb{t}^\top \partial \vb{t}} \E{\exp(\vb{t}^\top \vb{x})}
-    &= \E{\vb{x} \vb{x}^\top} + \cdots
+    \frac{\partial^2}{\partial \vb{t}^\top \partial \vb{t}} M_{\vb{X}}(\vb{t})
+    &= \E{\vb{X} \vb{X}^\top} + \cdots
   \end{align*}
-  \item $\vb{t} = \vb{0}$を代入すれば, $\E{\vb{x} \vb{x}^\top}$を得る.
+  \item $\vb{t} = \vb{0}$を代入すれば, $\E{\vb{X} \vb{X}^\top}$を得る.
 \end{itemize}
 \end{frame}
 
@@ -1372,14 +1373,14 @@ $\vb{z} = \vb{x} - \vb*{\mu}$とすると, $\vb{x} = \vb{z} + \vb*{\mu}$だか�
 \begin{block}{ガウス分布のモーメント母関数 (多次元)}
   ガウス分布$\mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma})$に対するモーメント母関数は,
   \begin{align*}
-    \E{\exp(\vb{t}^\top \vb{x})} = \exp(\vb*{\mu}^\top \vb{t}
+    M_{\vb{X}}(\vb{t}) = \E{\exp(\vb{t}^\top \vb{X})} = \exp(\vb*{\mu}^\top \vb{t}
       + \frac{1}{2} \vb{t}^\top \vb{\Sigma} \vb{t})
   \end{align*}
 \end{block}
 
 ただし,
 \begin{align*}
-  \E{\exp(\vb{t}^\top \vb{x})} &= \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
+  M_{\vb{X}}(\vb{t}) &= \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
     \mathcal{N}(\vb{x} \mid \vb*{\mu}, \vb{\Sigma}) \exp(\vb{t}^\top \vb{x}) \dd{\vb{x}} \\
   &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
     \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
@@ -1470,7 +1471,7 @@ $\vb{\Lambda}^\frac{1}{2}, \vb{\Lambda}^{-\frac{1}{2}}$は対角行列だから�
 \begin{frame}{多次元ガウス分布に対するモーメント母関数}
 以上より, モーメント母関数は,
 \begin{align*}
-  \E{\exp(\vb{t}^\top \vb{x})}
+  M_{\vb{X}}(\vb{t})
   &= \frac{1}{\left( 2\pi \right)^\frac{D}{2} \sqrt{\det \vb{\Sigma}}}
     \int_{-\boldsymbol{\infty}}^{\boldsymbol{\infty}}
     \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right)^\top \vb{\Sigma}^{-1}
