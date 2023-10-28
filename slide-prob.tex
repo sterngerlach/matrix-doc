@@ -496,6 +496,41 @@
 \end{enumerate}
 \end{frame}
 
+\begin{frame}{第9回: ガウス分布3}
+\begin{enumerate}
+  \item ガンマ関数$\Gamma(x)$について, 部分積分により次を示してください:
+  \begin{align*}
+    \Gamma(x + 1) &= x \Gamma(x)
+  \end{align*}
+  これより, $x$が整数であれば, $\Gamma(x + 1) = x!$が成り立つ.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第9回: ガウス分布3}
+\begin{enumerate}
+  \setcounter{enumi}{1}
+  \item $D = 4, 5$次元超球の体積$V_D(r)$と表面積$S_D(r)$を求めてください.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第9回: ガウス分布3}
+\begin{enumerate}
+  \item $D = 2$次元のガウス分布$\mathcal{N}(\vb{x} \mid \vb{0}, \sigma^2 \vb{I})$について,
+  次の積分を考えることにより, $\vb{x}$の半径$r = \left\| \vb{x} \right\|$に関する
+  レイリー分布$p(r)$を導出してください.
+  \begin{align*}
+    1 = \int_{\boldsymbol{-\infty}}^{\boldsymbol{\infty}}
+      \mathcal{N}(\vb{x} \mid \vb{0}, \sigma^2 \vb{I}) \dd{\vb{x}}
+      = \int_0^\infty p(r) \dd{r}
+  \end{align*}
+  ただし,
+  \begin{align*}
+    \mathcal{N}(\vb{x} \mid \vb{0}, \sigma^2 \vb{I})
+      &= \frac{1}{2\pi \sigma^2} \exp(-\frac{1}{2 \sigma^2} \vb{x}^\top \vb{x})
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
 \begin{frame}{}
 \end{frame}
 
@@ -1317,6 +1352,95 @@
   \end{align*}
 
   スライドの例 (68--69ページ) を参考に, 導出してみてください.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第9回: ガウス分布3}
+\begin{enumerate}
+  \item ガンマ関数$\Gamma(x)$について, 部分積分により次を示してください:
+  \begin{align*}
+    \Gamma(x + 1) &= x \Gamma(x)
+  \end{align*}
+  次のように示せる:
+  \begin{align*}
+    \Gamma(x + 1) &= \int_0^\infty u^x \exp(-u) \dd{u} \\
+      &= \left[ -u^x \exp(-u) \right]_0^\infty + \int_0^\infty x u^{x - 1} \exp(-u) \dd{u} \\
+      &= x \int_0^\infty u^{x - 1} \exp(-u) \dd{u} = x \Gamma(x)
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第9回: ガウス分布3}
+\begin{enumerate}
+  \setcounter{enumi}{1}
+  \item $D = 4, 5$次元超球の体積$V_D(r)$と表面積$S_D(r)$を求めてください.
+  $D = 4$次元超球の体積と表面積は,
+  \begin{align*}
+    V_4(r) &= \frac{\pi^\frac{4}{2}}{\Gamma(\frac{4}{2} + 1)} r^4
+      = \frac{\pi^2}{\Gamma(3)} r^4 = \frac{\pi^2}{2} r^4 \\
+    S_4(r) &= \frac{2\pi^\frac{4}{2}}{\Gamma(\frac{4}{2})} r^{4 - 1}
+      = \frac{2\pi^2}{\Gamma(2)} r^3 = 2\pi^2 r^3
+  \end{align*}
+  $D = 5$次元超球の体積と表面積は,
+  \begin{align*}
+    V_5(r) &= \frac{\pi^\frac{5}{2}}{\Gamma(\frac{5}{2} + 1)} r^5
+      = \frac{\pi^\frac{5}{2}}{\frac{5}{2} \cdot \frac{3}{2} \cdot \Gamma(\frac{3}{2})} r^5
+      = \frac{\pi^\frac{5}{2}}{\frac{5}{2} \cdot \frac{3}{2} \cdot \frac{\sqrt{\pi}}{2}} r^5
+      = \frac{8\pi^2}{15} r^5 \\
+    S_5(r) &= \frac{2\pi^\frac{5}{2}}{\Gamma(\frac{5}{2})} r^{5 - 1}
+      = \frac{2\pi^\frac{5}{2}}{\frac{3}{2} \cdot \Gamma(\frac{3}{2})} r^4
+      = \frac{2\pi^\frac{5}{2}}{\frac{3}{2} \cdot \frac{\sqrt{\pi}}{2}} r^4
+      = \frac{8\pi^2}{3} r^4
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第9回: ガウス分布3}
+\begin{enumerate}
+  \item $D = 2$次元のガウス分布$\mathcal{N}(\vb{x} \mid \vb{0}, \sigma^2 \vb{I})$について,
+  次の積分を考えることにより, $\vb{x}$の半径$r = \left\| \vb{x} \right\|$に関する
+  レイリー分布$p(r)$を導出してください.
+  \begin{align*}
+    1 = \int_{\boldsymbol{-\infty}}^{\boldsymbol{\infty}}
+      \mathcal{N}(\vb{x} \mid \vb{0}, \sigma^2 \vb{I}) \dd{\vb{x}}
+      = \int_0^\infty p(r) \dd{r}
+  \end{align*}
+  積分を, 次のように変数変換すればよい:
+  \begin{align*}
+    1 &= \int_{\boldsymbol{-\infty}}^{\boldsymbol{\infty}}
+      \mathcal{N}(\vb{x} \mid \vb{0}, \sigma^2 \vb{I}) \dd{\vb{x}} \\
+      &= \int_{\boldsymbol{-\infty}}^{\boldsymbol{\infty}}
+      \frac{1}{2\pi \sigma^2} \exp(-\frac{1}{2 \sigma^2} \vb{x}^\top \vb{x}) \dd{\vb{x}} \\
+      &= \int_{-\infty}^\infty \int_{-\infty}^\infty
+        \frac{1}{2\pi \sigma^2} \exp(-\frac{1}{2\sigma^2} \left( x^2 + y^2 \right)) \dd{x} \dd{y}
+  \end{align*}
+  $x = r \cos \theta$, $y = r \sin \theta$とおくと, 積分範囲は$r \in [0, \infty)$, $\theta = [0, 2\pi]$となる.
+  ヤコビ行列$\vb{J}$は,
+  \begin{align*}
+    \vb{J} &= \pdv{(x, y)}{(r, \theta)}
+      = \mqty(\pdv{x}{r} & \pdv{x}{\theta} \\ \pdv{y}{r} & \pdv{y}{\theta})
+      = \mqty(\cos \theta & -r \sin \theta \\ \sin \theta & r \cos \theta)
+  \end{align*}
+  ヤコビアン$\left| \det \vb{J} \right|$は,
+  \begin{align*}
+    \left| \det \vb{J} \right| &= \left|
+      (r \cos^2 \theta + r \sin^2 \theta) \right| = r
+  \end{align*}
+  よって, $\dd{x} \dd{y} = r \dd{r} \dd{\theta}$と変数変換できる.
+  \newpage
+  先ほどの積分を続けると,
+  \begin{align*}
+    1 &= \int_{-\infty}^\infty \int_{-\infty}^\infty
+      \frac{1}{2\pi \sigma^2} \exp(-\frac{1}{2\sigma^2} \left( x^2 + y^2 \right)) \dd{x} \dd{y} \\
+      &= \int_0^\infty \int_0^{2\pi}
+      \frac{1}{2\pi \sigma^2} \exp(-\frac{1}{2\sigma^2} r^2) r \dd{r} \dd{\theta} \\
+      &= \int_0^\infty \frac{1}{\sigma^2} \exp(-\frac{1}{2\sigma^2} r^2) r \dd{r}
+      = \int_0^\infty p(r) \dd{r}
+  \end{align*}
+  従って, レイリー分布$p(r)$は,
+  \begin{align*}
+    p(r) &= \frac{r}{\sigma^2} \exp(-\frac{1}{2\sigma^2} r^2)
+  \end{align*}
 \end{enumerate}
 \end{frame}
 
