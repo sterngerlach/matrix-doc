@@ -454,6 +454,48 @@
 \end{enumerate}
 \end{frame}
 
+\begin{frame}{第8回: ガウス分布2}
+\begin{enumerate}
+  \item $\vb{x}$, $\vb{y}$は互いに\textcolor{red}{独立}で,
+  ガウス分布$\mathcal{N}(\vb*{\mu}_x, \vb{\Sigma}_{xx})$,
+  $\mathcal{N}(\vb*{\mu}_y, \vb{\Sigma}_{yy})$に従うとき,
+  和$\vb{z} = \vb{A} \vb{x} + \vb{B} \vb{y}$が次のガウス分布に従うことを示してください.
+  \begin{align*}
+    \vb{z} \sim \mathcal{N}(\vb{A} \vb*{\mu}_x + \vb{B} \vb*{\mu}_y,
+      \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top + \vb{B} \vb{\Sigma}_{yy} \vb{B}^\top)
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第8回: ガウス分布2}
+\begin{enumerate}
+  \setcounter{enumi}{1}
+  \item $K$個の独立な確率変数$\vb{x}_k$があり, ガウス分布$\mathcal{N}(\vb*{\mu}_k, \vb{\Sigma}_k)$に従うとき,
+  重み付き和$\vb{x} = \sum_k w_k \vb{x}_k$が, 次のガウス分布に従うことを示してください.
+  \begin{align*}
+    \vb{x} \sim \mathcal{N} \left( \sum_k w_k \vb*{\mu}_k, \sum_k w_k^2 \vb{\Sigma}_k \right)
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第8回: ガウス分布2}
+\begin{enumerate}
+  \setcounter{enumi}{2}
+  \item 次が成り立つことを示してください:
+  \begin{align*}
+    & \prod_k \exp(-\frac{1}{2} \left( \vb{G}_k \vb{x} - \vb*{\mu}_k \right)^\top
+      \vb{\Sigma}_k^{-1} \left( \vb{G}_k \vb{x} - \vb*{\mu}_k \right)) \\
+    & \qquad \propto \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right) \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right))
+  \end{align*}
+  ただし,
+  \begin{align*}
+    \vb{\Sigma}^{-1} &= \sum_k \vb{G}_k^\top \vb{\Sigma}_k^{-1} \vb{G}_k \\
+    \vb{\Sigma}^{-1} \vb*{\mu} &= \sum_k \vb{G}_k^\top \vb{\Sigma}_k^{-1} \vb*{\mu}_k
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
 \begin{frame}{}
 \end{frame}
 
@@ -1214,6 +1256,67 @@
     \Var{\vb{x}} &= \E{\vb{x} \vb{x}^\top} - \E{\vb{x}} \E{\vb{x}}^\top
     = \vb*{\mu} \vb*{\mu}^\top + \vb{\Sigma} - \vb*{\mu} \vb*{\mu}^\top = \vb{\Sigma}
   \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第8回: ガウス分布2}
+\begin{enumerate}
+  \item $\vb{x}$, $\vb{y}$は互いに\textcolor{red}{独立}で,
+  ガウス分布$\mathcal{N}(\vb*{\mu}_x, \vb{\Sigma}_{xx})$,
+  $\mathcal{N}(\vb*{\mu}_y, \vb{\Sigma}_{yy})$に従うとき,
+  和$\vb{z} = \vb{A} \vb{x} + \vb{B} \vb{y}$が次のガウス分布に従うことを示してください.
+  \begin{align*}
+    \vb{z} \sim \mathcal{N}(\vb{A} \vb*{\mu}_x + \vb{B} \vb*{\mu}_y,
+      \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top + \vb{B} \vb{\Sigma}_{yy} \vb{B}^\top)
+  \end{align*}
+
+  $\vb{x}, \vb{y}$は互いに独立だから, それらを線形変換した$\vb{A} \vb{x}$, $\vb{B} \vb{y}$も独立である.
+  $\vb{x}, \vb{y}$はガウス分布に従うから, それらの線形変換$\vb{A} \vb{x}$, $\vb{B} \vb{y}$もまたガウス分布に従う.
+  従って, 2つの和$\vb{z}$も, ガウス分布に従う.
+
+  平均と分散は, 次のように求まる:
+  \begin{align*}
+    \E{\vb{z}} &= \E{\vb{A} \vb{x} + \vb{B} \vb{y}}
+      = \vb{A} \E{\vb{x}} + \vb{B} \E{\vb{y}}
+      = \vb{A} \vb*{\mu}_x + \vb{B} \vb*{\mu}_y \\
+    \Var{\vb{z}} &= \Var{\vb{A} \vb{x}} + \Var{\vb{B} \vb{y}}
+      + \Cov{\vb{A} \vb{x}}{\vb{B} \vb{y}} + \Cov{\vb{B} \vb{y}}{\vb{A} \vb{x}} \\
+      &= \Var{\vb{A} \vb{x}} + \Var{\vb{B} \vb{y}}
+      = \vb{A} \vb{\Sigma}_{xx} \vb{A}^\top + \vb{B} \vb{\Sigma}_{yy} \vb{B}^\top
+  \end{align*}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第8回: ガウス分布2}
+\begin{enumerate}
+  \setcounter{enumi}{1}
+  \item $K$個の独立な確率変数$\vb{x}_k$があり, ガウス分布$\mathcal{N}(\vb*{\mu}_k, \vb{\Sigma}_k)$に従うとき,
+  重み付き和$\vb{x} = \sum_k w_k \vb{x}_k$が, 次のガウス分布に従うことを示してください.
+  \begin{align*}
+    \vb{x} \sim \mathcal{N} \left( \sum_k w_k \vb*{\mu}_k, \sum_k w_k^2 \vb{\Sigma}_k \right)
+  \end{align*}
+
+  地道に導出してもよいが, スライドの例 (62--63ページ) について, $\vb{W}_k = w_k \vb{I}$とおけばよい.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{第8回: ガウス分布2}
+\begin{enumerate}
+  \setcounter{enumi}{2}
+  \item 次が成り立つことを示してください:
+  \begin{align*}
+    & \prod_k \exp(-\frac{1}{2} \left( \vb{G}_k \vb{x} - \vb*{\mu}_k \right)^\top
+      \vb{\Sigma}_k^{-1} \left( \vb{G}_k \vb{x} - \vb*{\mu}_k \right)) \\
+    & \qquad \propto \exp(-\frac{1}{2} \left( \vb{x} - \vb*{\mu} \right) \vb{\Sigma}^{-1}
+      \left( \vb{x} - \vb*{\mu} \right))
+  \end{align*}
+  ただし,
+  \begin{align*}
+    \vb{\Sigma}^{-1} &= \sum_k \vb{G}_k^\top \vb{\Sigma}_k^{-1} \vb{G}_k \\
+    \vb{\Sigma}^{-1} \vb*{\mu} &= \sum_k \vb{G}_k^\top \vb{\Sigma}_k^{-1} \vb*{\mu}_k
+  \end{align*}
+
+  スライドの例 (68--69ページ) を参考に, 導出してみてください.
 \end{enumerate}
 \end{frame}
 
