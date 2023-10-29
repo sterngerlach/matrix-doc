@@ -485,22 +485,25 @@ $Y$の分布を$p(y)$とすれば,
   \begin{align*}
     \vb{t}^\top \vb{Y} &= \vb{t}^\top \frac{1}{\sqrt{N}} \sum_{i = 1}^N
       \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top \left( \vb{X}_i - \vb*{\mu} \right) \\
-      &= \frac{1}{\sqrt{N}} \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top
-        \sum_{i = 1}^N \left( \vb{t}^\top \vb{X}_i - \vb{t}^\top \vb*{\mu} \right)
+      &= \frac{1}{\sqrt{N}} \sum_{i = 1}^N \left(
+      \vb{t}^\top \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top \vb{X}_i
+      - \vb{t}^\top \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top \vb*{\mu} \right)
   \end{align*}
-  \item 1次元の確率変数$\vb{t}^\top \vb{X}_i$の和をとって, $\vb{t}^\top \vb*{\mu}$だけ移動させ,
-  さらに$\frac{1}{\sqrt{N}} \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top$でスケールしたもの.
+  \item 1次元の確率変数$\vb{t}^\top \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top \vb{X}_i$の和をとって,
+  $\vb{t}^\top \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top \vb*{\mu}$だけ移動させ,
+  さらに$\frac{1}{\sqrt{N}}$でスケールしたもの.
 \end{itemize}
 \end{frame}
 
 \begin{frame}{中心極限定理 (Central Limit Theorem; CLT)}
 \begin{itemize}
-  \item $\vb{t}^\top \vb{Y}$は, 1次元の確率変数$\vb{t}^\top \vb{X}_i$の和をとって,
-  $\vb{t}^\top \vb*{\mu}$だけ移動させ,
-  さらに$\frac{1}{\sqrt{N}} \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top$でスケールしたもの.
+  \item 1次元の確率変数$\vb{t}^\top \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top \vb{X}_i$の和をとって,
+  $\vb{t}^\top \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top \vb*{\mu}$だけ移動させ,
+  さらに$\frac{1}{\sqrt{N}}$でスケールしたもの.
   \begin{align*}
-    \vb{t}^\top \vb{Y} &= \frac{1}{\sqrt{N}} \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top
-      \sum_{i = 1}^N \left( \vb{t}^\top \vb{X}_i - \vb{t}^\top \vb*{\mu} \right)
+    \vb{t}^\top \vb{Y} &= \frac{1}{\sqrt{N}} \sum_{i = 1}^N \left(
+      \vb{t}^\top \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top \vb{X}_i
+      - \vb{t}^\top \vb{\Lambda}^{-\frac{1}{2}} \vb{U}^\top \vb*{\mu} \right)
   \end{align*}
   \item $\E{\vb{Y}} = \vb{0}, \Var{\vb{Y}} = \vb{I}$だから,
   \begin{gather*}
